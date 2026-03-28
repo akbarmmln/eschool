@@ -1,0 +1,789 @@
+@extends(
+    $role == '0' ? 'admin.app' : 
+    ($role == '1' ? 'guru.app' : 'ortu.app')
+)
+@section('content')
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+	<div class="content">
+		<!-- Page Header -->
+		<div class="d-md-flex d-block align-items-center justify-content-between mb-3">
+			<div class="my-auto mb-2">
+				<h3 class="page-title mb-1">Profile</h3>
+				<nav>
+					<ol class="breadcrumb mb-0">
+						<li class="breadcrumb-item">
+							<a href="javascript:void(0);">Akademik</a>
+						</li>
+						<li class="breadcrumb-item">
+							<a href="javascript:void(0);">Pengaturan</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Profile</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+		<!-- /Page Header -->
+
+                <div id="pagefailed" style="display: none;">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div id="status_page" class="col-xxl-6 col-xl-6 col-lg-8 col-md-10 col-sm-12">
+                                <div class="card bg-white border-0">
+                                    <div class="alert custom-alert1 alert-warning">
+                                        <div class="text-center px-5 pb-0">
+                                            <div class="custom-alert-icon">
+                                                <i class="feather-alert-triangle flex-shrink-0"></i>
+                                            </div>
+                                            <h5 class="fw-bold text-uppercase text-warning mb-3">WARNING</h5>
+                                            <p id="text_result" class="text-black mb-1"></p>
+                                            <a href="#" id="btnRefresh" class="btn btn-sm btn-warning m-1">Coba kembali</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="loadingSpinner" class="text-center my-3" style="display: block;">
+                    <button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
+                        <span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+                            Memuat data...
+                    </button>
+                </div>
+
+				<div class="d-md-flex d-block mt-3">
+					<div id="admin_guru_app" class="d-none flex-fill ps-0 border-0">
+							<div class="d-md-flex">
+								<div class="flex-fill">
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5><b>Informasi Pribadi</b></h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_personal_information_admin_guru"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-id"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">NIY</h6>
+                                                            <p id="niy" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-calendar-time"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Tanggal Lahir</h6>
+                                                            <p id="tgl_lahir" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-id-badge"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Nama Lengkap</h6>
+                                                            <p id="nama_lengkap" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-friends"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Jenis Kelamin</h6>
+                                                            <p id="jenis_kelamin" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-school"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Pendidikan</h6>
+                                                            <p id="pendidikan" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-phone"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Nomor Telepon</h6>
+                                                            <p id="no_telp" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+									</div>
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5><b>Informasi Alamat</b></h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_address_information_admin_guru"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-map-2"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Alamat / Nama Jalan</h6>
+                                                            <p id="alamat" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-home-link"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">RT / RW</h6>
+                                                            <p id="rt_rw" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-layout-distribute-horizontal"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Kecamatan</h6>
+                                                            <p id="kecamatan" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="bg-light-300 d-flex align-items-center p-3 mb-3">
+                                                        <div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+                                                            <i class="ti ti-layout-distribute-horizontal"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-1 fw-bold">Kelurahan</h6>
+                                                            <p id="kelurahan" class="mb-0">-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+									</div>
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5>Password</h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_password"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+									</div>
+								</div>
+
+							</div>
+					</div>
+				</div>
+	</div>
+</div>
+<!-- /Page Wrapper -->
+ 
+		<!-- Edit Profile -->
+		<div class="modal fade" id="edit_personal_information_admin_guru">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Ubah Informasi Pribadi</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3">
+									<label class="form-label">Nama Lengkap</label>
+									<input type="text" class="form-control nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Jenis Kelamin</label>
+									<select name="jenis_kelamin" class="form-control jenis_kelamin">
+                                        <option value="">Pilih Jenis Kelamin</option>
+										<option value="L">Laki-Laki</option>
+										<option value="P">Perempuan</option>
+									</select>
+                                </div>
+								<div class="mb-3">
+									<label class="form-label">Tanggal Lahir</label>
+									<div class="input-icon position-relative">
+										<span class="input-icon-addon">
+											<i class="ti ti-calendar"></i>
+										</span>
+										<input type="text" id="tanggal_lahir" name="tanggal_lahir" class="form-control datepickerBuatan">
+									</div>
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Pendidikan</label>
+									<input type="text" class="form-control pendidikan" name="pendidikan" placeholder="Pendidikan">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Nomor Telepone</label>
+									<input type="text" class="form-control nomot_telp" name="nomot_telp" placeholder="Nomor Telepone">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2 btn_tutup" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Profile -->
+
+		<!-- Edit Profile -->
+		<div class="modal fade" id="edit_address_information_admin_guru">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Ubah Informasi Alamat</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Alamat / Nama Jalan</label>
+                                    <input type="text" name="alamat" class="form-control alamat" placeholder="Alamat / Nama Jalan">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">No RT</label>
+                                    <input type="text" name="no_rt" class="form-control no_rt" placeholder="No RT">
+                                </div>											
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">No RW</label>
+                                    <input type="text" name="no_rw" class="form-control no_rw" placeholder="No RW">
+                                </div>											
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Kecamatan</label>
+                                    <input type="text" name="kecamatan" class="form-control kecamatan" placeholder="Kecamatan">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Kelurahan</label>
+                                    <input type="text" name="kelurahan" class="form-control kelurahan" placeholder="Kelurahan">
+                                </div>
+                            </div>
+                        </div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2 btn_tutup" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Profile -->
+
+		<!-- Change Password -->
+		<div class="modal fade" id="edit_password">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Ubah Password</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3">
+									<label class="form-label">Password lama</label>
+									<div class="pass-group d-flex">
+										<input type="password" class="pass-input form-control pass_lama">
+										<span class="ti toggle-password ti-eye-off"></span>
+									</div>
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Password baru</label>
+									<div class="pass-group d-flex">
+										<input type="password" class="pass-inputs form-control pass_baru">
+										<span class="ti toggle-passwords ti-eye-off"></span>
+									</div>
+								</div>
+								<div class="mb-0">
+									<label class="form-label">Konfirmasi password baru</label>
+									<div class="pass-group d-flex">
+										<input type="password" class="pass-inputa form-control pass_baru_konfirm">
+										<span class="ti toggle-passworda ti-eye-off"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Change Password -->
+
+<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
+<script src="{{ asset('assets/js/fetchJson.js') }}"></script>
+<script>
+    const role = @json($role);
+    const pagefailed = document.getElementById("pagefailed");
+    const spinner = document.getElementById("loadingSpinner");
+    const admin_guru_app = document.getElementById('admin_guru_app')
+    
+    const editPiAdminGuruModals = document.getElementById('edit_personal_information_admin_guru')
+    const btnSimpanPiAdminGuru = editPiAdminGuruModals.querySelector('.btn_simpan')
+
+    const editAiAdminGuruModals = document.getElementById('edit_address_information_admin_guru')
+    const btnSimpanAiAdminGuru = editAiAdminGuruModals.querySelector('.btn_simpan')
+
+    const editPassword = document.getElementById('edit_password')
+    const btnSimpanEp = editPassword.querySelector('.btn_simpan')
+
+    let temp = {
+        niy: null,
+        tanggal_lahir: null,
+        nama: null,
+        jenis_kelamin: null,
+        pendidikan: null,
+        nomor_handphone: null,
+        alamat: null,
+        rt: null,
+        rw: null,
+        kecamatan: null,
+        kelurahan: null
+    }
+
+    document.querySelector(".datepickerBuatan").addEventListener("keydown", function(e){
+        e.preventDefault();
+    });
+
+    editPassword.addEventListener('hidden.bs.modal', function () {
+        const passLamaValue = editPassword.querySelector('.pass_lama');
+        const passBaruValue = editPassword.querySelector('.pass_baru');
+        const passBaruKonfirmValue = editPassword.querySelector('.pass_baru_konfirm');
+
+        if (passLamaValue) passLamaValue.value = ''
+        if (passBaruValue) passBaruValue.value = ''
+        if (passBaruKonfirmValue) passBaruKonfirmValue.value = ''
+    })
+    editPassword.addEventListener('show.bs.modal', function () {
+        const validator = initFormValidation(editPassword, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.pass_lama',
+                '.pass_baru',
+                '.pass_baru_konfirm'
+            ]
+        });
+        editPassword._validator = validator;
+    })
+
+    editAiAdminGuruModals.addEventListener('hidden.bs.modal', function () {})
+    editAiAdminGuruModals.addEventListener('show.bs.modal', function () {
+        const alamatValue = editAiAdminGuruModals.querySelector('.alamat');
+        const noRtValue = editAiAdminGuruModals.querySelector('.no_rt');
+        const noRwValue = editAiAdminGuruModals.querySelector('.no_rw');
+        const kecamatanValue = editAiAdminGuruModals.querySelector('.kecamatan');
+        const kelurahanValue = editAiAdminGuruModals.querySelector('.kelurahan');
+
+        alamatValue.value = temp.alamat
+        noRtValue.value = temp.rt
+        noRwValue.value = temp.rw
+        kecamatanValue.value = temp.kecamatan
+        kelurahanValue.value = temp.kelurahan
+
+        const validator = initFormValidation(editAiAdminGuruModals, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.alamat',
+                '.no_rt',
+                '.no_rw',
+                '.kecamatan',
+                '.kelurahan'
+            ]
+        });
+        editAiAdminGuruModals._validator = validator;
+    })
+
+    editPiAdminGuruModals.addEventListener('hidden.bs.modal', function () {})
+    editPiAdminGuruModals.addEventListener('show.bs.modal', function () {
+        const namaLengkapValue = editPiAdminGuruModals.querySelector('.nama_lengkap');
+        const JKValue = editPiAdminGuruModals.querySelector('.jenis_kelamin');
+        const TglLahirValue = editPiAdminGuruModals.querySelector('#tanggal_lahir');
+        const pendidikanValue = editPiAdminGuruModals.querySelector('.pendidikan');
+        const noTelpValue = editPiAdminGuruModals.querySelector('.nomot_telp');
+
+        namaLengkapValue.value = temp.nama ?? "";
+        JKValue.value = temp.jenis_kelamin ?? "";
+
+        const dateStr = temp.tanggal_lahir?.substring(0, 10) || "";
+        const [year = "", month = "", day = ""] = dateStr.split('-');
+        TglLahirValue.value = dateStr ? `${day}-${month}-${year}` : "";
+        pendidikanValue.value = temp.pendidikan ?? ""
+        noTelpValue.value = temp.nomor_handphone ?? ""
+
+        const validator = initFormValidation(editPiAdminGuruModals, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.nama_lengkap',
+                '.jenis_kelamin',
+                '#tanggal_lahir',
+                '.pendidikan',
+                '.nomot_telp'
+            ]
+        });
+        editPiAdminGuruModals._validator = validator;
+    });
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        document.querySelectorAll('.datepickerBuatan').forEach(el => {
+            const modal = el.closest('.modal');
+            const dp = new AirDatepicker(el, {
+                container: el.closest('.modal'),
+                autoClose: true,
+                dateFormat: 'dd-MM-yyyy',
+                locale: {
+                    days: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+                    daysShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                    daysMin: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                    months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                    today: 'Hari ini',
+                    clear: 'Hapus',
+                    dateFormat: 'dd-MM-yyyy',
+                    firstDay: 1
+                },
+                onSelect({ date, formattedDate, datepicker }) {
+                    if (modal.id === 'edit_personal_information_admin_guru') {
+                        modal?._validator?.validate();
+                    }
+                },
+                buttons: [
+                    {
+                        content: 'Hari ini',
+                        onClick(dp) {
+                            const today = new Date();
+                            dp.selectDate(today);
+                            dp.hide();
+                        }
+                    },
+                    {
+                        content: 'Hapus',
+                        onClick(dp) {
+                            dp.clear();
+                            dp.hide();
+                        }
+                    }
+                ]
+            });
+            el._dp = dp;
+        });
+
+        if (role == 0 || role == 1) {
+            await loadProfileGroup01();
+        }
+    })
+
+    btnSimpanPiAdminGuru.addEventListener("click", async function () {
+        try {
+            btnSimpanPiAdminGuru.disabled = true;
+            btnSimpanPiAdminGuru.innerHTML = 'Menyimpan...';
+            let payload;
+            if (role == 0 || role == 1) {
+                payload = {
+                    uri: '/_backend/profile/ds1-update',
+                    body: {
+                        object_update: {
+                            nama: editPiAdminGuruModals.querySelector('.nama_lengkap').value,
+                            tanggal_lahir: editPiAdminGuruModals.querySelector('#tanggal_lahir').value ? formatToISO(editPiAdminGuruModals.querySelector('#tanggal_lahir').value) : null,
+                            pendidikan: editPiAdminGuruModals.querySelector('.pendidikan').value,
+                            jenis_kelamin: editPiAdminGuruModals.querySelector('.jenis_kelamin').value,
+                            nomor_handphone: editPiAdminGuruModals.querySelector('.nomot_telp').value,
+                        }
+                    }
+                }
+            }
+            const result = await fetchJson(payload.uri, {
+                method: 'POST',
+                body: payload.body
+            });
+
+            if (!result.ok) {
+                showToast('Terjadi kegagalan perbarui data', 'success');
+            }
+
+            showToast('Data berhasil diperbarui', 'success');    
+            if (role == 0 || role == 1) {
+                await loadProfileGroup01();
+            }
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_personal_information_admin_guru')
+            );
+            modal.hide();
+
+            btnSimpanPiAdminGuru.disabled = false;
+            btnSimpanPiAdminGuru.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+    btnSimpanAiAdminGuru.addEventListener("click", async function () {
+        try {
+            btnSimpanAiAdminGuru.disabled = true;
+            btnSimpanAiAdminGuru.innerHTML = 'Menyimpan...';
+            let payload;
+            if (role == 0 || role == 1) {
+                payload = {
+                    uri: '/_backend/profile/ds1-update',
+                    body: {
+                        object_update: {
+                            alamat: editAiAdminGuruModals.querySelector('.alamat').value,
+                            rt: editAiAdminGuruModals.querySelector('.no_rt').value,
+                            rw: editAiAdminGuruModals.querySelector('.no_rw').value,
+                            kelurahan: editAiAdminGuruModals.querySelector('.kelurahan').value,
+                            kecamatan: editAiAdminGuruModals.querySelector('.kecamatan').value
+                        }
+                    }
+                }
+            }
+            const result = await fetchJson(payload.uri, {
+                method: 'POST',
+                body: payload.body
+            });
+            if (!result.ok) {
+                showToast('Terjadi kegagalan perbarui data', 'success');
+            }
+
+            showToast('Data berhasil diperbarui', 'success');    
+            if (role == 0 || role == 1) {
+                await loadProfileGroup01();
+            }
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_address_information_admin_guru')
+            );
+            modal.hide();
+
+            btnSimpanAiAdminGuru.disabled = false;
+            btnSimpanAiAdminGuru.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+    btnSimpanEp.addEventListener("click", async function () {
+        const passLamaValue = editPassword.querySelector('.pass_lama');
+        const passBaruValue = editPassword.querySelector('.pass_baru');
+        const passBaruKonfirmValue = editPassword.querySelector('.pass_baru_konfirm');
+
+        if (passBaruValue.value != passBaruKonfirmValue.value) {
+            showToast('password baru tidak sama dengan konfirmasi password baru')
+            return;
+        }
+
+        try {
+            btnSimpanEp.disabled = true;
+            btnSimpanEp.innerHTML = 'Menyimpan...';
+
+            const result = await fetchJson('/_backend/profile/change-password', {
+                method: 'POST',
+                body: {
+                    password_lama: passLamaValue.value,
+                    password_baru: passBaruKonfirmValue.value
+                }
+            });
+            if (!result.ok) {
+                throw result
+            }
+
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_password')
+            );
+            modal.hide();
+
+            showToast('password berhasil dilakukan perubahan')
+        } catch(e) {
+            const code = e?.code
+			const message = e?.message
+
+            if (code == '70008' || code == '70015') {
+                showToast('password lama anda tidak sesuai')
+            } else {
+                showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+            }
+        } finally {
+            btnSimpanEp.disabled = false;
+            btnSimpanEp.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+    async function loadProfileGroup01() {
+        pagefailed.style.display = "none";
+        spinner.style.display = "block";
+        admin_guru_app.classList.add('d-none');
+
+        try {
+            const result = await fetchJson('/_backend/profile', {
+                method: 'POST'
+            });
+
+            temp.niy = result.data.niy
+            temp.tanggal_lahir = result.data.tanggal_lahir
+            temp.nama = result.data.nama
+            temp.jenis_kelamin = result.data.jenis_kelamin
+            temp.pendidikan = result.data.pendidikan
+            temp.nomor_handphone = result.data.nomor_handphone
+            temp.alamat = result.data.alamat
+            temp.rt = result.data.rt
+            temp.rw = result.data.rw
+            temp.kecamatan = result.data.kecamatan
+            temp.kelurahan = result.data.kelurahan
+
+            const niy = admin_guru_app.querySelector('#niy');
+            niy.innerHTML = temp.niy ?? '-';
+            const tgl_lahir = admin_guru_app.querySelector('#tgl_lahir');
+            tgl_lahir.innerHTML = temp.tanggal_lahir ? moment(temp.tanggal_lahir).format('DD / MM / YYYY') : '-'
+            const nama = admin_guru_app.querySelector('#nama_lengkap');
+            nama.innerHTML = temp.nama;
+            const jenis_kelamin = admin_guru_app.querySelector('#jenis_kelamin');
+            jenis_kelamin.innerHTML = temp.jenis_kelamin == 'L' ? 'Laki-Laki' :
+                                     temp.jenis_kelamin == 'P' ? 'Perempuan' : '-'
+            const pendidikan = admin_guru_app.querySelector('#pendidikan');
+            pendidikan.innerHTML = temp.pendidikan ?? '-';
+            const no_telp = admin_guru_app.querySelector('#no_telp');
+            no_telp.innerHTML = temp.nomor_handphone ?? '-';
+
+            const alamat = admin_guru_app.querySelector('#alamat');
+            alamat.innerHTML = temp.alamat ?? '-';
+            const rt_rw = admin_guru_app.querySelector('#rt_rw');
+            rt_rw.innerHTML = `${temp.rt ?? '-'} / ${temp.rw ?? '-'}`
+
+            const kecamatan = admin_guru_app.querySelector('#kecamatan');
+            kecamatan.innerHTML = temp.kecamatan ?? '-';
+            const kelurahan = admin_guru_app.querySelector('#kelurahan');
+            kelurahan.innerHTML = temp.kelurahan ?? '-';
+
+            admin_guru_app.classList.remove('d-none');
+        } catch(e) {
+            pagefailed.style.display = "block";
+            admin_guru_app.classList.add('d-none');
+        } finally {
+            spinner.style.display = "none";
+        }
+    }
+
+    function initFormValidation(modal, config) {
+        const btn = modal.querySelector(config.btnSelector);
+
+        const fields = config.fields.map(selector => modal.querySelector(selector));
+
+        const validate = () => {
+            let isValid = fields.every(el => {
+                if (!el) return false;
+                return el.value?.toString().trim() !== "";
+            });
+
+            if (config.customValidate) {
+                isValid = isValid && config.customValidate(fields);
+            }
+
+            btn.disabled = !isValid;
+        };
+
+        if (!modal.dataset.validationAttached) {
+            fields.forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', validate);
+                el.addEventListener('change', validate);
+            });
+
+            modal.dataset.validationAttached = "true";
+        }
+
+        validate();
+
+        return { validate };
+    }
+
+    const formatToISO = (dateStr) => {
+        if (!dateStr) return "";
+
+        const parts = dateStr.split("-");
+        if (parts.length !== 3) return "";
+
+        const [day, month, year] = parts;
+
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    };
+
+    function showToast(message, type = 'success') {
+        const toastElement = document.getElementById('globalToast');
+        const toastBody = document.getElementById('globalToastBody');
+
+        // reset class
+        toastElement.className = 'toast align-items-center border-0';
+
+        // set warna berdasarkan type
+        if (type === 'success') {
+            toastElement.classList.add('text-bg-primary');
+        } else if (type === 'error') {
+            toastElement.classList.add('text-bg-danger');
+        } else if (type === 'warning') {
+            toastElement.classList.add('text-bg-warning');
+        } else {
+            toastElement.classList.add('text-bg-success');
+        }
+
+        toastBody.innerHTML = message;
+
+        const toast = new bootstrap.Toast(toastElement, {
+            delay: 1500
+        });
+
+        toast.show();
+    }
+</script>
+@endsection
