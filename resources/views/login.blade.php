@@ -38,7 +38,7 @@
                         <div id="toast-container" class="position-fixed top-0 end-0 p-3"></div>
                         <div class="login-right">
                             <div class="login-right-wrap">
-                                <h1>Jurnal Mengajar <br> Khalifa IMS Tegal</h1>
+                                <h1>Selamat Datang di <br> Jurnal Mengajar</h1>
                                 <p class="account-subtitle"></p>
                                     <div class="form-group">
                                         <label>Username <span class="login-danger">*</span></label>
