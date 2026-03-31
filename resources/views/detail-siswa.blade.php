@@ -429,17 +429,17 @@
 					dateFormat: 'dd-MM-yyyy',
 					firstDay: 1
 				},
-				onRenderCell({ date, cellType }) {
-					if (cellType === 'day') {
-						const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
+				// onRenderCell({ date, cellType }) {
+				// 	if (cellType === 'day') {
+				// 		const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
 
-						if (day === 0 || day === 6) {
-							return {
-								disabled: true
-							};
-						}
-					}
-				},
+				// 		if (day === 0 || day === 6) {
+				// 			return {
+				// 				disabled: true
+				// 			};
+				// 		}
+				// 	}
+				// },
 				onSelect({ date, formattedDate, datepicker }) {
 					const container = el.closest('#filterSection');
 					const minDate = datepicker.opts.minDate;
