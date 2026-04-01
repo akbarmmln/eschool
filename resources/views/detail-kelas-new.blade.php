@@ -128,14 +128,14 @@
                                    Daftar Siswa
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="#aktivitas"
                                 class="nav-link"
                                 data-bs-toggle="tab">
                                     <i class="ti ti-table-options me-2"></i>
                                     Aktivitas / Pembelajaran
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
 
                         <div class="tab-content">
@@ -160,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane fade" id="aktivitas">
+                            <!-- <div class="tab-pane fade" id="aktivitas">
                                 <div class="card">
                                     <div class="card-body">
                                         <span>kegiatan</span>
@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
