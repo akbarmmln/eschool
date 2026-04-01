@@ -18,10 +18,7 @@ class RequestBackEnd
         $dataStatusCode = $result->status();
         $dataResponse = $result->json();
 
-        if ($result->failed()) {  
-            if ($dataStatusCode == 504) {
-                return redirect('/akademik/forbidden');
-            }
+        if ($result->failed()) {
             $errCode = $dataResponse['err_code'] ?? null;
             $message = ($errCode === '70005') ? 'Username dan Password tidak sesuai' : ($dataResponse['err_msg'] ?? 'Terjadi kesalahan');
             return response()->json([

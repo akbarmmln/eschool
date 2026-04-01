@@ -116,6 +116,11 @@ class ApiService
 
             return $response;
         } catch (ConnectionException $e) {
+            \Log::error('API TIMEOUT LOGIN', [
+                'message' => $e->getMessage(),
+                'endpoint' => $endpoint ?? null
+            ]);
+
             return new \Illuminate\Http\Client\Response(
                 new \GuzzleHttp\Psr7\Response(
                     504,
@@ -128,6 +133,14 @@ class ApiService
             );
         } catch (\Throwable $e) {
             $body = $e->response->json();
+            \Log::error('API ERROR LOGIN', [
+                'message' => $e->getMessage(),
+                'method' => 'POST',
+                'endpoint' => $endpoint ?? null,
+                'response' => $body,
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
             return new \Illuminate\Http\Client\Response(
                 new \GuzzleHttp\Psr7\Response(
                     500,

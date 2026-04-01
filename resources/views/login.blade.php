@@ -112,7 +112,6 @@
                             password: password
                         }
                     });
-                    
                     if (!result.ok) {
                         showToast(result.message, 'success');
                         return;
