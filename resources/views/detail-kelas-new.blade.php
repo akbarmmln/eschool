@@ -229,8 +229,8 @@
 
             renderSiswa(dataSiswa)
         } catch (e) {
-			const code = e?.code
-			const message = e?.message
+			const code = e?.code;
+			const message = e?.message;
 			if (code === '70008'){
 				textResult.textContent = `Proses gagal dilakukan: ${message}`;
 			} else {
