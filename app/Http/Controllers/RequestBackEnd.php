@@ -576,4 +576,16 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doOrtuAddAccess(Request $request, ApiService $apiService) {
+        $url = "/api/v1/siswa/ortu/add-access";
+        $response = $apiService->doOrtuAddAccess($request->only([
+            'id_siswa',
+            'email',
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

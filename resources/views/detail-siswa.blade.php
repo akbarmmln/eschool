@@ -805,9 +805,25 @@
 
     btnSimpanTambahAkses.addEventListener("click", async function () {
         try {
+			const emailInput = tambahAksesModals.querySelector('.email').value;
+
 			btnSimpanTambahAkses.disabled = true;
             btnSimpanTambahAkses.innerHTML = 'Menyimpan...';
+
+            const result = await fetchJson('/_backend/logic/ortu/add-access', {
+                method: 'POST',
+                body: {
+					id_siswa: id_siswa,
+					email: emailInput
+                }
+            });
+			if (!result.ok) {
+				throw result;
+			} else {
+				showToast('Data akses berhasil dibuat', 'success');
+			}
         } catch(e) {
+			console.log('sadasdasdsad', e)
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
