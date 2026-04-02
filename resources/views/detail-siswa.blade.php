@@ -427,6 +427,21 @@
 			</div>
 		</div>
 
+	<div id="success-alert-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content modal-filled bg-success">
+				<div class="modal-body p-4">
+					<div class="text-center">
+						<i class="dripicons-checkmark h1 text-white"></i>
+						<h5 class="fw-bold text-white text-uppercase text-warning mb-3">BERHASIL</h5>
+						<p id="containt_text" class="mt-3 text-white"></p>
+						<button type="button" id="btnContinueSuccess" class="btn btn-light me-2 my-2" data-bs-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
@@ -840,9 +855,13 @@
             });
 			if (!result.ok) {
 				throw result;
-			} else {
-				showToast('Data akses berhasil dibuat', 'success');
 			}
+
+            const modalElement = document.getElementById("success-alert-modal");
+            const containtText = modalElement.querySelector("#containt_text");
+            containtText.innerHTML = 'Data akses berhasil dibuat'
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         } catch(e) {
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
@@ -871,9 +890,13 @@
             });
 			if (!result.ok) {
 				throw result;
-			} else {
-				showToast('Data akses berhasil dihapus', 'success');
 			}
+
+            const modalElement = document.getElementById("success-alert-modal");
+            const containtText = modalElement.querySelector("#containt_text");
+            containtText.innerHTML = 'Data akses berhasil dihapus'
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
         } catch(e) {
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
@@ -900,10 +923,13 @@
             });
 			if (!result.ok) {
 				throw result;
-			} else {
-				showToast('Data akses berhasil direset', 'success');
-				location.reload();
 			}
+
+            const modalElement = document.getElementById("success-alert-modal");
+            const containtText = modalElement.querySelector("#containt_text");
+            containtText.innerHTML = 'Password akses berhasil direset'
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
 		} catch(e) {
 			showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
 		} finally {
@@ -975,5 +1001,9 @@
 
         toast.show();
     }
+
+    document.getElementById("btnContinueSuccess").addEventListener("click", function () {
+        window.location.reload();
+    });
 </script>
 @endsection
