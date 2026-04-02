@@ -135,7 +135,7 @@
 
                 <div id="pagesuccess" style="display: none;">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div id="filed_input" class="col-md-12">
                                 <!-- Personal Information -->
                                 <div class="card">
                                     <div class="card-header bg-light">
@@ -341,7 +341,7 @@
 
                                 <div class="text-end">
                                     <button type="button" onclick="window.location.href='{{ route('siswa') }}'" class="btn btn-light me-3">Tutup</button>
-                                    <button type="submit" id="btn-simpan" class="btn btn-primary">Simpan</button>
+                                    <button type="submit" id="btn-simpan" class="btn btn-primary btn_simpan">Simpan</button>
                                 </div>
                         </div>
                     </div>
@@ -391,7 +391,9 @@
     let changeImage = false;
     let id_parent = null;
 
-    const unlinkParentModals = document.getElementById('unlink_parent')
+    const filedInput = document.getElementById('filed_input');
+
+    const unlinkParentModals = document.getElementById('unlink_parent');
     const btnUnlinkParent = unlinkParentModals.querySelector('.btn_delete');
 
     const dropdown = document.querySelector('.kelas-dropdown');
@@ -556,28 +558,6 @@
     document.getElementById("btnContinueSuccess").addEventListener("click", function () {
         window.location.reload();
     });
-
-    function validateAddForm() {
-        nikValid = nikInput.value.trim() !== '';
-        namaValid = namaLengkapInput.value.trim() !== '';
-        jkValid = jkInput.value.trim() !== '';
-        tanggalValid = tglLahirInput.value.trim() !== '';
-        alamatValid = alamatInput.value.trim() !== '';
-        noRTValid = noRtInput.value.trim() !== '';
-        noRWValid = noRwInput.value.trim() !== '';
-        kelurahanValid = kelurahanInput.value.trim() !== '';
-        kecamatanValid = kecamatanInput.value.trim() !== '';
-        kelasIdHiddenValid = idKelasInput.value.trim() !== '';
-        namaAyahValid = namaAyahInput.value.trim() !== '';
-        namaIbuValid = namaIbuInput.value.trim() !== '';
-        emailAktifValid = emailAktifInput.value.trim() !== '';
-        ocupAyahValid = ocupAyahInput.value.trim() !== '';
-        ocupIbuValid = ocupIbuInput.value.trim() !== '';
-
-        buttonSimpan.disabled = !(nikValid && namaValid && jkValid && tanggalValid 
-            && alamatValid && noRTValid && noRWValid && kelurahanValid && kecamatanValid
-            && kelasIdHiddenValid && namaAyahValid && namaIbuValid && emailAktifValid && ocupAyahValid && ocupIbuValid);
-    }
     
     document.addEventListener("DOMContentLoaded", async function () {
         try {
@@ -597,7 +577,8 @@
                         firstDay: 1
                     },
                     onSelect({ date, formattedDate, datepicker }) {
-                        validateHandler()
+                        const container = el.closest('#filed_input');
+                        container?._validator?.validate();
                     },
                     buttons: [
                         {
@@ -620,29 +601,28 @@
                 el._dp = dp;
             });
 
-            const validateHandler = () => validateAddForm();
-            [
-                [nikInput, "input", validateHandler],
-                [namaLengkapInput, "input", validateHandler],
-                [jkInput, "change", validateHandler],
-                [alamatInput, "input", validateHandler],
-                [noRtInput, "input", validateHandler],
-                [noRwInput, "input", validateHandler],
-                [kelurahanInput, "input", validateHandler],
-                [kecamatanInput, "input", validateHandler],
-                [idKelasInput, "change", validateHandler],
-                [kelasSearchInput, "input", () => {
-                    idKelasInput.value = '';
-                    validateAddForm();
-                }],
-                [namaAyahInput, "input", validateHandler],
-                [namaIbuInput, "input", validateHandler],
-                [emailAktifInput, "input", validateHandler],
-                [ocupAyahInput, "input", validateHandler],
-                [ocupIbuInput, "input", validateHandler],
-            ].forEach(([el, event, handler]) => {
-                el.addEventListener(event, handler);
+            const validator = initFormValidation(filedInput, {
+                btnSelector: '.btn_simpan',
+                fields: [
+                    '.nik',
+                    '.nama_lengkap',
+                    '.jenis_kelamin',
+                    '.datepickerBuatan',
+                    '.alamat',
+                    '.no_rt',
+                    '.no_rw',
+                    '.kelurahan',
+                    '.kecamatan',
+                    '.kelas-id',
+                    '.kelas-search',
+                    '.nama_ayah',
+                    '.nama_ibu',
+                    '.email_aktif',
+                    '.ocup_ayah',
+                    '.ocup_ibu',
+                ]
             });
+            filedInput._validator = validator;
 
             studentPhotoView.classList.remove("d-none");
             studentPhotoEdit.classList.add("d-none");
@@ -745,6 +725,39 @@
             }
         }, 300)
     })
+
+    function initFormValidation(modal, config) {
+        const btn = modal.querySelector(config.btnSelector);
+
+        const fields = config.fields.map(selector => modal.querySelector(selector));
+
+        const validate = () => {
+            let isValid = fields.every(el => {
+                if (!el) return false;
+                return el.value?.toString().trim() !== "";
+            });
+
+            if (config.customValidate) {
+                isValid = isValid && config.customValidate(fields);
+            }
+
+            btn.disabled = !isValid;
+        };
+
+        if (!modal.dataset.validationAttached) {
+            fields.forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', validate);
+                el.addEventListener('change', validate);
+            });
+
+            modal.dataset.validationAttached = "true";
+        }
+
+        validate();
+
+        return { validate };
+    }
 
     function showToast(message, type = 'success') {
         const toastElement = document.getElementById('globalToast');
