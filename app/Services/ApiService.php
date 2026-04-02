@@ -501,4 +501,9 @@ class ApiService
         $response = $this->request('POST', $url, $payload);
         return $response;
     }
+
+    public function doOrtuUnlink(array $payload, string $url) {
+        $response = $this->request('POST', $url, $payload);
+        return $response;
+    }
 }

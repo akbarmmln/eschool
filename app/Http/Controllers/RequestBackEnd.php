@@ -599,4 +599,15 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doOrtuUnlink(Request $request, ApiService $apiService) {
+        $url = "/api/v1/siswa/ortu/unlink";
+        $response = $apiService->doOrtuUnlink($request->only([
+            'id_siswa'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

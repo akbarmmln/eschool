@@ -299,7 +299,7 @@
                                             <h4 class="text-dark">Informasi Orang Tua</h4>
                                         </div>
                                         <div class="form-check form-switch">
-                                            <a href="#" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash"></i></a>
+                                            <a href="#" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#unlink_parent"><i class="ti ti-trash"></i></a>
                                         </div>
                                     </div>
                                     <div class="card-body pb-1">
@@ -358,11 +358,26 @@
 					<div class="text-center">
 						<i class="dripicons-checkmark h1 text-white"></i>
 						<h5 class="fw-bold text-white text-uppercase text-warning mb-3">BERHASIL</h5>
-						<p class="mt-3 text-white">Perubahan data siswa berhasil dirubah
-						</p>
+						<p id="containt_text" class="mt-3 text-white">Perubahan data siswa berhasil dirubah</p>
 						<button type="button" id="btnContinueSuccess" class="btn btn-light me-2 my-2" data-bs-dismiss="modal">OK</button>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="unlink_parent">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h4>Konfirmasi Penghapusan</h4>
+                    <br>
+					<p id="title_konfirmasi">Anda akan menghapus data orang tua yang terhubung dengan siswa ini. Tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya</p>
+					<div class="d-flex justify-content-center">
+						<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
+						<button type="submit" class="btn btn-danger btn_delete">Ya, Hapus</button>
+					</div>
+				</div>				
 			</div>
 		</div>
 	</div>
@@ -375,6 +390,9 @@
     let debounceTimer = null;
     let changeImage = false;
     let id_parent = null;
+
+    const unlinkParentModals = document.getElementById('unlink_parent')
+    const btnUnlinkParent = unlinkParentModals.querySelector('.btn_delete');
 
     const dropdown = document.querySelector('.kelas-dropdown');
     const buttonSimpan = document.getElementById('btn-simpan')
@@ -411,6 +429,38 @@
     const inputFile = document.querySelector('.image-sign');
     const base64Image = document.getElementById('base64_image');
     
+    btnUnlinkParent.addEventListener('click', async function (e) {
+        try {
+			btnUnlinkParent.disabled = true;
+            btnUnlinkParent.innerHTML = 'Memproses...';
+
+            const result = await fetchJson('/_backend/logic/ortu/unlink', {
+                method: 'POST',
+                body: {
+					id_siswa: id
+                }
+            });
+			if (!result.ok) {
+				throw result;
+			}
+
+            const modalElement = document.getElementById("success-alert-modal");
+            const containtText = modalElement.querySelector("#containt_text");
+            containtText.innerHTML = 'Data orang tua/wali murid berhasil dihapus'
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('unlink_parent')
+            );
+            modal.hide();
+            btnUnlinkParent.disabled = false;
+            btnUnlinkParent.innerHTML = 'Ya, Hapus';
+        }
+    })
+
     document.querySelector(".datepickerBuatan").addEventListener("keydown", function(e){
         e.preventDefault();
     });

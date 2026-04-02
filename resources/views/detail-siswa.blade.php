@@ -373,7 +373,8 @@
 					<div class="modal-content">
 						<div class="modal-body text-center">
 							<h4>Konfirmasi Penghapusan</h4>
-							<p id="title_konfirmasi">Anda akan menghapus akses login terhadap user ini, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya..</p>
+							<br>
+							<p id="title_konfirmasi">Anda akan menghapus akses login terhadap user ini. Tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya</p>
 							<div class="d-flex justify-content-center">
 								<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
 								<button type="submit" class="btn btn-danger btn_delete">Ya, Hapus</button>
@@ -388,6 +389,7 @@
 					<div class="modal-content">
 						<div class="modal-body text-center">
 							<h4>Konfirmasi Pemulihan Kata Sandi</h4>
+							<br>
 							<p id="title_konfirmasi">Password baru akan di kirimkan ke email terdaftar. Harap pastikan email dapat diakses</p>
 							<div class="d-flex justify-content-center">
 								<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
