@@ -291,12 +291,15 @@
 
                                 <!-- Parents & Guardian Information -->
                                 <div class="card">
-                                    <div class="card-header bg-light">
+                                    <div class="card-header bg-light d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center">
                                             <span class="bg-white avatar avatar-sm me-2 text-gray-7 flex-shrink-0">
                                                 <i class="ti ti-user-shield fs-16"></i>
                                             </span>
                                             <h4 class="text-dark">Informasi Orang Tua</h4>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <a href="#" class="btn btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash"></i></a>
                                         </div>
                                     </div>
                                     <div class="card-body pb-1">
@@ -493,7 +496,6 @@
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
         } catch(e) {
-            console.log('sadasasd', e)
             showToast('Perubahan data siswa gagal dirubah', 'success')
         } finally {
             buttonSimpan.disabled = false;

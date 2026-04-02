@@ -588,4 +588,15 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doOrtuResetAccess(Request $request, ApiService $apiService) {
+        $url = "/api/v1/siswa/ortu/reset-access";
+        $response = $apiService->doOrtuResetAccess($request->only([
+            'id_access'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

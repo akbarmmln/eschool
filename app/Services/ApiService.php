@@ -496,4 +496,9 @@ class ApiService
         $response = $this->request('POST', $url, $payload);
         return $response;
     }
+
+    public function doOrtuResetAccess(array $payload, string $url) {
+        $response = $this->request('POST', $url, $payload);
+        return $response;
+    }
 }

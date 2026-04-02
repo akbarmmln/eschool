@@ -383,6 +383,21 @@
 				</div>
 		</div>
 
+		<div class="modal fade" id="reset_password">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body text-center">
+							<h4>Konfirmasi Pemulihan Kata Sandi</h4>
+							<p id="title_konfirmasi">Password baru akan di kirimkan ke email terdaftar. Harap pastikan email dapat diakses</p>
+							<div class="d-flex justify-content-center">
+								<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
+								<button type="submit" class="btn btn-primary btn_lanjut_reset">Lanjutkan</button>
+							</div>
+						</div>				
+					</div>
+				</div>
+		</div>
+
 		<div class="modal fade" id="tambah_akses">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
@@ -437,6 +452,9 @@
 	const hapusAksesModals = document.getElementById('hapus_akses')
 	const btnSimpanHapusAkses = hapusAksesModals.querySelector('.btn_delete')
 	
+	const resetPasswordModals = document.getElementById('reset_password')
+	const btnLanjutReset = resetPasswordModals.querySelector('.btn_lanjut_reset')
+
 	const tambahAksesModals = document.getElementById('tambah_akses')
 	const btnSimpanTambahAkses = tambahAksesModals.querySelector('.btn_simpan')
 
@@ -590,8 +608,9 @@
 			id_access = result['data']['id_parent']
 			email_access = result['data']['email']
 			id_siswa = result['data']['id']
+			status_login = result['data']['status_login']
 
-			if (result?.data?.email) {
+			if (status_login) {
 				btnHapusAkses.classList.remove("d-none");
 				btnTambahAkses.classList.add("d-none");
 				btnResetPassword.classList.remove("d-none");
@@ -823,7 +842,6 @@
 				showToast('Data akses berhasil dibuat', 'success');
 			}
         } catch(e) {
-			console.log('sadasdasdsad', e)
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
@@ -832,6 +850,7 @@
             modal.hide();
             btnSimpanTambahAkses.disabled = false;
             btnSimpanTambahAkses.innerHTML = 'Simpan Perubahan';
+			location.reload();
         }
     })
 
@@ -854,7 +873,6 @@
 				showToast('Data akses berhasil dihapus', 'success');
 			}
         } catch(e) {
-			console.log('asdasdasd', e)
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
@@ -863,7 +881,37 @@
             modal.hide();
             btnSimpanHapusAkses.disabled = false;
             btnSimpanHapusAkses.innerHTML = 'Ya, Hapus';
+			location.reload();
         }
+	})
+
+	btnLanjutReset.addEventListener("click", async function () {
+		try {
+			btnLanjutReset.disabled = true;
+            btnLanjutReset.innerHTML = 'Memproses...';
+
+            const result = await fetchJson('/_backend/logic/ortu/reset-access', {
+                method: 'POST',
+                body: {
+                    id_access: id_access
+                }
+            });
+			if (!result.ok) {
+				throw result;
+			} else {
+				showToast('Data akses berhasil direset', 'success');
+				location.reload();
+			}
+		} catch(e) {
+			showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+		} finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('reset_password')
+            );
+            modal.hide();
+            btnLanjutReset.disabled = false;
+            btnLanjutReset.innerHTML = 'Lanjutkan';
+		}
 	})
 
     function initFormValidation(modal, config) {
