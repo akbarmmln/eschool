@@ -108,7 +108,7 @@
         };
 
         btnDel.disabled = true;
-        btnDel.innerHTML = 'Deleting...';
+        btnDel.innerHTML = 'Memproses...';
 
         fetch('/_backend/logic/data-silabus-delete', {
             method: 'POST',

@@ -393,7 +393,7 @@
         };
 
         btnDel.disabled = true;
-        btnDel.innerHTML = 'Deleting...';
+        btnDel.innerHTML = 'Memproses...';
 
         try {
             const result = await fetchJson('/_backend/logic/data-kelas-delete', {

@@ -90,6 +90,7 @@ Route::post('/_backend/logic/data-siswa-create', [RequestBackEnd::class, 'doCrea
 Route::post('/_backend/logic/data-siswa-update', [RequestBackEnd::class, 'doUpdateSiswa']);
 Route::post('/_backend/logic/detail-siswa', [RequestBackEnd::class, 'doDetailSiswa']);
 Route::post('/_backend/logic/kehadiran-siswa', [RequestBackEnd::class, 'doKehadiranSiswa']);
+Route::post('/_backend/logic/ortu/remove-access', [RequestBackEnd::class, 'doOrtuRemoveAccess']);
 
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);

@@ -352,6 +352,10 @@
 												</div>
 											</div>
 										</div>
+
+										<a href="#" id="btn_hapus_akses" class="d-none btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#hapus_akses"><i class="ti ti-edit me-2"></i>Hapus Akses</a>
+										<a href="#" id="btn_tambah_akses" class="d-none btn btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#tambah_akses" style="background-color:#FFC107;"><i class="ti ti-edit me-2"></i>Tambah Akses</a>
+										<a href="#" id="btn_reset_password" class="d-none btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reset_password"><i class="ti ti-edit me-2"></i>Reset Password</a>
 									</div>
 								</div>
                             </div>
@@ -364,9 +368,52 @@
 </div>
 <!-- /Page Wrapper -->
 
+		<div class="modal fade" id="hapus_akses">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-body text-center">
+							<h4>Konfirmasi Penghapusan</h4>
+							<p id="title_konfirmasi">Anda akan menghapus akses login terhadap user ini, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya..</p>
+							<div class="d-flex justify-content-center">
+								<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
+								<button type="submit" class="btn btn-danger btn_delete">Ya, Hapus</button>
+							</div>
+						</div>				
+					</div>
+				</div>
+		</div>
+
+		<div class="modal fade" id="tambah_akses">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Pemberian Akses Login</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3">
+									<label class="form-label">Email Baru</label>
+									<input type="text" class="form-control email" name="email" placeholder="Masukkan email baru">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2 btn_tutup" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
+	let id_access = null, email_access = null, id_siswa = null;
     const id = @json($id);
 	const pageInit = document.getElementById("pageinit");
 	const pageNotFound = document.getElementById("pagenotfound");
@@ -382,6 +429,17 @@
 	const ocupIbu = document.getElementById("ocup_ibu");
 	const ortuEmail1 = document.getElementById("ortu_email1");
 	const ortuEmail2 = document.getElementById("ortu_email2");
+
+	const btnHapusAkses = document.getElementById('btn_hapus_akses')
+	const btnTambahAkses = document.getElementById('btn_tambah_akses')
+	const btnResetPassword = document.getElementById('btn_reset_password')
+
+	const hapusAksesModals = document.getElementById('hapus_akses')
+	const btnSimpanHapusAkses = hapusAksesModals.querySelector('.btn_delete')
+	
+	const tambahAksesModals = document.getElementById('tambah_akses')
+	const btnSimpanTambahAkses = tambahAksesModals.querySelector('.btn_simpan')
+
 	const today = new Date();
     const options = { 
         day: '2-digit', 
@@ -512,6 +570,7 @@
 			if(result.data.image){
 				document.getElementById("student-photo").src = result.data.image;
 			}
+
             setData('nama', result['data']['nama_siswa']);
             setData('nik', result['data']['nik']);
             setData('jenis_kelamin', result['data']['jenis_kelamin'] == 'L' ? 'Laki-Laki' : 'Perempuan');
@@ -528,6 +587,19 @@
 			ocupIbu.innerHTML = result?.data?.pekerjaan_ibu
 			ortuEmail1.innerHTML = result?.data?.email
 			ortuEmail2.innerHTML = result?.data?.email
+			id_access = result['data']['id_parent']
+			email_access = result['data']['email']
+			id_siswa = result['data']['id']
+
+			if (result?.data?.email) {
+				btnHapusAkses.classList.remove("d-none");
+				btnTambahAkses.classList.add("d-none");
+				btnResetPassword.classList.remove("d-none");
+			} else {
+				btnHapusAkses.classList.add("d-none");
+				btnTambahAkses.classList.remove("d-none");
+				btnResetPassword.classList.add("d-none");
+			}
 		} catch (e) {
             const code = e?.code
 			const message = e?.message
@@ -718,6 +790,124 @@
         let el = document.getElementById(field);
         el.classList.remove("d-none");
         el.innerText = value ?? "-";
+    }
+
+    tambahAksesModals.addEventListener('hidden.bs.modal', function () {})
+    tambahAksesModals.addEventListener('show.bs.modal', function () {
+        const validator = initFormValidation(tambahAksesModals, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.email'
+            ]
+        });
+        tambahAksesModals._validator = validator;
+    });
+
+    btnSimpanTambahAkses.addEventListener("click", async function () {
+        try {
+			btnSimpanTambahAkses.disabled = true;
+            btnSimpanTambahAkses.innerHTML = 'Menyimpan...';
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('tambah_akses')
+            );
+            modal.hide();
+            btnSimpanTambahAkses.disabled = false;
+            btnSimpanTambahAkses.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+	btnSimpanHapusAkses.addEventListener("click", async function () {
+        try {
+			btnSimpanHapusAkses.disabled = true;
+            btnSimpanHapusAkses.innerHTML = 'Memproses...';
+
+            const result = await fetchJson('/_backend/logic/ortu/remove-access', {
+                method: 'POST',
+                body: {
+					id_siswa: id_siswa,
+                    id_access: id_access,
+					email: email_access
+                }
+            });
+			if (!result.ok) {
+				throw result;
+			} else {
+				showToast('Data akses berhasil dihapus', 'success');
+			}
+        } catch(e) {
+			console.log('asdasdasd', e)
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('hapus_akses')
+            );
+            modal.hide();
+            btnSimpanHapusAkses.disabled = false;
+            btnSimpanHapusAkses.innerHTML = 'Ya, Hapus';
+        }
+	})
+
+    function initFormValidation(modal, config) {
+        const btn = modal.querySelector(config.btnSelector);
+
+        const fields = config.fields.map(selector => modal.querySelector(selector));
+
+        const validate = () => {
+            let isValid = fields.every(el => {
+                if (!el) return false;
+                return el.value?.toString().trim() !== "";
+            });
+
+            if (config.customValidate) {
+                isValid = isValid && config.customValidate(fields);
+            }
+
+            btn.disabled = !isValid;
+        };
+
+        if (!modal.dataset.validationAttached) {
+            fields.forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', validate);
+                el.addEventListener('change', validate);
+            });
+
+            modal.dataset.validationAttached = "true";
+        }
+
+        validate();
+
+        return { validate };
+    }
+
+    function showToast(message, type = 'success') {
+        const toastElement = document.getElementById('globalToast');
+        const toastBody = document.getElementById('globalToastBody');
+
+        // reset class
+        toastElement.className = 'toast align-items-center border-0';
+
+        // set warna berdasarkan type
+        if (type === 'success') {
+            toastElement.classList.add('text-bg-primary');
+        } else if (type === 'error') {
+            toastElement.classList.add('text-bg-danger');
+        } else if (type === 'warning') {
+            toastElement.classList.add('text-bg-warning');
+        } else {
+            toastElement.classList.add('text-bg-success');
+        }
+
+        toastBody.innerHTML = message;
+
+        const toast = new bootstrap.Toast(toastElement, {
+            delay: 1500
+        });
+
+        toast.show();
     }
 </script>
 @endsection

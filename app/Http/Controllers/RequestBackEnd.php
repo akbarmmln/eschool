@@ -563,4 +563,17 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doOrtuRemoveAccess(Request $request, ApiService $apiService) {
+        $url = "/api/v1/siswa/ortu/remove-access";
+        $response = $apiService->doOrtuRemoveAccess($request->only([
+            'id_siswa',
+            'id_access',
+            'email'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

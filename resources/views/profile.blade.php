@@ -558,7 +558,7 @@
                 await loadProfileGroup01();
             }
         } catch(e) {
-            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById('edit_personal_information_admin_guru')

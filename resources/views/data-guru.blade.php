@@ -251,7 +251,7 @@
         };
 
         btnDel.disabled = true;
-        btnDel.innerHTML = 'Deleting...';
+        btnDel.innerHTML = 'Memproses...';
 
         try {
             const result = await fetchJson('/_backend/logic/data-guru-delete', {
@@ -260,15 +260,14 @@
                     id: selectedId
                 }
             });
-            const statusCode = result.statusCode;
-            if (!statusCode || statusCode != 200) {
-                showAlert('Terjadi kegagalan hapus data', 'success');
+            if (!result.ok) {
+                throw result;
             } else {
                 showAlert('Data berhasil dihapus', 'success');
                 loadData(1);
             }
         } catch (e) {
-            showAlert('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+            showAlert('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById('delete-modal')
