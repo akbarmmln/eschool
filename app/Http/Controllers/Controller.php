@@ -126,7 +126,7 @@ class Controller
         request()->session()->regenerateToken();
 
         if($status == 'jwt-expr') {
-            return redirect('/akademik/login')->with('error', 'Token Anda sudah kadaluarsa. Silakan login kembali.');
+            return redirect('/akademik/login')->with('error', 'Demi keamanan, Anda baru saja ter-logout otomatis. Login kembali untuk melanjutkan');
         } else {
             return redirect('/akademik/login')->with('success', 'Logout berhasil.');
         }
