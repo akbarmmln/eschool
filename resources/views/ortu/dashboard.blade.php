@@ -62,7 +62,7 @@
 		</div>
 		<!-- /Page Header -->
 
-		<div class="row">
+		<div class="row mb-4">
 			<!-- Profile -->
 			<div class="col-xxl-12 col-xl-12 d-flex">
 				<div class="card bg-dark position-relative flex-fill">
@@ -99,8 +99,21 @@
 			</div>
 			<!-- /Profile -->
 
-			<div class="col-xxl-6 col-xl-12 d-flex">
+			<div class="col-xxl-7 col-xl-12 d-flex">
 				<div class="row flex-fill" id="list_anak"></div>
+			</div>
+		</div>
+
+		<div class="row mb-4">
+			<div class="col-xxl-12 col-xl-12 d-flex">
+				<div class="card flex-fill">
+					<div id="loadingSpinner" class="text-center my-3" style="display: none;">
+						<button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
+							<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+								Memuat data...
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -113,6 +126,7 @@
 	const shimmerProfile = document.getElementById('shimmer_profile');
 	const detailProfile = document.getElementById('detail_profile');
 
+	const loadingSpinner = document.getElementById('loadingSpinner');
 	const id_account = document.getElementById('id_account');
 	const nama = document.getElementById('nama');
 	const since = document.getElementById('since');
@@ -164,7 +178,6 @@
 	})
 
 	function renderDataAnak(child) {
-		console.log('sadasdasdasd', child)
 		const container = document.getElementById("list_anak");
 		container.innerHTML = child.map((item, index) => `
 				<div class="col-xl-4 col-md-6 d-flex">
@@ -181,17 +194,21 @@
 	}
 
 	function hitungUsiaDetail(tanggalLahir) {
-		const today = new Date();
-		const birthDate = new Date(tanggalLahir);
-		let tahun = today.getFullYear() - birthDate.getFullYear();
-		let bulan = today.getMonth() - (birthDate.getMonth() + 1);		
+		if (!isEmpty(tanggalLahir)) {
+			const today = new Date();
+			const birthDate = new Date(tanggalLahir);
+			let tahun = today.getFullYear() - birthDate.getFullYear();
+			let bulan = today.getMonth() - (birthDate.getMonth() + 1);		
 
-		if (bulan < 0) {
-			tahun--;
-			bulan += 12;
+			if (bulan < 0) {
+				tahun--;
+				bulan += 12;
+			}
+
+			return `${tahun} tahun ${bulan} bulan`;
+		} else {
+			return `- tahun`;
 		}
-
-		return `${tahun} tahun ${bulan} bulan`;
 	}
 
 	document.addEventListener("click", async function(e) {
@@ -212,6 +229,7 @@
 	    const id = card.dataset.id;
 
 		try {
+			loadingSpinner.style.display = "block"
 			await renderDetailsCard(id);
 		} catch (e) {
 			console.log("error", e);
@@ -219,12 +237,18 @@
 			document.querySelectorAll(".student-card").forEach(el => {
 				el.classList.remove("disabled");
 			});
+			loadingSpinner.style.display = "none"
 			isLoadingCard = false;
 		}
 	});
 
 	async function renderDetailsCard(id_siswa) {
-
+		await new Promise(resolve => {
+			setTimeout(() => {
+				console.log("Done fetch:", id_siswa);
+				resolve();
+			}, 1500);
+		});
 	}
 
 	function formatAnak(child) {
