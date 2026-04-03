@@ -211,7 +211,7 @@
 <!-- /Page Wrapper -->
  
 		<!-- Edit Profile -->
-		<div class="modal fade" id="edit_personal_information_admin_guru">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_personal_information_admin_guru">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -265,7 +265,7 @@
 		<!-- /Edit Profile -->
 
 		<!-- Edit Profile -->
-		<div class="modal fade" id="edit_address_information_admin_guru">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_address_information_admin_guru">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -318,7 +318,7 @@
 		<!-- /Edit Profile -->
 
 		<!-- Change Password -->
-		<div class="modal fade" id="edit_password">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_password">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">

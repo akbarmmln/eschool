@@ -115,7 +115,7 @@
 							</form>
 						</div>
 
-                        <div class="modal fade" id="modalKepsek" tabindex="-1">
+                        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalKepsek" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">

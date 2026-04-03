@@ -241,7 +241,7 @@
 </div>
 <!-- /Page Wrapper -->
 
-								<div class="modal fade" id="modalInputNilai" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
+								<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalInputNilai" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
 									<div class="modal-dialog modal-fullscreen">
 										<div class="modal-content">
 											<div class="modal-header">
@@ -303,7 +303,7 @@
 									</div>
 								</div>
 
-<div class="modal fade" id="modalFile" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalFile" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
 			<div class="modal-header">

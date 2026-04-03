@@ -368,7 +368,7 @@
 </div>
 <!-- /Page Wrapper -->
 
-		<div class="modal fade" id="hapus_akses">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="hapus_akses">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content">
 						<div class="modal-body text-center">
@@ -384,7 +384,7 @@
 				</div>
 		</div>
 
-		<div class="modal fade" id="reset_password">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="reset_password">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content">
 						<div class="modal-body text-center">
@@ -400,7 +400,7 @@
 				</div>
 		</div>
 
-		<div class="modal fade" id="tambah_akses">
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="tambah_akses">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -863,7 +863,9 @@
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
         } catch(e) {
-            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+			const code = e?.code;
+			const message = e?.message;
+            showToast(`Proses gagal dilakukan: ${message}`, 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById('tambah_akses')
@@ -871,7 +873,6 @@
             modal.hide();
             btnSimpanTambahAkses.disabled = false;
             btnSimpanTambahAkses.innerHTML = 'Simpan Perubahan';
-			location.reload();
         }
     })
 
@@ -898,7 +899,9 @@
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
         } catch(e) {
-            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+			const code = e?.code;
+			const message = e?.message;
+            showToast(`Proses gagal dilakukan: ${message}`, 'error');
         } finally {
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById('hapus_akses')
@@ -906,7 +909,6 @@
             modal.hide();
             btnSimpanHapusAkses.disabled = false;
             btnSimpanHapusAkses.innerHTML = 'Ya, Hapus';
-			location.reload();
         }
 	})
 
@@ -931,7 +933,9 @@
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
 		} catch(e) {
-			showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error');
+			const code = e?.code;
+			const message = e?.message;
+            showToast(`Proses gagal dilakukan: ${message}`, 'error');
 		} finally {
             const modal = bootstrap.Modal.getInstance(
                 document.getElementById('reset_password')

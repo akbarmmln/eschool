@@ -66,7 +66,7 @@
 <!-- /Page Wrapper -->
 
 <!-- Delete Modal -->
-	<div class="modal fade" id="delete-modal">
+	<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="delete-modal">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body text-center">

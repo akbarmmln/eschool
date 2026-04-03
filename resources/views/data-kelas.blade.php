@@ -83,7 +83,7 @@
 <!-- /Page Wrapper -->
 
 <!-- Edit Class Room -->
-<div class="modal fade" id="edit_class_room">
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_class_room">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -138,7 +138,7 @@
 <!-- /Edit Class Room -->
 
 <!-- Add Class Room -->
-    <div class="modal fade" id="add_class_room">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="add_class_room">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -188,7 +188,7 @@
 <!-- /Add Class Room -->
 
 <!-- Delete Modal -->
-	<div class="modal fade" id="delete-modal">
+	<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="delete-modal">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body text-center">

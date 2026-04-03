@@ -366,7 +366,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="unlink_parent">
+	<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="unlink_parent">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body text-center">

@@ -228,7 +228,7 @@
 		</div>
 	</div>
     
-    <div class="modal fade" id="add_jurnal">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="add_jurnal">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -288,7 +288,7 @@
 		</div>
 	</div>
 
-    <div class="modal fade" id="cari_jurnal">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="cari_jurnal">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 				<div class="modal-header">
