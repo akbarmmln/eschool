@@ -107,12 +107,38 @@
 		<div class="row mb-4">
 			<div class="col-xxl-12 col-xl-12 d-flex">
 				<div class="card flex-fill">
+					<div id="page_selected" class="d-none row">
+						<div class="col-md-6">
+							<div class="d-flex align-items-center p-3 mb-3">
+								<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+									<i class="ti ti-id-badge-2"></i>
+								</div>
+								<div>
+									<h6 class="mb-1 fw-bold">ID Siswa</h6>
+									<p class="mb-0 id_siswa">-</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class=" d-flex align-items-center p-3 mb-3">
+								<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
+									<i class="ti ti-school"></i>
+								</div>
+								<div>
+									<h6 class="mb-1 fw-bold">Nama Siswa</h6>
+									<p class="mb-0 nama_siswa">-</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div id="loadingSpinner" class="text-center my-3" style="display: none;">
 						<button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
 							<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
 								Memuat data...
 						</button>
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -123,8 +149,13 @@
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
+	let selectedID = null, selectedNama = null;
 	const shimmerProfile = document.getElementById('shimmer_profile');
 	const detailProfile = document.getElementById('detail_profile');
+
+	const pageSelected = document.getElementById('page_selected');
+	const idSiswaContent = pageSelected.querySelector(".id_siswa");
+	const namaSiswaContent =  pageSelected.querySelector(".nama_siswa");
 
 	const loadingSpinner = document.getElementById('loadingSpinner');
 	const id_account = document.getElementById('id_account');
@@ -182,7 +213,7 @@
 		container.innerHTML = child.map((item, index) => `
 				<div class="col-xl-4 col-md-6 d-flex">
 					<div class="card student-card bg-primary-transparent border-3 
-						border-white text-center p-3 w-100 h-100" data-id="${item.id}">
+						border-white text-center p-3 w-100 h-100" data-id="${item.id}" data-nama="${item.nama}">
 						<h6 class="mb-2">${toTitleCase(item.nama)}</h6>
 						<div class="mt-auto d-flex align-items-center justify-content-between text-default">
 							<p class="border-end mb-0 pe-2">${item.nama_kelas ?? '-'}</p>
@@ -226,11 +257,15 @@
 		});
 
 		card.classList.add("active");
-	    const id = card.dataset.id;
+		selectedID = card.dataset.id;
+		selectedNama = card.dataset.nama;
 
 		try {
+			pageSelected.classList.add("d-none");
 			loadingSpinner.style.display = "block"
-			await renderDetailsCard(id);
+			await renderDetailsCard(selectedID);
+			idSiswaContent.textContent = selectedID
+			namaSiswaContent.textContent = selectedNama
 		} catch (e) {
 			console.log("error", e);
 		} finally {
@@ -238,6 +273,7 @@
 				el.classList.remove("disabled");
 			});
 			loadingSpinner.style.display = "none"
+			pageSelected.classList.remove("d-none");
 			isLoadingCard = false;
 		}
 	});
@@ -247,7 +283,7 @@
 			setTimeout(() => {
 				console.log("Done fetch:", id_siswa);
 				resolve();
-			}, 1500);
+			}, 1000);
 		});
 	}
 

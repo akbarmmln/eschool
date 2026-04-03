@@ -236,7 +236,7 @@
 							<div class="mb-3">
                                 <label class="form-label">Hari / Tanggal Mengajar</label>
                                 <div class="date-pic">
-                                    <input type="text" id="tanggal" class="form-control datepickerBuatan" data-validate="add" placeholder="">
+                                    <input type="text" autocomplete="off" id="tanggal" class="form-control datepickerBuatan" data-validate="add" placeholder="">
 									<span class="cal-icon"><i class="ti ti-calendar"></i></span>
 								</div>
 							</div>
