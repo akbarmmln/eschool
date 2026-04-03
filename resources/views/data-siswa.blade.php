@@ -124,6 +124,9 @@
 
         title_konfirmasi.innerHTML = `Anda akan menghapus <b>${selectedNama}</b>, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya.`;
     });
+    btnDel.addEventListener('click', function (event) {
+        console.log('sadsadsad')
+    })
 
     document.addEventListener("DOMContentLoaded", async function () {
         await loadData(1);

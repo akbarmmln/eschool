@@ -412,6 +412,16 @@ class RequestBackEnd
         );
     }
 
+    public function doMyProfileD2(Request $request, ApiService $apiService) {
+        $url = "/api/v1/profile/d2";
+
+        $response = $apiService->doMyProfileD2($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
     public function doMyDs1ProfileUpdate(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/ds1/update-personal";
 

@@ -53,6 +53,7 @@ Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('for
 
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
 Route::post('/_backend/profile', [RequestBackEnd::class, 'doMyProfile']);
+Route::post('/_backend/profile/d2', [RequestBackEnd::class, 'doMyProfileD2']);
 Route::post('/_backend/profile/ds1-update', [RequestBackEnd::class, 'doMyDs1ProfileUpdate']);
 Route::post('/_backend/logic/settings', [RequestBackEnd::class, 'doGetSettings']);
 Route::post('/_backend/profile/change-password', [RequestBackEnd::class, 'doChangePassword']);

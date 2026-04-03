@@ -423,6 +423,11 @@ class ApiService
         return $response;
     }
 
+    public function doMyProfileD2(string $url) {
+        $response = $this->request('GET', $url);
+        return $response;
+    }
+
     public function doMyDs1ProfileUpdate(array $payload, string $url) {
         $response = $this->request('POST', $url, $payload);
         return $response;
