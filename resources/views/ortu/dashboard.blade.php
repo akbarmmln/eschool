@@ -164,22 +164,34 @@
 	})
 
 	function renderDataAnak(child) {
+		console.log('sadasdasdasd', child)
 		const container = document.getElementById("list_anak");
 		container.innerHTML = child.map((item, index) => `
 				<div class="col-xl-4 col-md-6 d-flex">
 					<div class="card student-card bg-primary-transparent border-3 
 						border-white text-center p-3 w-100 h-100" data-id="${item.id}">
-						<span class="avatar avatar-sm rounded bg-primary mx-auto mb-3">
-							<i class="ti ti-hexagonal-prism-plus fs-15"></i>
-						</span>
 						<h6 class="mb-2">${toTitleCase(item.nama)}</h6>
 						<div class="mt-auto d-flex align-items-center justify-content-between text-default">
 							<p class="border-end mb-0 pe-2">${item.nama_kelas ?? '-'}</p>
-							<p class="mb-0 ps-2">${item?.usia ?? '-'} tahun</p>
+							<p class="mb-0 ps-2">${hitungUsiaDetail(item.tanggal_lahir)}</p>
 						</div>
 					</div>
 				</div>
 			`).join("");
+	}
+
+	function hitungUsiaDetail(tanggalLahir) {
+		const today = new Date();
+		const birthDate = new Date(tanggalLahir);
+		let tahun = today.getFullYear() - birthDate.getFullYear();
+		let bulan = today.getMonth() - (birthDate.getMonth() + 1);		
+
+		if (bulan < 0) {
+			tahun--;
+			bulan += 12;
+		}
+
+		return `${tahun} tahun ${bulan} bulan`;
 	}
 
 	document.addEventListener("click", async function(e) {
