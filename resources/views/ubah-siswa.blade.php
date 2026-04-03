@@ -531,7 +531,7 @@
             ocup_ayah: ocupAyahInput.value,
             ocup_ibu: ocupIbuInput.value,
         }
-
+        
         buttonSimpan.disabled = true;
         buttonSimpan.innerHTML = 'Menyimpan...';
 
