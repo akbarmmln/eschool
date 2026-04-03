@@ -31,6 +31,10 @@
     height: 100%;
     width: 100%;
 }
+
+.text-justify {
+    text-align: justify;
+}
 </style>
 
 <!-- Page Wrapper -->
@@ -414,8 +418,9 @@
 							<div class="col-md-12">
 								<div class="mb-3">
 									<label class="form-label">Email Baru</label>
-									<input type="text" class="form-control email" name="email" placeholder="Masukkan email baru">
+									<input type="text" readonly class="form-control email" name="email" placeholder="Masukkan email baru">
 								</div>
+								<label class="form-label text-warning small text-justify">*dengan menyetujui dan melanjutkan proses ini, email yang terdaftar akan diberikan akses untuk menggunakan fitur pada website ini.</label>
 							</div>
 						</div>
 					</div>
@@ -609,19 +614,19 @@
             setData('nama', result['data']['nama_siswa']);
             setData('nik', result['data']['nik']);
             setData('jenis_kelamin', result['data']['jenis_kelamin'] == 'L' ? 'Laki-Laki' : 'Perempuan');
-            setData('tgl_lahir', result['data']['tanggal_lahir'] ? moment(result['data']['tanggal_lahir']).format('DD / MM / YYYY') : '-');
+            setData('tgl_lahir', result['data']['tanggal_lahir'] ? moment(result['data']['tanggal_lahir']).format('DD / MM / YYYY') : '- / - / -');
             setData('alamat', result['data']['alamat']);
-            setData('rt_rw', `${result['data']['rt']} / ${result['data']['rw']}`);
+            setData('rt_rw', `${result['data']['rt'] ?? "-"} / ${result['data']['rw'] ?? "-"}`);
             setData('kelurahan', result['data']['kelurahan']);
             setData('kecamatan', result['data']['kecamatan']);
             setData('kelas', result['data']['nama_kelas']);
             setData('wali_kelas', result['data']['nama_guru']);
-			ortuAyah.innerHTML = result?.data?.nama_ayah
-			ortuIbu.innerHTML = result?.data?.nama_ibu
-			ocupAyah.innerHTML = result?.data?.pekerjaan_ayah
-			ocupIbu.innerHTML = result?.data?.pekerjaan_ibu
-			ortuEmail1.innerHTML = result?.data?.email
-			ortuEmail2.innerHTML = result?.data?.email
+			ortuAyah.innerHTML = result?.data?.nama_ayah ?? "-"
+			ortuIbu.innerHTML = result?.data?.nama_ibu ?? "-"
+			ocupAyah.innerHTML = result?.data?.pekerjaan_ayah ?? "-"
+			ocupIbu.innerHTML = result?.data?.pekerjaan_ibu ?? "-"
+			ortuEmail1.innerHTML = result?.data?.email ?? "-"
+			ortuEmail2.innerHTML = result?.data?.email ?? "-"
 			id_access = result['data']['id_parent']
 			email_access = result['data']['email']
 			id_siswa = result['data']['id']
@@ -830,6 +835,8 @@
 
     tambahAksesModals.addEventListener('hidden.bs.modal', function () {})
     tambahAksesModals.addEventListener('show.bs.modal', function () {
+		const emailInput = tambahAksesModals.querySelector('.email')
+		emailInput.value = email_access
         const validator = initFormValidation(tambahAksesModals, {
             btnSelector: '.btn_simpan',
             fields: [
