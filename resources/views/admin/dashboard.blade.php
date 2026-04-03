@@ -126,19 +126,6 @@
         </div>
         <!-- /Greeting Section -->
 
-        <div class="row d-none">
-            <div class="card">
-                <div class="card-body">
-                    <div id="loadingSpinner" class="text-center my-3" style="display: block;">
-                        <button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
-                            <span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
-                                Memuat data...
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <!-- <div class="d-flex align-items-center flex-wrap justify-content-end">
                 <div class="input-icon-start mb-3 me-2 position-relative d-flex align-items-center gap-2">
@@ -185,6 +172,12 @@
                         <i class="ti ti-search me-2"></i>Cari Jurnal
                     </a>
                 </div>
+            </div>
+            <div class="card-body">
+				<nav aria-label="Page navigation" class="pagination-style-2">
+					<ul class="pagination justify-content-end mb-0" id="paginationContainer">
+					</ul>
+				</nav>
             </div>
             <div id="jurnal_history_not_found_page" class="container mt-1" style="display:none">
                 <div class="overflow-hidden d-flex justify-content-center align-items-center flex-column" style="min-height:300px;">
@@ -664,6 +657,8 @@
         loading_page.style.display = "block";
         jurnal_history_found_page.style.display = "none";
         jurnal_history_not_found_page.style.display = "none";
+        const pagination = document.getElementById("paginationContainer");
+        pagination.classList.add("loading");
 
         if (!isEmpty(tglDari) && !isEmpty(tglSampai)) {
             textResult.innerHTML = `Tidak ditemukan jurnal dari tanggal ${tglDari} sampai ${tglSampai}`;
@@ -686,18 +681,24 @@
                 jurnal_history_not_found_page.style.display = "block";
             } else {
                 const rows = result.data.rows
+                const currentPage = result.data.currentPage
+                const totalPage = result.data.totalPage
                 renderJurnalHtml(rows);
+                if (rows.length > 0) {
+                    renderPagination(currentPage, totalPage);
+                }
             }
         } catch(e) {
             jurnal_history_found_page.style.display = "none";
             jurnal_history_not_found_page.style.display = "block";
         } finally {
             loading_page.style.display = "none";
+            pagination.classList.remove("loading");
             isLoading = false;
         }
     }
 
-    function renderJurnalHtml(data) {
+    function renderJurnalHtml(data, currentPage, totalPage) {
         const container = document.querySelector("#jurnal_history_found_page .row");
         if (data.length == 0) {
             jurnal_history_found_page.style.display = "none";
@@ -988,6 +989,88 @@
         validate();
 
         return { validate };
+    }
+
+    function renderPagination(currentPage, totalPage) {
+        const pagination = document.getElementById("paginationContainer");
+        pagination.innerHTML = "";
+
+        const maxVisible = 1; // jumlah page sekitar current
+        const createPageItem = (page, label = null, active = false, disabled = false) => {
+            return `
+                <li class="page-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${page}">
+                        ${label ?? page}
+                    </a>
+                </li>
+            `;
+        };
+
+        // ===== PREVIOUS =====
+        pagination.innerHTML += createPageItem(
+            currentPage - 1,
+            "Previous",
+            false,
+            currentPage === 1
+        );
+
+        // ===== PAGE 1 selalu tampil =====
+        pagination.innerHTML += createPageItem(1, null, currentPage === 1);
+
+        let start = Math.max(2, currentPage - maxVisible);
+        let end = Math.min(totalPage - 1, currentPage + maxVisible);
+
+        // ===== Ellipsis kiri =====
+        if (start > 2) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+
+        // ===== Page tengah =====
+        for (let i = start; i <= end; i++) {
+            pagination.innerHTML += createPageItem(i, null, i === currentPage);
+        }
+
+        // ===== Ellipsis kanan =====
+        if (end < totalPage - 1) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+
+        // ===== Last Page selalu tampil =====
+        if (totalPage > 1) {
+            pagination.innerHTML += createPageItem(
+                totalPage,
+                null,
+                currentPage === totalPage
+            );
+        }
+
+        // ===== NEXT =====
+        pagination.innerHTML += createPageItem(
+            currentPage + 1,
+            "Next",
+            false,
+            currentPage === totalPage
+        );
+
+        // ===== Event Click =====
+        document.querySelectorAll("#paginationContainer a[data-page]").forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const page = parseInt(this.dataset.page);
+
+                if (!this.parentElement.classList.contains("disabled")) {
+                    loadDataJurnal(page);
+                }
+            });
+        });
     }
 </script>
 @endsection
