@@ -82,6 +82,26 @@
 </div>
 <!-- /Page Wrapper -->
 
+<!-- Delete Modal -->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="delete-modal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<span class="delete-icon">
+						<i class="ti ti-trash-x"></i>
+					</span>
+					<h4>Konfirmasi Penghapusan</h4>
+					<p id="title_konfirmasi">Anda akan menghapus data yang dipilih, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya..</p>
+					<div class="d-flex justify-content-center">
+						<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
+						<button type="submit" class="btn btn-danger btn_delete">Ya, Hapus</button>
+					</div>
+				</div>				
+			</div>
+		</div>
+</div>
+<!-- /Delete Modal -->
+
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
     const role = @json($role);
@@ -89,6 +109,21 @@
     let currentKeyword = "";
     let debounceTimer = null;
     let selectedId = null;
+
+    const delModal = document.getElementById('delete-modal');
+    const btnDel = delModal.querySelector('.btn_delete');
+
+    delModal.addEventListener('hidden.bs.modal', function () {
+        selectedId = null
+    })
+    delModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // tombol yang diklik
+        const title_konfirmasi = delModal.querySelector('#title_konfirmasi')
+        selectedId = button.getAttribute('data-id');
+        selectedNama = button.getAttribute('data-nama');
+
+        title_konfirmasi.innerHTML = `Anda akan menghapus <b>${selectedNama}</b>, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya.`;
+    });
 
     document.addEventListener("DOMContentLoaded", async function () {
         await loadData(1);
