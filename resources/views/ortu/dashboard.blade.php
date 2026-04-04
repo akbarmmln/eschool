@@ -130,15 +130,43 @@
 								</div>
 							</div>
 						</div>
-					</div>
 
+                        <div class="custom-datatable-filter table-responsive">
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+										<th style="width:5%">No</th>
+                                        <th style="width:10%">Tanggal</th>
+                                        <th style="width:10%">Materi</th>
+										<th style="width:10%">Refleksi</th>
+										<th style="width:20%">Kelas</th>
+										<th style="width:20%">Pengajar</th>
+										<th style="width:20%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemData">
+                                </tbody>
+                            </table>
+							<div id="loadingSpinnerTabel" class="text-center my-3" style="display: none;">
+								<button id="loadingSpinnerTabel" class="btn btn-info-light" type="button" disabled="">
+									<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+										Memuat data...
+								</button>
+							</div>
+                        </div>
+						<div class="card-body">
+							<nav aria-label="Page navigation" class="pagination-style-2">
+								<ul class="pagination justify-content-end mb-0" id="paginationContainer">
+								</ul>
+							</nav>
+						</div>
+					</div>
 					<div id="loadingSpinner" class="text-center my-3" style="display: none;">
 						<button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
 							<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
 								Memuat data...
 						</button>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -150,6 +178,7 @@
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
 	let selectedID = null, selectedNama = null;
+	let public_date_to, public_date_from;
 	const shimmerProfile = document.getElementById('shimmer_profile');
 	const detailProfile = document.getElementById('detail_profile');
 
@@ -157,11 +186,14 @@
 	const idSiswaContent = pageSelected.querySelector(".id_siswa");
 	const namaSiswaContent =  pageSelected.querySelector(".nama_siswa");
 
+	const loadingSpinnerTabel = document.getElementById('loadingSpinnerTabel');
 	const loadingSpinner = document.getElementById('loadingSpinner');
+	
 	const id_account = document.getElementById('id_account');
 	const nama = document.getElementById('nama');
 	const since = document.getElementById('since');
 	
+	let isLoadingTabel = false;
 	let isLoadingCard = false;
 
 	document.addEventListener("DOMContentLoaded", async function () {
@@ -263,7 +295,14 @@
 		try {
 			pageSelected.classList.add("d-none");
 			loadingSpinner.style.display = "block"
-			await renderDetailsCard(selectedID);
+
+			const today = new Date();
+			const sevenDaysAgo = new Date();
+			sevenDaysAgo.setDate(today.getDate() - 7);
+			public_date_to = moment(today).format('DD-MM-YYYY')
+			public_date_from = moment(sevenDaysAgo).format('DD-MM-YYYY')
+
+			await renderDetailsCard(1);
 			idSiswaContent.textContent = selectedID
 			namaSiswaContent.textContent = selectedNama
 		} catch (e) {
@@ -278,13 +317,73 @@
 		}
 	});
 
-	async function renderDetailsCard(id_siswa) {
-		await new Promise(resolve => {
-			setTimeout(() => {
-				console.log("Done fetch:", id_siswa);
-				resolve();
-			}, 1000);
-		});
+	async function renderDetailsCard(page) {
+        if (isLoadingTabel) return;
+        isLoadingTabel = true;
+
+		const body = {
+			page: page,
+			id_siswa: selectedID,
+			dari: public_date_from,
+			sampai: public_date_to
+        }
+
+		loadingSpinnerTabel.style.display = "block";
+		const pagination = document.getElementById("paginationContainer");
+		const tbody = document.getElementById("itemData");
+        tbody.innerHTML = `
+            <tr>
+            </tr>
+        `;
+		pagination.classList.add("loading");
+
+        const result = await fetchJson('/_backend/logic/siswa/jurnal', {
+            method: 'POST',
+            body: body
+        });
+		if (!result.ok) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">
+                        Gagal mengambil data
+                    </td>
+                </tr>
+            `;
+		}
+
+		const rows = result.data.rows
+		const currentPage = result.data.currentPage
+		const totalPage = result.data.rowtotalPages
+
+		if (rows.length == 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center">
+                        Data tidak tersedia
+                    </td>
+                </tr>
+            `;
+		} else {
+			let no = 1;
+			rows.forEach(item => {
+				tbody.innerHTML += `
+					<tr>
+						<td>${no++}.</td>
+						<td>${dateFormatIndo(item.tanggal_jurnal)} ${item.jam_mulai.slice(0, 5)} - ${item.jam_selesai.slice(0, 5)}</td>
+						<td>${item.materi}</td>
+						<td>${item.refleksi}</td>
+						<td>${item.nama_kelas}</td>
+						<td>${item.nama_guru}</td>
+						<td>Details</td>
+					</tr>
+				`
+			})
+			renderPagination(currentPage, totalPage);
+		}
+
+		loadingSpinnerTabel.style.display = "none";
+		pagination.classList.remove("loading");
+		isLoadingTabel = false;
 	}
 
 	function formatAnak(child) {
@@ -330,6 +429,88 @@
             day: "2-digit",
             month: "long",
             year: "numeric"
+        });
+    }
+
+    function renderPagination(currentPage, totalPage) {
+        const pagination = document.getElementById("paginationContainer");
+        pagination.innerHTML = "";
+
+        const maxVisible = 1; // jumlah page sekitar current
+        const createPageItem = (page, label = null, active = false, disabled = false) => {
+            return `
+                <li class="page-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${page}">
+                        ${label ?? page}
+                    </a>
+                </li>
+            `;
+        };
+
+        // ===== PREVIOUS =====
+        pagination.innerHTML += createPageItem(
+            currentPage - 1,
+            "Previous",
+            false,
+            currentPage === 1
+        );
+
+        // ===== PAGE 1 selalu tampil =====
+        pagination.innerHTML += createPageItem(1, null, currentPage === 1);
+
+        let start = Math.max(2, currentPage - maxVisible);
+        let end = Math.min(totalPage - 1, currentPage + maxVisible);
+
+        // ===== Ellipsis kiri =====
+        if (start > 2) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+
+        // ===== Page tengah =====
+        for (let i = start; i <= end; i++) {
+            pagination.innerHTML += createPageItem(i, null, i === currentPage);
+        }
+
+        // ===== Ellipsis kanan =====
+        if (end < totalPage - 1) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+
+        // ===== Last Page selalu tampil =====
+        if (totalPage > 1) {
+            pagination.innerHTML += createPageItem(
+                totalPage,
+                null,
+                currentPage === totalPage
+            );
+        }
+
+        // ===== NEXT =====
+        pagination.innerHTML += createPageItem(
+            currentPage + 1,
+            "Next",
+            false,
+            currentPage === totalPage
+        );
+
+        // ===== Event Click =====
+        document.querySelectorAll("#paginationContainer a[data-page]").forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const page = parseInt(this.dataset.page);
+
+                if (!this.parentElement.classList.contains("disabled")) {
+                    renderDetailsCard(page);
+                }
+            });
         });
     }
 </script>

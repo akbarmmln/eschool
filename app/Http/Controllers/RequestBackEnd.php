@@ -620,4 +620,18 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doSiswaJurnal(Request $request, ApiService $apiService) {
+        $page = $request->page;
+        $url = "/api/v1/siswa/jurnal/$page";
+        $response = $apiService->doSiswaJurnal($request->only([
+            'id_siswa',
+            'dari',
+            'sampai'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

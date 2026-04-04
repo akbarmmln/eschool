@@ -95,6 +95,7 @@ Route::post('/_backend/logic/ortu/remove-access', [RequestBackEnd::class, 'doOrt
 Route::post('/_backend/logic/ortu/add-access', [RequestBackEnd::class, 'doOrtuAddAccess']);
 Route::post('/_backend/logic/ortu/reset-access', [RequestBackEnd::class, 'doOrtuResetAccess']);
 Route::post('/_backend/logic/ortu/unlink', [RequestBackEnd::class, 'doOrtuUnlink']);
+Route::post('/_backend/logic/siswa/jurnal', [RequestBackEnd::class, 'doSiswaJurnal']);
 
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);
