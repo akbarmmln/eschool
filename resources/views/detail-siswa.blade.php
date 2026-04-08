@@ -644,7 +644,7 @@
 		} catch (e) {
             const code = e?.code
 			const message = e?.message
-			if (code === '70008'){
+			if (code === '70008') {
 				textResult.textContent = `Proses gagal dilakukan: ${message}`;
 			} else {
 				textResult.textContent = `Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`;
@@ -763,7 +763,7 @@
 			const textResult = kehadiranSection.querySelector("#text_result");
             const code = e?.code
 			const message = e?.message
-			if (code === '70013'){
+			if (code === '70013') {
 				textResult.textContent = `Proses gagal dilakukan: ${message}`;
 			} else {
 				textResult.textContent = `Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`;

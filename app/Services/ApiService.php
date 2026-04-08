@@ -433,6 +433,16 @@ class ApiService
         return $response;
     }
 
+    public function doMyDs2ProfileUpdate(array $payload, string $url) {
+        $response = $this->request('POST', $url, $payload);
+        return $response;
+    }
+
+    public function doMyUpdateEmail(array $payload, string $url) {
+        $response = $this->request('POST', $url, $payload);
+        return $response;
+    }
+
     public function doCreateJurnal(array $payload, string $url){
         $response = $this->request('POST', $url, $payload);
         return $response;

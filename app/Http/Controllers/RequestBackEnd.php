@@ -434,6 +434,29 @@ class RequestBackEnd
         );
     }
 
+    public function doMyDs2ProfileUpdate(Request $request, ApiService $apiService) {
+        $url = "/api/v1/profile/ds2/update-personal";
+
+        $response = $apiService->doMyDs2ProfileUpdate($request->only([
+            'object_update'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
+    public function doMyUpdateEmail(Request $request, ApiService $apiService) {
+        $url = "/api/v1/profile/update-email";
+        $response = $apiService->doMyUpdateEmail($request->only([
+            'email_baru'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
     public function doCreateJurnal(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/create-new";
         $response = $apiService->doCreateJurnal($request->only([

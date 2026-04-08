@@ -51,7 +51,7 @@
                                         <span class="profile-views feather-eye toggle-password"></span>
                                     </div>
                                     <div class="forgotpass">
-                                        <a href="forgot-password.html">Forgot Password?</a>
+                                        <a href="forgot-password.html">Lupa Password?</a>
                                     </div>
                                     <div class="form-group">
                                         <button id="btnLogin" class="btn btn-primary btn-block" type="submit">Login</button>

@@ -197,14 +197,99 @@
 									</div>
 									<div class="card">
 										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5>Email</h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_email"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
 											<h5>Password</h5>
 											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_password"><i class="ti ti-edit me-2"></i>Ubah</a>
 										</div>
 									</div>
 								</div>
-
 							</div>
 					</div>
+
+                    <div id="ortu_app" class="d-none flex-fill ps-0 border-0">
+                        <div class="d-md-flex">
+                            <div class="flex-fill">
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5><b>Detail Wali Murid</b></h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#ubah_personal_wali_murid"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+                                        <div class="card-body">
+                                            <div class="border rounded p-3 pb-0 mb-3">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-lg-4">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <div class="ms-2 overflow-hidden">
+                                                                <h6 id="ortu_ayah" class="text-truncate">-</h6>
+                                                                <p class="text-primary">Ayah</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-lg-4">
+                                                        <div class="mb-3">
+                                                            <p class="text-dark fw-medium mb-1">Pekerjaan</p>
+                                                            <p id="ocup_ayah">-</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-lg-4">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <div class="mb-3 overflow-hidden me-3">
+                                                                <p class="text-dark fw-medium mb-1">Email</p>
+                                                                <p id="ortu_email1" class="text-truncate">-</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="border rounded p-3 pb-0 mb-3">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-sm-6 ">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <div class="ms-2 overflow-hidden">
+                                                                <h6 id="ortu_ibu" class="text-truncate">-</h6>
+                                                                <p class="text-primary">Ibu</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 col-sm-6 ">
+                                                        <div class="mb-3">
+                                                            <p class="text-dark fw-medium mb-1">Pekerjaan</p>
+                                                            <p id="ocup_ibu">-</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4 col-sm-6">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <div class="mb-3 overflow-hidden me-3">
+                                                                <p class="text-dark fw-medium mb-1">Email</p>
+                                                                <p id="ortu_email2" class="text-truncate">-</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+									</div>
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5>Email</h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_email"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-header d-flex justify-content-between align-items-center">
+											<h5>Password</h5>
+											<a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit_password"><i class="ti ti-edit me-2"></i>Ubah</a>
+										</div>
+									</div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 	</div>
 </div>
@@ -363,6 +448,76 @@
 		</div>
 		<!-- /Change Password -->
 
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="ubah_personal_wali_murid">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Ubah Informasi Pribadi</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3">
+									<label class="form-label">Nama Ayah</label>
+									<input type="text" class="form-control nama_ayah" name="nama_ayah" placeholder="Nama Lengkap">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Nama Ibu</label>
+									<input type="text" class="form-control nama_ibu" name="nama_ibu" placeholder="Nama Lengkap">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Pekerjaan Ayah</label>
+									<input type="text" class="form-control ocup_ayah" name="ocup_ayah" placeholder="Pekerjaan">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Pekerjaan Ayah</label>
+									<input type="text" class="form-control ocup_ibu" name="ocup_ibu" placeholder="Pekerjaan">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2 btn_tutup" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_email">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Ubah Email</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="mb-3">
+									<label class="form-label">Email Saat Ini</label>
+									<input type="text" readonly class="form-control email_now" name="email_now" placeholder="Email">
+								</div>
+								<div class="mb-3">
+									<label class="form-label">Email Baru</label>
+									<input type="text" class="form-control email_new" name="email_new" placeholder="Email">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-light me-2 btn_tutup" data-bs-dismiss="modal">Tutup</a>
+						<button type="submit" class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
@@ -370,13 +525,20 @@
     const pagefailed = document.getElementById("pagefailed");
     const spinner = document.getElementById("loadingSpinner");
     const admin_guru_app = document.getElementById('admin_guru_app')
+    const ortu_app = document.getElementById('ortu_app')
     
     const editPiAdminGuruModals = document.getElementById('edit_personal_information_admin_guru')
     const btnSimpanPiAdminGuru = editPiAdminGuruModals.querySelector('.btn_simpan')
 
+    const editPiWalMurModals = document.getElementById('ubah_personal_wali_murid')
+    const btnSimpanPiWalMur = editPiWalMurModals.querySelector('.btn_simpan')
+    
     const editAiAdminGuruModals = document.getElementById('edit_address_information_admin_guru')
     const btnSimpanAiAdminGuru = editAiAdminGuruModals.querySelector('.btn_simpan')
 
+    const editEmailModals = document.getElementById('edit_email')
+    const btnSimpanEditEmail = editEmailModals.querySelector('.btn_simpan')
+    
     const editPassword = document.getElementById('edit_password')
     const btnSimpanEp = editPassword.querySelector('.btn_simpan')
 
@@ -391,7 +553,16 @@
         rt: null,
         rw: null,
         kecamatan: null,
-        kelurahan: null
+        kelurahan: null,
+        email: null
+    }
+
+    let tempD2 = {
+        nama_ayah: null,
+        nama_ibu: null,
+        pekerjaan_ayah: null,
+        pekerjaan_ibu: null,
+        email: null
     }
 
     document.querySelector(".datepickerBuatan").addEventListener("keydown", function(e){
@@ -476,6 +647,55 @@
         editPiAdminGuruModals._validator = validator;
     });
 
+    editPiWalMurModals.addEventListener('hidden.bs.modal', function () {})
+    editPiWalMurModals.addEventListener('show.bs.modal', function () {
+        const namaAyahValue = editPiWalMurModals.querySelector('.nama_ayah');
+        const namaIbuValue = editPiWalMurModals.querySelector('.nama_ibu');
+        const ocupAyahValue = editPiWalMurModals.querySelector('.ocup_ayah');
+        const ocupIbuValue = editPiWalMurModals.querySelector('.ocup_ibu');
+
+        namaAyahValue.value = tempD2.nama_ayah ?? "";
+        namaIbuValue.value = tempD2.nama_ibu ?? "";
+        ocupAyahValue.value = tempD2.pekerjaan_ayah ?? "";
+        ocupIbuValue.value = tempD2.pekerjaan_ibu ?? "";
+
+
+        const validator = initFormValidation(editPiWalMurModals, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.nama_ayah',
+                '.nama_ibu',
+                '.ocup_ayah',
+                '.ocup_ibu'
+            ]
+        });
+        editPiWalMurModals._validator = validator;
+    });
+
+    editEmailModals.addEventListener('hidden.bs.modal', function () {
+        const emailNewValue = editEmailModals.querySelector('.email_new');
+
+        if (emailNewValue) emailNewValue.value = '';
+    })
+    editEmailModals.addEventListener('show.bs.modal', function () {
+        const emailNowValue = editEmailModals.querySelector('.email_now');
+        
+        if (role == 0 || role == 1) {
+            emailNowValue.value = temp.email ?? "";
+        } else {
+            emailNowValue.value = tempD2.email ?? "";
+        }
+
+        const validator = initFormValidation(editEmailModals, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '.email_now',
+                '.email_new'
+            ]
+        });
+        editEmailModals._validator = validator;
+    });
+    
     document.addEventListener("DOMContentLoaded", async function () {
         document.querySelectorAll('.datepickerBuatan').forEach(el => {
             const modal = el.closest('.modal');
@@ -522,6 +742,8 @@
 
         if (role == 0 || role == 1) {
             await loadProfileGroup01();
+        } else {
+            await loadProfileGroup02();
         }
     })
 
@@ -660,6 +882,94 @@
         }
     })
 
+    btnSimpanPiWalMur.addEventListener("click", async function () {
+        try {
+            btnSimpanPiWalMur.disabled = true;
+            btnSimpanPiWalMur.innerHTML = 'Menyimpan...';
+            let payload;
+            if (role == 2) {
+                payload = {
+                    uri: '/_backend/profile/ds2-update',
+                    body: {
+                        object_update: {
+                            nama_ayah: editPiWalMurModals.querySelector('.nama_ayah').value,
+                            nama_ibu: editPiWalMurModals.querySelector('.nama_ibu').value,
+                            pekerjaan_ayah: editPiWalMurModals.querySelector('.ocup_ayah').value,
+                            pekerjaan_ibu: editPiWalMurModals.querySelector('.ocup_ibu').value
+                        }
+                    }
+                }
+            }
+            const result = await fetchJson(payload.uri, {
+                method: 'POST',
+                body: payload.body
+            });
+            if (!result.ok) {
+                showToast('Terjadi kegagalan perbarui data', 'success');
+            }
+
+            showToast('Data berhasil diperbarui', 'success');    
+            if (role == 2) {
+                await loadProfileGroup02();
+            }
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('ubah_personal_wali_murid')
+            );
+            modal.hide();
+
+            btnSimpanPiWalMur.disabled = false;
+            btnSimpanPiWalMur.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+    btnSimpanEditEmail.addEventListener("click", async function () {
+        try {
+            btnSimpanEditEmail.disabled = true;
+            btnSimpanEditEmail.innerHTML = 'Menyimpan...';
+            let payload;
+            payload = {
+                uri: '/_backend/profile/update-email',
+                body: {
+                    email_baru: editEmailModals.querySelector('.email_new').value
+                }
+            }
+            const result = await fetchJson(payload.uri, {
+                method: 'POST',
+                body: payload.body
+            });
+            
+            if (!result.ok) {
+                throw result;
+            }
+
+            showToast('Data berhasil diperbarui', 'success');
+            if (role == 0 || role == 1) {
+                await loadProfileGroup01();
+            } else {
+                await loadProfileGroup02();
+            }
+        } catch(e) {
+			const code = e?.code;
+			const message = e?.message;
+			if (code === '70017' || code === '70004') {
+                showToast(`Proses gagal dilakukan: ${message}`, 'error');
+			} else {
+				showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'success');
+			}
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_email')
+            );
+            modal.hide();
+
+            btnSimpanEditEmail.disabled = false;
+            btnSimpanEditEmail.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
     async function loadProfileGroup01() {
         pagefailed.style.display = "none";
         spinner.style.display = "block";
@@ -681,6 +991,7 @@
             temp.rw = result.data.rw
             temp.kecamatan = result.data.kecamatan
             temp.kelurahan = result.data.kelurahan
+            temp.email = result.data.email
 
             const niy = admin_guru_app.querySelector('#niy');
             niy.innerHTML = temp.niy ?? '-';
@@ -710,6 +1021,43 @@
         } catch(e) {
             pagefailed.style.display = "block";
             admin_guru_app.classList.add('d-none');
+        } finally {
+            spinner.style.display = "none";
+        }
+    }
+
+    async function loadProfileGroup02() {
+        pagefailed.style.display = "none";
+        spinner.style.display = "block";
+        ortu_app.classList.add('d-none');
+
+        try {
+            const result = await fetchJson('/_backend/profile/d2', {
+                method: 'POST'
+            });
+            tempD2.nama_ayah = result.data.nama_ayah
+            tempD2.nama_ibu = result.data.nama_ibu
+            tempD2.pekerjaan_ayah = result.data.pekerjaan_ayah
+            tempD2.pekerjaan_ibu = result.data.pekerjaan_ibu
+            tempD2.email = result.data.email
+
+            const ortu_ayah = ortu_app.querySelector('#ortu_ayah');
+            ortu_ayah.innerHTML = tempD2.nama_ayah ?? '-';
+            const ortu_ibu = ortu_app.querySelector('#ortu_ibu');
+            ortu_ibu.innerHTML = tempD2.nama_ibu ?? '-';
+            const ocup_ayah = ortu_app.querySelector('#ocup_ayah');
+            ocup_ayah.innerHTML = tempD2.pekerjaan_ayah ?? '-';
+            const ocup_ibu = ortu_app.querySelector('#ocup_ibu');
+            ocup_ibu.innerHTML = tempD2.pekerjaan_ibu ?? '-';
+            const ortu_email1 = ortu_app.querySelector('#ortu_email1');
+            ortu_email1.innerHTML = tempD2.email ?? '-';
+            const ortu_email2 = ortu_app.querySelector('#ortu_email2');
+            ortu_email2.innerHTML = tempD2.email ?? '-';
+            
+            ortu_app.classList.remove('d-none');
+        } catch(e) {
+            pagefailed.style.display = "block";
+            ortu_app.classList.add('d-none');
         } finally {
             spinner.style.display = "none";
         }
