@@ -23,6 +23,7 @@ WORKDIR /var/www
 COPY . .
 
 # Install PHP dependencies
+RUN composer update
 RUN composer install --no-dev --optimize-autoloader
 
 # Laravel setup
