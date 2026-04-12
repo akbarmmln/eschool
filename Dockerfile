@@ -27,7 +27,10 @@ RUN composer update
 RUN composer install --no-dev --optimize-autoloader
 
 # Laravel setup
+RUN npm install && npm run build
 RUN php artisan config:clear || true
+
+RUN chmod -R 775 storage bootstrap/cache
 
 # Expose port (Railway inject PORT env)
 EXPOSE 8080
