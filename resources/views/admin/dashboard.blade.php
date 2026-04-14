@@ -760,45 +760,44 @@
                             </div>
                         </div>
 
-                        <div class="card-body p-3">
-                            <div class="mb-3">
-                                <div class="fw-bold text-uppercase text-primary small">
-                                    Materi
+                        <div class="card-body p-3 d-flex flex-column">
+                            <div class="flex-grow-1">
+                                <div class="mb-3">
+                                    <div class="fw-bold text-uppercase text-primary small">
+                                        Materi
+                                    </div>
+                                    <div class="text-black small">
+                                        ${item.materi}
+                                    </div>
                                 </div>
-                                <div class="text-black small">
-                                    ${item.materi}
+                                <div class="mb-3">
+                                    <div class="fw-bold text-uppercase text-primary small">
+                                        Refleksi
+                                    </div>
+                                    <div class="text-black small">
+                                        ${item.refleksi}
+                                    </div>
+                                </div>
+
+                                <hr class="border-1 opacity-100">
+
+                                <div class="mb-3">
+                                    <div class="fw-bold text-uppercase text-primary small mb-2">
+                                        Tidak Hadir
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="badge bg-secondary text-white" style="width: 12%">Sakit</span>
+                                        <small>${!isEmpty(result.sakit_nama) ? result.sakit_nama : '0'}</small>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-danger text-light" style="width: 12%">Alpa</span>
+                                        <small>${!isEmpty(result.alpha_nama) ? result.alpha_nama : '0'}</small>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <div class="fw-bold text-uppercase text-primary small">
-                                    Refleksi
-                                </div>
-                                <div class="text-black small">
-                                    ${item.refleksi}
-                                </div>
-                            </div>
-
-                            <hr class="border-1 opacity-100">
-
-                            <div class="mb-3">
-                                <div class="fw-bold text-uppercase text-primary small mb-2">
-                                    Tidak Hadir
-                                </div>
-
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <span class="badge bg-secondary text-white" style="width: 12%">Sakit</span>
-                                    <small>${!isEmpty(result.sakit_nama) ? result.sakit_nama : '0'}</small>
-                                </div>
-
-                                <div class="d-flex gap-2">
-                                    <span class="badge bg-danger text-light" style="width: 12%">Alpa</span>
-                                    <small>${!isEmpty(result.alpha_nama) ? result.alpha_nama : '0'}</small>
-                                </div>
-
-                            </div>
-
-                            <div class="d-flex align-items-center mt-4">
+                            <div class="d-flex align-items-center mt-auto">
                                 <div class="flex-grow-1 border-top"></div>
 
                                 <div class="d-flex gap-2 ms-3">
