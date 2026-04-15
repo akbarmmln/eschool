@@ -42,7 +42,7 @@ class RequestBackEnd
             $url .= "/$search";
         }
 
-        $response = $apiService->doListDataTingkatanKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -52,7 +52,7 @@ class RequestBackEnd
     public function doCreateDataTingkatanKelas(Request $request, ApiService $apiService) {
         $url = "api/v1/class-level/create";
 
-        $response = $apiService->doCreateDataTingkatanKelas($request->only(['nama', 'deskripsi']), $url);
+        $response = $apiService->fetchPOST($request->only(['nama', 'deskripsi']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -62,7 +62,7 @@ class RequestBackEnd
     public function doUpdateDataTingkatanKelas(Request $request, ApiService $apiService) {
         $url = "api/v1/class-level/update";
 
-        $response = $apiService->doUpdateDataTingkatanKelas($request->only(['id', 'nama', 'deskripsi']), $url);
+        $response = $apiService->fetchPOST($request->only(['id', 'nama', 'deskripsi']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -72,7 +72,7 @@ class RequestBackEnd
     public function doDeleteDataTingkatanKelas(Request $request, ApiService $apiService) {
         $url = "api/v1/class-level/delete";
 
-        $response = $apiService->doDeleteDataTingkatanKelas($request->only(['id']), $url);
+        $response = $apiService->fetchPOST($request->only(['id']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -82,7 +82,7 @@ class RequestBackEnd
     public function doLevelDataTingkatanKelas(Request $request, ApiService $apiService) {
         $url = "api/v1/class-level/level";
         
-        $response = $apiService->doLevelDataTingkatanKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -93,7 +93,7 @@ class RequestBackEnd
         $id = $request->id;
         $url = "api/v1/class-level/detail/$id";
 
-        $response = $apiService->doDetailTingkatanKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -109,7 +109,7 @@ class RequestBackEnd
             $url .= "/$search";
         }
 
-        $response = $apiService->doListDataKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -118,7 +118,7 @@ class RequestBackEnd
 
     public function doLevelDataKelas(Request $request, ApiService $apiService) {
         $url = "/api/v1/class-room/class";
-        $response = $apiService->doLevelDataKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -127,7 +127,7 @@ class RequestBackEnd
 
     public function doCreateDataKelas(Request $request, ApiService $apiService) {
         $url = "/api/v1/class-room/create";
-        $response = $apiService->doCreateDataKelas($request->only(['nama_kelas', 'id_wali_kelas', 'id_tingkatan_kelas']), $url);
+        $response = $apiService->fetchPOST($request->only(['nama_kelas', 'id_wali_kelas', 'id_tingkatan_kelas']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -136,7 +136,7 @@ class RequestBackEnd
 
     public function doUpdateDataKelas(Request $request, ApiService $apiService) {
         $url = "/api/v1/class-room/update";
-        $response = $apiService->doUpdateDataKelas($request->only(['id_kelas', 'nama_kelas', 'id_wali_kelas', 'id_tingkatan_kelas']), $url);
+        $response = $apiService->fetchPOST($request->only(['id_kelas', 'nama_kelas', 'id_wali_kelas', 'id_tingkatan_kelas']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -145,7 +145,7 @@ class RequestBackEnd
 
     public function doDeleteDataKelas(Request $request, ApiService $apiService) {
         $url = "/api/v1/class-room/delete";
-        $response = $apiService->doDeleteDataKelas($request->only(['id']), $url);
+        $response = $apiService->fetchPOST($request->only(['id']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -156,7 +156,7 @@ class RequestBackEnd
         $keyword = $request->keyword;
         $url = "api/v1/class-room/search/$keyword";
 
-        $response = $apiService->doSearchDataKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -167,7 +167,7 @@ class RequestBackEnd
         $id = $request->id;
         $url = "api/v1/class-room/detail/$id";
 
-        $response = $apiService->doDetailKelas($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -178,7 +178,7 @@ class RequestBackEnd
         $keyword = $request->keyword;
         $url = "api/v1/teacher/search/$keyword";
 
-        $response = $apiService->doSearchTeacher($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -194,7 +194,7 @@ class RequestBackEnd
             $url .= "/$search";
         }
 
-        $response = $apiService->doListDataGuru($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -203,7 +203,7 @@ class RequestBackEnd
 
     public function doCreateDataGuru(Request $request, ApiService $apiService) {
         $url = "/api/v1/teacher/create";
-        $response = $apiService->doCreateDataGuru($request->only(['niy', 'nama', 'email']), $url);
+        $response = $apiService->fetchPOST($request->only(['niy', 'nama', 'email']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -212,7 +212,7 @@ class RequestBackEnd
 
     public function doUpdateDataGuru(Request $request, ApiService $apiService) {
         $url = "/api/v1/teacher/update";
-        $response = $apiService->doUpdateDataGuru($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id',
             'object_update.niy',
             'object_update.nama'
@@ -225,7 +225,7 @@ class RequestBackEnd
 
     public function doDeleteDataGuru(Request $request, ApiService $apiService) {
         $url = "/api/v1/teacher/delete";
-        $response = $apiService->doDeleteDataGuru($request->only(['id']), $url);
+        $response = $apiService->fetchPOST($request->only(['id']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -241,7 +241,7 @@ class RequestBackEnd
             $url .= "/$search";
         }
 
-        $response = $apiService->doListSilabus($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -250,7 +250,7 @@ class RequestBackEnd
 
     public function doDeleteSilabus(Request $request, ApiService $apiService) {
         $url = "/api/v1/silabus/delete";
-        $response = $apiService->doDeleteSilabus($request->only(['id']), $url);
+        $response = $apiService->fetchPOST($request->only(['id']), $url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -260,7 +260,8 @@ class RequestBackEnd
     public function doSearchSilabusId(Request $request, ApiService $apiService) {
         $keyword = $request->materiId;
         $url = "/api/v1/silabus/detail/$keyword";
-        $response = $apiService->doSearchSilabusId($url);
+
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -269,7 +270,7 @@ class RequestBackEnd
 
     public function doUpdateSilabus(Request $request, ApiService $apiService) {
         $url = "/api/v1/silabus/update";
-        $response = $apiService->doUpdateSilabus($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id',
             'judul',
             'items'
@@ -282,7 +283,7 @@ class RequestBackEnd
 
     public function doCreateSilabus(Request $request, ApiService $apiService) {
         $url = "/api/v1/silabus/create";
-        $response = $apiService->doCreateSilabus($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'judul',
             'items'
         ]), $url);
@@ -294,7 +295,7 @@ class RequestBackEnd
 
     public function doUpdateRelasiSilabus(Request $request, ApiService $apiService) {
         $url = "/api/v1/class-level/update/relasi-silabus";
-        $response = $apiService->doUpdateRelasiSilabus($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id',
             'items'
         ]), $url);
@@ -307,7 +308,7 @@ class RequestBackEnd
     public function doCreateSiswa(Request $request, ApiService $apiService) {
         $url = "api/v1/siswa/create";
 
-        $response = $apiService->doCreateSiswa($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'image',
             'nik',
             'nama_lengkap',
@@ -334,7 +335,7 @@ class RequestBackEnd
     public function doUpdateSiswa(Request $request, ApiService $apiService) {
         $url = "api/v1/siswa/update";
 
-        $response = $apiService->doUpdateSiswa($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa',
             'change_image',
             'image',
@@ -370,7 +371,7 @@ class RequestBackEnd
             $url .= "/$search";
         }
 
-        $response = $apiService->doListSiswa($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -381,7 +382,7 @@ class RequestBackEnd
         $id = $request->id;
         $url = "/api/v1/siswa/detail/$id";
 
-        $response = $apiService->doDetailSiswa($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -391,7 +392,7 @@ class RequestBackEnd
     public function doKehadiranSiswa(Request $request, ApiService $apiService) {
         $url = "/api/v1/siswa/absensi";
 
-        $response = $apiService->doKehadiranSiswa($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa',
             'dari',
             'sampai'
@@ -405,7 +406,7 @@ class RequestBackEnd
     public function doMyProfile(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile";
 
-        $response = $apiService->doMyProfile($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -415,7 +416,7 @@ class RequestBackEnd
     public function doMyProfileD2(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/d2";
 
-        $response = $apiService->doMyProfileD2($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -425,7 +426,7 @@ class RequestBackEnd
     public function doMyDs1ProfileUpdate(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/ds1/update-personal";
 
-        $response = $apiService->doMyDs1ProfileUpdate($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'object_update'
         ]), $url);
         return response()->json(
@@ -437,7 +438,7 @@ class RequestBackEnd
     public function doMyDs2ProfileUpdate(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/ds2/update-personal";
 
-        $response = $apiService->doMyDs2ProfileUpdate($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'object_update'
         ]), $url);
         return response()->json(
@@ -448,7 +449,7 @@ class RequestBackEnd
 
     public function doMyUpdateEmail(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/update-email";
-        $response = $apiService->doMyUpdateEmail($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'email_baru'
         ]), $url);
         return response()->json(
@@ -459,7 +460,7 @@ class RequestBackEnd
 
     public function doCreateJurnal(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/create-new";
-        $response = $apiService->doCreateJurnal($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'tanggal',
             'mulai',
             'selesai',
@@ -478,7 +479,7 @@ class RequestBackEnd
         $id = $request->id;
         $url = "/api/v1/jurnal/detail/$id";
 
-        $response = $apiService->doDetailJurnal($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -487,7 +488,7 @@ class RequestBackEnd
 
     public function doUpdateAbsensi(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/update-absensi";
-        $response = $apiService->doUpdateAbsensi($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id',
             'absensi'
         ]), $url);
@@ -499,7 +500,7 @@ class RequestBackEnd
 
     public function doInisiasiPenilaian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/inisiasi-penilaian";
-        $response = $apiService->doInisiasiPenilaian($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_jurnal',
             'id_diajar'
         ]), $url);
@@ -511,7 +512,7 @@ class RequestBackEnd
 
     public function doUpdatePenilaian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/update-penilaian";
-        $response = $apiService->doUpdatePenilaian($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'data'
         ]), $url);
         return response()->json(
@@ -531,7 +532,7 @@ class RequestBackEnd
             $url .= "/$dari/$sampai";
         }
 
-        $response = $apiService->doListDataJurnal($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -540,7 +541,7 @@ class RequestBackEnd
 
     public function doSubmitItemPenilaian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/submit-item-penilaian";
-        $response = $apiService->doSubmitItemPenilaian($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_jurnal',
             'id_diajar',
             'judul',
@@ -554,7 +555,7 @@ class RequestBackEnd
 
     public function doDownloadSingleNilaiHarian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/download-single-penilaian-harian";
-        $response = $apiService->doDownloadSingleNilaiHarian($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_jurnal',
             'id_detail_diajar',
             'nama_siswa'
@@ -567,7 +568,7 @@ class RequestBackEnd
 
     public function doDownloadBulkNilaiHarian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/download-bulk-penilaian-harian";
-        $response = $apiService->doDownloadBulkNilaiHarian($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_jurnal'
         ]), $url);
         return response()->json(
@@ -578,7 +579,7 @@ class RequestBackEnd
 
     public function doGetSettings(Request $request, ApiService $apiService) {
         $url = "/api/v1/settings";
-        $response = $apiService->doGetSettings($url);
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()
@@ -587,7 +588,7 @@ class RequestBackEnd
 
     public function doChangePassword(Request $request, ApiService $apiService) {
         $url = "/api/v1/profile/change/password";
-        $response = $apiService->doChangePassword($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'password_lama',
             'password_baru'
         ]), $url);
@@ -599,7 +600,7 @@ class RequestBackEnd
 
     public function doOrtuRemoveAccess(Request $request, ApiService $apiService) {
         $url = "/api/v1/siswa/ortu/remove-access";
-        $response = $apiService->doOrtuRemoveAccess($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa',
             'id_access',
             'email'
@@ -612,7 +613,7 @@ class RequestBackEnd
 
     public function doOrtuAddAccess(Request $request, ApiService $apiService) {
         $url = "/api/v1/siswa/ortu/add-access";
-        $response = $apiService->doOrtuAddAccess($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa',
             'email',
         ]), $url);
@@ -624,7 +625,7 @@ class RequestBackEnd
 
     public function doOrtuResetAccess(Request $request, ApiService $apiService) {
         $url = "/api/v1/siswa/ortu/reset-access";
-        $response = $apiService->doOrtuResetAccess($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_access'
         ]), $url);
         return response()->json(
@@ -635,7 +636,7 @@ class RequestBackEnd
 
     public function doOrtuUnlink(Request $request, ApiService $apiService) {
         $url = "/api/v1/siswa/ortu/unlink";
-        $response = $apiService->doOrtuUnlink($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa'
         ]), $url);
         return response()->json(
@@ -647,7 +648,7 @@ class RequestBackEnd
     public function doSiswaJurnal(Request $request, ApiService $apiService) {
         $page = $request->page;
         $url = "/api/v1/siswa/jurnal/$page";
-        $response = $apiService->doSiswaJurnal($request->only([
+        $response = $apiService->fetchPOST($request->only([
             'id_siswa',
             'dari',
             'sampai'
