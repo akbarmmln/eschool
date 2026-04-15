@@ -20,7 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        URL::forceScheme('https');
-        //
+        $node = config('custom.node_env');
+        if ($node == 'production') {
+            URL::forceScheme('https');
+        }
     }
 }

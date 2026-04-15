@@ -13,7 +13,7 @@ class ApiService
     protected ?string $token;
 
     public function __construct(){
-        $this->baseUrl = env('API_URL');
+        $this->baseUrl = config('custom.api_url_v1');
         $this->token   = session('access-token');
     }
 
