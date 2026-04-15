@@ -29,6 +29,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Laravel setup
 RUN npm install && npm run build
 RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
 
 RUN chmod -R 775 storage bootstrap/cache
 
