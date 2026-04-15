@@ -25,6 +25,7 @@ COPY . .
 # Install PHP dependencies
 RUN composer update
 RUN composer install --no-dev --optimize-autoloader
+RUN composer require predis/predis
 
 # Laravel setup
 RUN npm install && npm run build
