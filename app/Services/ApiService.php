@@ -225,6 +225,12 @@ class ApiService
     }
 
     public function fetchPOST(array $payload, string $url) {
+        //jika diperlukan untuk dilakukan mapping terhadap payload body gunakan cara ini
+        // $newPayload = [
+        //     'id' => $payload['id'],
+        //     ...lainnya
+        // ];
+
         $response = $this->request('POST', $url, $payload);
         return $response;
     }
