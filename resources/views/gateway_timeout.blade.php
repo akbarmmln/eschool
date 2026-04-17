@@ -55,10 +55,10 @@
                                             autoplay>
                                         </lottie-player>
                                     </div> -->
-                                    <img src="{{ asset('assets/img/authentication/authentication-08.svg') }}" class="error-img img-fluid" alt="Img">
+                                    <img src="{{ asset('assets/img/authentication/authentication-408.webp') }}" class="error-img img-fluid" alt="Img">
                                 </div>
-                                <h3 class="h2 mb-3">Akses Ditolak</h3>
-                                <p class="text-center">maaf, Anda tidak memiliki hak akses untuk membuka halaman ini.</p>
+                                <h3 class="h2 mb-3">Request Waktu Habis</h3>
+                                <p class="text-center">Server kehabisan waktu untuk memproses. Silahkan coba kembali.</p>
                                 <a href="{{ route('dashboard') }}" class="btn btn-primary d-flex align-items-center"><i class="ti ti-arrow-left me-2"></i>Kembali ke Beranda</a>
                             </div>
                         </div>

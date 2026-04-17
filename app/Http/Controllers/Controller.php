@@ -113,9 +113,23 @@ class Controller
     }
 
     public function doForbidden() {
-        return response()->view('forbidden', [], 403);
+        if (!session('page_forbidden_access')) {
+            return redirect('/akademik/login');
+        } else {
+            session()->forget('page_forbidden_access');
+            return response()->view('forbidden', [], 403);
+        }
     }
 
+    public function doRTO() {
+        if (!session('page_gateway_timeout')) {
+            return redirect('/akademik/login');
+        } else {
+            session()->forget('page_gateway_timeout');
+            return response()->view('gateway_timeout', [], 408);
+        }
+    }
+    
     public function login() {
         return view('login');
     }

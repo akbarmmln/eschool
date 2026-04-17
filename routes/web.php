@@ -50,6 +50,7 @@ Route::middleware('check.notlogin')->group(function () {
 
 Route::get('/akademik/logout', [Controller::class, 'doLogout'])->name('logout');
 Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('forbidden');
+Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
 Route::post('/_backend/profile', [RequestBackEnd::class, 'doMyProfile']);

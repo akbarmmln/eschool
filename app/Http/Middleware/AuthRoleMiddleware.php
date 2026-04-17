@@ -29,8 +29,9 @@ class AuthRoleMiddleware
         $dataResponse = $response->json();
 
         if ($response->failed()) {
-            if ($dataStatusCode == 504) {
-                return redirect('/akademik/forbidden');
+            if ($dataStatusCode == 500 || $dataStatusCode == 504) {
+                session(['page_gateway_timeout' => true]);
+                return redirect('/akademik/rto');
             } else {
                 return app(Controller::class)->doLogout('jwt-expr');
             }
@@ -40,6 +41,7 @@ class AuthRoleMiddleware
             $id_account = $dataResponse['data']['id_account'];
 
             if (!in_array($role, $roles)) {
+                session(['page_forbidden_access' => true]);
                 return redirect('/akademik/forbidden');
             }
 
