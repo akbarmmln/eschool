@@ -44,7 +44,7 @@ Route::middleware('check.login')->group(function () {
     Route::get('/akademik/profile', [Controller::class, 'profile'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU . ',' . Role::ROLE_ORANG_TUA)->name('profile');
 });
 
-Route::middleware('guest.custom')->group(function () {
+Route::middleware('check.notlogin')->group(function () {
     Route::get('/akademik/login', [Controller::class, 'login'])->name('login');
 });
 

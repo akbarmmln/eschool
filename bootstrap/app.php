@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'check.login' => \App\Http\Middleware\CheckLogin::class,
-            'guest.custom' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'check.notlogin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'auth.role' => \App\Http\Middleware\AuthRoleMiddleware::class,
         ]);
     })
