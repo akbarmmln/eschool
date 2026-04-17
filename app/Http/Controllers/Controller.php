@@ -121,7 +121,7 @@ class Controller
         }
     }
 
-    public function doRTO() {
+    public function doRTOs() {
         if (!session('page_gateway_timeout')) {
             return redirect('/akademik/login');
         } else {
