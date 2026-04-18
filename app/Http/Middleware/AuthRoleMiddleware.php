@@ -29,7 +29,7 @@ class AuthRoleMiddleware
         $dataResponse = $response->json();
 
         if ($response->failed()) {
-            if ($dataStatusCode == 500 || $dataStatusCode == 504) {
+            if ($dataStatusCode == 500 || $dataStatusCode == 502 || $dataStatusCode == 504) {
                 session(['page_gateway_timeout' => true]);
                 return redirect('/akademik/rto');
             } else {
