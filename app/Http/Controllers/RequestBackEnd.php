@@ -658,4 +658,37 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doForgetPassword(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/invalidate-forgot-password";
+        $response = $apiService->fetchPOST($request->only([
+            'email'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
+    public function doInvalidatePage(Request $request, ApiService $apiService) {
+        $jwt = $request->jwt;
+        $url = "/api/v1/auth/invalidate-page/$jwt";
+        $response = $apiService->fetchGET($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
+    public function doVerifyOTP(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/verify-otp";
+        $response = $apiService->fetchPOST($request->only([
+            'type',
+            'otp'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

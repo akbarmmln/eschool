@@ -49,10 +49,15 @@ Route::middleware('check.notlogin')->group(function () {
 });
 
 Route::get('/akademik/logout', [Controller::class, 'doLogout'])->name('logout');
+Route::get('/akademik/lupa-password', [Controller::class, 'doLupaPassword'])->name('lupa-password');
+Route::get('/akademik/invalidate-password', [Controller::class, 'doInvalidateForPass'])->name('invalidate-forg-password');
 Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('forbidden');
 Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
+Route::post('/_backend/auth/invalidate-reset-password', [RequestBackEnd::class, 'doForgetPassword']);
+Route::post('/_backend/auth/verify-otp', [RequestBackEnd::class, 'doVerifyOTP']);
+Route::post('/_backend/auth/invalidate-page', [RequestBackEnd::class, 'doInvalidatePage']);
 Route::post('/_backend/profile', [RequestBackEnd::class, 'doMyProfile']);
 Route::post('/_backend/profile/d2', [RequestBackEnd::class, 'doMyProfileD2']);
 Route::post('/_backend/profile/ds1-update', [RequestBackEnd::class, 'doMyDs1ProfileUpdate']);

@@ -130,6 +130,24 @@ class Controller
         }
     }
     
+    public function doLupaPassword() {
+        if (session('access-token')) {
+            return redirect('/akademik/login');
+        } else {
+            return view('lupa-password');
+        }
+    }
+
+    public function doInvalidateForPass(Request $request) {
+        $jwt = $request->query('jwt');
+
+        if (!$jwt) {
+            abort(404);
+        }
+
+        return view('invalidate-password');
+    }
+
     public function login() {
         return view('login');
     }
