@@ -684,7 +684,8 @@ class RequestBackEnd
         $url = "/api/v1/auth/verify-otp";
         $response = $apiService->fetchPOST($request->only([
             'type',
-            'otp'
+            'otp',
+            'jwt'
         ]), $url);
         return response()->json(
             $response->json(),

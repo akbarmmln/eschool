@@ -236,11 +236,11 @@
 
                         <!-- Title -->
                         <h2 style="font-weight:600;color:#2f3542;margin-bottom:15px;">
-                            Request Tidak Valid
+                            Permintaan Tidak Valid
                         </h2>
 
                         <!-- Description -->
-                        <p style="
+                        <p id="deskripsi" style="
                             max-width:320px;
                             margin:0 auto;
                             line-height:1.7;
@@ -248,8 +248,8 @@
                             font-size:14px;
                             text-align: justify
                         ">
-                            Reset kata sandi yang Anda gunakan sudah tidak berlaku atau telah kedaluwarsa.
-                            Silakan lakukan permintaan reset password kembali untuk mendapatkan akses yang baru.
+                            Reset kata sandi yang Anda gunakan sudah tidak berlaku atau telah kedaluwarsa atau telah mengalami beberapa kali percobaan.
+                            Silakan lakukan permintaan reset kata sandi kembali untuk mendapatkan akses yang baru.
                         </p>
 
                         <!-- Button -->
@@ -273,22 +273,24 @@
 
         <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
         <script>
+            let countTry = 0;
             let timeLeft = 0;
             let countdownInterval;
             const loadingSection = document.getElementById('loadingSpinner')
             const otpSection = document.getElementById('otpSection')
             const passwordSection = document.getElementById('passwordSection')
             const invalidateLink = document.getElementById('invalidateLink')
+            const deskripsi = document.getElementById('deskripsi')
             
-            const params = new URLSearchParams(window.location.search);
-            const jwt = params.get('jwt');
-
             const inputs = document.querySelectorAll(".otp-input input");
             const otpLoader = document.getElementById("otpLoader");
             const otpError = document.getElementById("otpError");
 
             const countdownEl = document.getElementById("countdown");
             const resendBtn = document.getElementById("resendBtn");
+
+            const params = new URLSearchParams(window.location.search);
+            const jwt = params.get('jwt');
 
             document.addEventListener("DOMContentLoaded", async function () {
                 loadingSection.style.display = 'block';
@@ -310,9 +312,18 @@
                     passwordSection.style.display = 'none';
                     invalidateLink.style.display = 'none';
 
+                    nextSent = result.data.next_sent;
+                    countTry = result.data.counter;
+                    otpValidate = result.data.otp_validate;
                     timeLeft = result.data.inSecond;
                     startCountdown();
-                    console.log('asdasdasd', timeLeft)
+
+                    if (countTry <= 0 || otpValidate == 1) {
+                        deskripsi.innerHTML = `Anda telah mengalami 3 kali percobaan. Silahkan akses kembali pada tanggal ${moment(nextSent).format('DD/MM/YYYY')} jam ${moment(nextSent).format('HH:mm:ss')}`
+                        otpSection.style.display = 'none';
+                        passwordSection.style.display = 'none';
+                        invalidateLink.style.display = 'block';
+                    }
                 } catch(e) {
                     otpSection.style.display = 'none';
                     passwordSection.style.display = 'none';
@@ -328,12 +339,12 @@
             }
             // input behavior
             inputs.forEach((input, i) => {
-                input.addEventListener("input", () => {
+                input.addEventListener("input", async () => {
                     if (input.value && i < 5) inputs[i+1].focus();
-                    verifyOTP();
+                    await verifyOTP();
                 });
 
-                input.addEventListener("keydown", (e) => {
+                input.addEventListener("keydown", async (e) => {
                     if (e.key === "Backspace" && !input.value && i > 0) {
                         inputs[i-1].focus();
                     }
@@ -347,57 +358,57 @@
 
             async function verifyOTP() {
                 const otp = getOTP();
+
                 if (otp.length !== 6) return;
 
                 inputs.forEach(i => i.disabled = true);
                 otpLoader.style.display = "block";
                 otpError.innerText = "";
-                
-                // STOP countdown if needed, for now is in disabled
-                // if (countdownInterval) {
-                //     clearInterval(countdownInterval);
-                // }
 
                 try {
+                    const payload = {
+                        type: 'reset-password',
+                        otp: otp,
+                        jwt: jwt
+                    };
+
                     const result = await fetchJson('/_backend/auth/verify-otp', {
                         method: 'POST',
-                        body: {
-                            type: 'reset-password',
-                            otp: otp,
-                            jwt: jwt
-                        }
+                        body: payload
                     });
-                } catch(e) {
-                    consle.log('asdasdasdasdas', e)
+
+                    if (!result.ok) throw result;
+
+                    // pindah ke password form
+                    otpSection.style.display = 'none';
+                    passwordSection.style.display = 'block';
+                    invalidateLink.style.display = 'none';
+                } catch (e) {
+                    inputs.forEach(i => {
+                        i.value = "";
+                        i.disabled = false;
+                    });
+                    inputs[0].focus();
+
+                    const code = e?.code
+                    const message = e?.message
+                    if (code === '70006' || code === '70020' || code === '70023') {
+                        otpSection.style.display = 'none';
+                        passwordSection.style.display = 'none';
+                        invalidateLink.style.display = 'block';
+                    } else if (code === '70022') {
+                        countTry = countTry - 1
+                        otpError.innerText = `kode OTP tidak valid. Batas percobaan ${countTry} kali tersedia`;
+                        inputs.forEach(i => {
+                            i.value = "";
+                            i.disabled = false;
+                        });
+                        inputs[0].focus();
+                    }
+                } finally {
+                    otpLoader.style.display = "none";
                 }
-
-                // fetch('/verify-otp', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                //     },
-                //     body: JSON.stringify({ otp })
-                // })
-                // .then(res => res.json())
-                // .then(res => {
-                //     otpLoader.style.display = "none";
-
-                //     if (res.success) {
-                //         // pindah ke password form
-                //         otpSection.classList.add("hidden");
-                //         passwordSection.classList.remove("hidden");
-                //     } else {
-                //         otpError.innerText = "OTP salah";
-                //         inputs.forEach(i => {
-                //             i.value = "";
-                //             i.disabled = false;
-                //         });
-                //         inputs[0].focus();
-                //     }
-                // });
             }
-
 
             function formatTime(seconds) {
                 const m = String(Math.floor(seconds / 60)).padStart(2, '0');
@@ -417,6 +428,7 @@
                         countdownEl.innerText = "00:00";
                         resendBtn.style.pointerEvents = "auto";
                         resendBtn.style.opacity = "1";
+                        inputs.forEach(i => i.disabled = true);
                     }
                 }, 1000);
             }
