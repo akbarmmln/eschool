@@ -56,6 +56,7 @@ Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
 Route::post('/_backend/auth/invalidate-reset-password', [RequestBackEnd::class, 'doForgetPassword']);
+Route::post('/_backend/auth/invalidate/password', [RequestBackEnd::class, 'doInvalidatePassword']);
 Route::post('/_backend/auth/verify-otp', [RequestBackEnd::class, 'doVerifyOTP']);
 Route::post('/_backend/auth/invalidate-page', [RequestBackEnd::class, 'doInvalidatePage']);
 Route::post('/_backend/profile', [RequestBackEnd::class, 'doMyProfile']);

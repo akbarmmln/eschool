@@ -692,4 +692,16 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doInvalidatePassword(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/invalidate/password";
+        $response = $apiService->fetchPOST($request->only([
+            'password',
+            'session'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

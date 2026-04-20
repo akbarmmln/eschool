@@ -171,6 +171,22 @@
     </head>
 
     <body>
+        <div id="success-alert-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content modal-filled bg-success">
+                    <div class="modal-body p-4">
+                        <div class="text-center">
+                            <i class="dripicons-checkmark h1 text-white"></i>
+                            <h5 class="fw-bold text-white text-uppercase text-warning mb-3">BERHASIL</h5>
+                            <p id="containt_text" class="mt-3 text-white">Data berhasil dibuat
+                            </p>
+                            <button type="button" id="btnContinueSuccess" class="btn btn-light me-2 my-2" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="card">
                 <div id="loadingSpinner" class="text-center my-3" style="display: none;">
@@ -398,13 +414,18 @@
                         password: konfirm_password,
                         session: sessionUpdate
                     }
-                    console.log('asdasdasdasd', payload)
-                    // const result = await fetchJson('/_backend/auth/verify-otp', {
-                    //     method: 'POST',
-                    //     body: payload
-                    // });
-                } catch(e) {
+                    const result = await fetchJson('/_backend/auth/invalidate/password', {
+                        method: 'POST',
+                        body: payload
+                    });
 
+                    const modalElement = document.getElementById("success-alert-modal");
+                    const containtText = modalElement.querySelector("#containt_text");
+                    containtText.innerHTML = 'Perubahan kata sandi berhasil dilakukan'
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                } catch(e) {
+                    passError.innerText = "Terjadi kesalahan saat pemrosesan. Silahkan coba kembali";
                 } finally {
                     btnSimpanPassword.disabled = false;
                     btnSimpanPassword.innerHTML = 'Simpan';
@@ -460,6 +481,13 @@
                             i.disabled = false;
                         });
                         inputs[0].focus();
+                    } else {
+                        otpError.innerText = `Terjadi kesalahan saat pemrosesan. Silahkan coba kembali`;
+                        inputs.forEach(i => {
+                            i.value = "";
+                            i.disabled = false;
+                        });
+                        inputs[0].focus();
                     }
                 } finally {
                     otpLoader.style.display = "none";
@@ -510,6 +538,10 @@
                         this.classList.replace('ti-eye-off', 'ti-eye');
                     }
                 });
+            });
+
+            document.getElementById("btnContinueSuccess").addEventListener("click", function () {
+                window.location.href = '/akademik/login';
             });
         </script>
 
