@@ -125,7 +125,13 @@
                 color: #4c6ef5;
                 text-decoration: none;
             }
+
+            .toggle-password {
+                cursor: pointer;
+            }
         </style>
+
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/education_2.svg') }}">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
@@ -210,17 +216,33 @@
 
                 <!-- ================= PASSWORD SECTION ================= -->
                 <div id="passwordSection" class="hidden" style="display: none">
-                    <h2>Password Baru</h2>
-                    <p>Silakan masukkan password baru Anda.</p>
+                    <h2 style="
+                            max-width:320px;
+                            line-height:2;
+                            font-size:20px;
+                        ">
+                        Password Baru
+                    </h2>
+                    <p>Silakan masukkan kata sandi baru Anda.</p>
 
-                    <form id="resetForm">
-                        <div class="input-group">
-                            <input type="password" id="password" placeholder="Password baru" required>
-                            <input type="password" id="confirmPassword" placeholder="Konfirmasi password" required>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <div class="pass-group">
+                                <input type="password" id="password" class="form-control password">
+                                <span class="ti toggle-password ti-eye-off"></span>
+                            </div>
                         </div>
 
-                        <button type="submit">Simpan Password</button>
-                    </form>
+                        <div class="mb-3">
+                            <label class="form-label">Konfirmasi password</label>
+                            <div class="pass-group">
+                                <input type="password" id="konfirm_password" class="form-control konfirm_password">
+                                <span class="ti toggle-password ti-eye-off"></span>
+                            </div>
+                        </div>
+						<div class="mb-3">
+							<button type="submit" id="btn-simpan-password" class="btn btn-primary w-100">Simpan</button>
+					    </div>
 
                     <div class="loader" id="passLoader">
                         <div class="spinner"></div>
@@ -275,7 +297,11 @@
         <script>
             let countTry = 0;
             let timeLeft = 0;
-            let countdownInterval;
+            let countdownInterval, sessionUpdate;
+
+            const resetForm = document.getElementById('resetForm');
+            const btnSimpanPassword = document.getElementById('btn-simpan-password');
+
             const loadingSection = document.getElementById('loadingSpinner')
             const otpSection = document.getElementById('otpSection')
             const passwordSection = document.getElementById('passwordSection')
@@ -352,9 +378,38 @@
             });
 
             // reset password
-            document.getElementById("resetForm").addEventListener("submit", function(e) {
-                e.preventDefault();
-            });
+            btnSimpanPassword.addEventListener("click", async function(e) {
+                const passError = document.getElementById("passError");
+                const password = document.getElementById("password").value;
+                const konfirm_password = document.getElementById("konfirm_password").value;
+
+                btnSimpanPassword.disabled = true;
+                btnSimpanPassword.innerHTML = 'Memproses...';
+
+                passError.innerText = "";
+
+                if (password !== konfirm_password) {
+                    passError.innerText = "Password tidak sama dengan Konfirmasi password";
+                    return;
+                }
+
+                try {
+                    const payload = {
+                        password: konfirm_password,
+                        session: sessionUpdate
+                    }
+                    console.log('asdasdasdasd', payload)
+                    // const result = await fetchJson('/_backend/auth/verify-otp', {
+                    //     method: 'POST',
+                    //     body: payload
+                    // });
+                } catch(e) {
+
+                } finally {
+                    btnSimpanPassword.disabled = false;
+                    btnSimpanPassword.innerHTML = 'Simpan';
+                }
+            })
 
             async function verifyOTP() {
                 const otp = getOTP();
@@ -378,6 +433,7 @@
                     });
 
                     if (!result.ok) throw result;
+                    sessionUpdate = result.data
 
                     // pindah ke password form
                     otpSection.style.display = 'none';
@@ -432,6 +488,29 @@
                     }
                 }, 1000);
             }
+
+            document.querySelectorAll('.toggle-password').forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const group = this.closest('.pass-group');
+
+                    let input;
+                    if (group.querySelector('.password')) {
+                        input = group.querySelector('.password');
+                    } else if (group.querySelector('.konfirm_password')) {
+                        input = group.querySelector('.konfirm_password');
+                    }
+
+                    if (!input) return;
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.classList.replace('ti-eye', 'ti-eye-off');
+                    } else {
+                        input.type = 'password';
+                        this.classList.replace('ti-eye-off', 'ti-eye');
+                    }
+                });
+            });
         </script>
 
         <!-- jQuery -->
