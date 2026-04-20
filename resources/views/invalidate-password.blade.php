@@ -406,6 +406,8 @@
 
                 if (password !== konfirm_password) {
                     passError.innerText = "Password tidak sama dengan Konfirmasi password";
+                    btnSimpanPassword.disabled = false;
+                    btnSimpanPassword.innerHTML = 'Simpan';
                     return;
                 }
 
