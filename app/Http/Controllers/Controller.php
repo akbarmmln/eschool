@@ -163,4 +163,9 @@ class Controller
             return redirect('/akademik/login')->with('success', 'Logout berhasil.');
         }
     }
+
+    public function waliJurnal(Request $request, $id_jurnal, $id_siswa) {
+        $role = $request->auth_role;
+        return view('wali-jurnal', compact('role', 'id_jurnal', 'id_siswa'));
+    }
 }

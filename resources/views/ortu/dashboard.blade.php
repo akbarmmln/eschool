@@ -366,6 +366,8 @@
 		} else {
 			let no = 1;
 			rows.forEach(item => {
+				const jurnalRoute = "{{ route('wali-jurnal', ['id_jurnal' => ':id_jurnal', 'id_siswa' => ':id_siswa']) }}";
+				const url = jurnalRoute.replace(':id_jurnal', item.id).replace(':id_siswa', selectedID);
 				tbody.innerHTML += `
 					<tr>
 						<td>${no++}.</td>
@@ -374,7 +376,7 @@
 						<td>${item.refleksi}</td>
 						<td>${item.nama_kelas}</td>
 						<td>${item.nama_guru}</td>
-						<td>Details</td>
+						<td><a href="${url}" class="link-primary">Detail</a></td>
 					</tr>
 				`
 			})

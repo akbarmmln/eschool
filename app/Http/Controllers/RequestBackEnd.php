@@ -704,4 +704,15 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doSiswaJurnalDetail(Request $request, ApiService $apiService) {
+        $idjurnal = $request->idjurnal;
+        $idsiswa = $request->idsiswa;
+        $url = "/api/v1/siswa/jurnal/detail/$idjurnal/$idsiswa";
+        $response = $apiService->fetchGET($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

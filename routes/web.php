@@ -42,6 +42,9 @@ Route::middleware('check.login')->group(function () {
     
     //route for profile
     Route::get('/akademik/profile', [Controller::class, 'profile'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU . ',' . Role::ROLE_ORANG_TUA)->name('profile');
+
+    //route for wali lihat detail pengajaran
+    Route::get('/akademik/wali/jurnal/{id_jurnal}/{id_siswa}', [Controller::class, 'waliJurnal'])->middleware('auth.role:' . Role::ROLE_ORANG_TUA)->name('wali-jurnal');
 });
 
 Route::middleware('check.notlogin')->group(function () {
@@ -105,6 +108,7 @@ Route::post('/_backend/logic/ortu/add-access', [RequestBackEnd::class, 'doOrtuAd
 Route::post('/_backend/logic/ortu/reset-access', [RequestBackEnd::class, 'doOrtuResetAccess']);
 Route::post('/_backend/logic/ortu/unlink', [RequestBackEnd::class, 'doOrtuUnlink']);
 Route::post('/_backend/logic/siswa/jurnal', [RequestBackEnd::class, 'doSiswaJurnal']);
+Route::post('/_backend/logic/siswa/jurnal/detail', [RequestBackEnd::class, 'doSiswaJurnalDetail']);
 
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);
