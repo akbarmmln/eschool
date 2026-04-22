@@ -715,4 +715,14 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doRoleList(Request $request, ApiService $apiService) {
+        $page = $request->page;
+        $url = "/api/v1/auth/role/list/$page";
+        $response = $apiService->fetchGET($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

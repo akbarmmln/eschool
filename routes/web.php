@@ -45,6 +45,9 @@ Route::middleware('check.login')->group(function () {
 
     //route for wali lihat detail pengajaran
     Route::get('/akademik/wali/jurnal/{id_jurnal}/{id_siswa}', [Controller::class, 'waliJurnal'])->middleware('auth.role:' . Role::ROLE_ORANG_TUA)->name('wali-jurnal');
+
+    //route for role-akses
+    Route::get('/akademik/role-akses', [Controller::class, 'roleAkses'])->middleware('auth.role:' . Role::ROLE_ADMIN)->name('role-akses');
 });
 
 Route::middleware('check.notlogin')->group(function () {
@@ -57,6 +60,7 @@ Route::get('/akademik/invalidate-password', [Controller::class, 'doInvalidateFor
 Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('forbidden');
 Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
+Route::post('/_backend/logic/auth/role/list', [RequestBackEnd::class, 'doRoleList']);
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
 Route::post('/_backend/auth/invalidate-reset-password', [RequestBackEnd::class, 'doForgetPassword']);
 Route::post('/_backend/auth/invalidate/password', [RequestBackEnd::class, 'doInvalidatePassword']);

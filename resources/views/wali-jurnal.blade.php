@@ -257,9 +257,9 @@
                 item.forEach(lineItem => {
                     const keteranganNilai =
                         lineItem.nilai == 1 ? 'Berkembang Sangat Baik' :
-                        absensi == 2 ? 'Berkembang Sesuai Harapan' :
-                        absensi == 3 ? 'Mulai Berkembang' :
-                        absensi == 4 ? 'Belum Berkembang' :
+                        lineItem.nilai == 2 ? 'Berkembang Sesuai Harapan' :
+                        lineItem.nilai == 3 ? 'Mulai Berkembang' :
+                        lineItem.nilai == 4 ? 'Belum Berkembang' :
                         '-';
                     tBodyitemPembelajaran.innerHTML += `
                     <tr>

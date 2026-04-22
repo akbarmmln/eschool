@@ -168,4 +168,9 @@ class Controller
         $role = $request->auth_role;
         return view('wali-jurnal', compact('role', 'id_jurnal', 'id_siswa'));
     }
+
+    public function roleAkses(Request $request) {
+        $role = $request->auth_role;
+        return response()->view('role-akses', compact('role'));
+    }
 }
