@@ -109,7 +109,7 @@
                     result.data.rows.forEach(item => {
                         const role =
                             item.role == 0 ? 'Admin' :
-                            item.role == 1 ? 'Non Admin' :
+                            item.role == 1 ? 'User' :
                             '-';
 
                         tbody.innerHTML += `
