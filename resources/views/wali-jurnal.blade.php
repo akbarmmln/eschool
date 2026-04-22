@@ -1,12 +1,20 @@
 @extends('ortu.app')
 @section('content')
+<style>
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 	<div class="content">
 		<!-- Page Header -->
 		<div class="d-md-flex d-block align-items-center justify-content-between mb-3">
 			<div class="my-auto mb-2">
-				<h3 class="page-title mb-1">Detail Jurnal</h3>
+				<h3 id="title" class="page-title mb-1">Detail Jurnal...</h3>
 				<nav>
 					<ol class="breadcrumb mb-0">
 						<li class="breadcrumb-item">
@@ -59,7 +67,7 @@
 					<div class="col-md-6">
 						<div class="bg-light-300 d-flex align-items-center p-3 mb-3">
 							<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
-								<i class="ti ti-door"></i>
+								<i class="ti ti-calendar-time"></i>
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Tanggal dan Jam Mengajar</h6>
@@ -71,7 +79,7 @@
 					<div class="col-md-6">
 						<div class="bg-light-300 d-flex align-items-center p-3 mb-3">
 							<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
-								<i class="ti ti-book"></i>
+								<i class="ti ti-door"></i>
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Kelas</h6>
@@ -83,7 +91,7 @@
 					<div class="col-md-6">
 						<div class="bg-light-300 d-flex align-items-center p-3 mb-3">
 							<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
-								<i class="ti ti-school"></i>
+								<i class="ti ti-book"></i>
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Materi</h6>
@@ -119,7 +127,7 @@
 					<div class="col-md-6">
 						<div class="bg-light-300 d-flex align-items-center p-3 mb-3">
 							<div class="avatar avatar-lg bg-danger-transparent flex-shrink-0 me-2">
-								<i class="ti ti-calendar-time"></i>
+								<i class="ti ti-bookmark-edit me-2"></i>
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Kehadiran</h6>
@@ -130,6 +138,38 @@
 				</div>
 			</div>
 		</div>
+
+        <div id="pagesuccess2" class="col-xxl-12 col-xl-12" style="display: none;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+						<div class="card-header">
+							<h5>Kegitan Belajar</h5>
+						</div>
+                        <div id="renderSuccess" style="display: none;" class="card-body">
+                            <div class="custom-datatable-filter table-responsive">
+                                <table class="table">
+                                    <thead class="thead-light">
+                                        <tr>
+											<th style="width:10%">No</th>
+                                            <th style="width:40%">Nama Pembelajaran</th>
+                                            <th style="width:20%">Nilai</th>
+                                            <th style="width:20%">Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itemPembelajaran">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="renderError" style="display: none;" class="card-body">
+                            <div class="error" id="text_render_error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 	</div>
 </div>
 <!-- /Page Wrapper -->
@@ -141,7 +181,14 @@
     const loadingSpinner = document.getElementById('loadingSpinner')
     const pagefailed = document.getElementById('pagefailed')
     const pagesuccess1 = document.getElementById('pagesuccess1')
-    
+    const pagesuccess2 = document.getElementById('pagesuccess2')
+    const renderSuccess = pagesuccess2.querySelector('#renderSuccess');
+    const renderError = pagesuccess2.querySelector('#renderError');
+    const textRenderError = renderError.querySelector('#text_render_error');
+
+    const tBodyitemPembelajaran = document.getElementById("itemPembelajaran");
+
+    const title = document.getElementById('title')
     const tglJamMengajar = document.getElementById('tgl_jam_mengajar')
     const namaKelas = document.getElementById('nama_kelas')
     const materi = document.getElementById('materi')
@@ -153,9 +200,77 @@
         loadingSpinner.style.display = "block"
         pagefailed.style.display = "none"
         pagesuccess1.style.display = "none"
+        pagesuccess2.style.display = "none"
 
-        callData();
+        const dataSilabus = await callData();
+        renderSilabus(dataSilabus);
     })
+
+    async function renderSilabus(dataSilabus) {
+        pagesuccess2.style.display = "block"
+        try {
+            const result = {};
+            dataSilabus.forEach(item => {
+                const key = item.id_silabus;
+
+                if (!result[key]) {
+                    result[key] = {
+                        title: item.title_silabus,
+                        item: []
+                    };
+                }
+
+                result[key].item.push({
+                    item_silabus: item.item_silabus,
+                    nilai: item.nilai,
+                    keterangan: item.keterangan
+                });
+            });
+            let hasil = Object.values(result);
+            hasil = hasil[0]
+            console.log('asdasdasdas', hasil)
+            const title = hasil.title;
+            const item = hasil.item
+
+            tBodyitemPembelajaran.innerHTML = `
+                <tr>
+                </tr>
+            `;
+            if (item.length == 0) {
+                tBodyitemPembelajaran.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center">
+                        Data tidak tersedia
+                    </td>
+                </tr>
+                `;
+            } else {
+                let no = 1;
+                item.forEach(lineItem => {
+                    const keteranganNilai =
+                        lineItem.nilai == 1 ? 'Berkembang Sangat Baik' :
+                        absensi == 2 ? 'Berkembang Sesuai Harapan' :
+                        absensi == 3 ? 'Mulai Berkembang' :
+                        absensi == 4 ? 'Belum Berkembang' :
+                        '-';
+                    tBodyitemPembelajaran.innerHTML += `
+                    <tr>
+                        <td>${no++}.</td>
+                        <td>${lineItem.item_silabus}</td>
+                        <td>${keteranganNilai}</td>
+                        <td>${lineItem.keterangan ?? '-'}</td>
+                    </tr>`;
+                })
+            }
+            renderSuccess.style.display = "block"
+            renderError.style.display = "none"
+        } catch(e) {
+            console.log('asdasdsd', e)
+            textRenderError.innerHTML = 'Kegiatan pembelajaran gagal ditampilkan. Silahkan coba untuk refresh halaman.'
+            renderSuccess.style.display = "none"
+            renderError.style.display = "block"
+        }
+    }
 
     async function callData() {
         try {
@@ -166,7 +281,6 @@
                     idsiswa: id_siswa,
                 }
             });
-            console.log('asdasdasd', result)
             pagefailed.style.display = "none"
             pagesuccess1.style.display = "block"
 
@@ -177,8 +291,11 @@
             const materi_ = result.data.parent.materi;
             const refleksi_ = result.data.parent.refleksi;
             const nama_guru = result.data.parent.nama_guru;
+            const nama_siswa = toTitleCase(result.data.subParent.nama_siswa);
             const absensi = result.data.subParent.absensi;
+            const dataSilabus = result.data.child;
 
+            title.innerHTML = `Detail Jurnal ${nama_siswa ?? ''}`;
             tglJamMengajar.innerHTML = `${dateFormatIndo(tanggal)} • ${moment(jam_mulai, 'HH:mm').format('HH:mm')} - ${moment(jam_selesai, 'HH:mm').format('HH:mm')} WIB`;
             namaKelas.innerHTML = nama_kelas;
             materi.innerHTML = materi_;
@@ -190,12 +307,24 @@
                 absensi == 3 ? 'Sakit' :
                 absensi == 4 ? 'Alfa' :
                 '-';
+            
+            return dataSilabus;
         } catch(e) {
             pagefailed.style.display = "block"
             pagesuccess1.style.display = "none"
+            pagesuccess2.style.display = "none"
+            return null;
         } finally {
             loadingSpinner.style.display = "none"
         }
+    }
+
+    function toTitleCase(text) {
+        return text
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     }
 
     function dateFormatIndo(date) {

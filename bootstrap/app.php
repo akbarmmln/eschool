@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(\App\Http\Middleware\CheckRedisConnection::class);
+        
         $middleware->alias([
             'check.login' => \App\Http\Middleware\CheckLogin::class,
             'check.notlogin' => \App\Http\Middleware\RedirectIfAuthenticated::class,
