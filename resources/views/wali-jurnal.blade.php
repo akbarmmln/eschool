@@ -209,26 +209,34 @@
     async function renderSilabus(dataSilabus) {
         pagesuccess2.style.display = "block"
         try {
+            let hasil;
             const result = {};
-            dataSilabus.forEach(item => {
-                const key = item.id_silabus;
-
-                if (!result[key]) {
-                    result[key] = {
-                        title: item.title_silabus,
-                        item: []
-                    };
+            if (dataSilabus.length == 0) {
+                hasil = {
+                    title: null,
+                    item: []
                 }
+            } else {
+                dataSilabus.forEach(item => {
+                    const key = item.id_silabus;
 
-                result[key].item.push({
-                    item_silabus: item.item_silabus,
-                    nilai: item.nilai,
-                    keterangan: item.keterangan
+                    if (!result[key]) {
+                        result[key] = {
+                            title: item.title_silabus,
+                            item: []
+                        };
+                    }
+
+                    result[key].item.push({
+                        item_silabus: item.item_silabus,
+                        nilai: item.nilai,
+                        keterangan: item.keterangan
+                    });
                 });
-            });
-            let hasil = Object.values(result);
-            hasil = hasil[0]
-            console.log('asdasdasdas', hasil)
+                hasil = Object.values(result);
+                hasil = hasil[0]
+            }
+            
             const title = hasil.title;
             const item = hasil.item
 
@@ -265,7 +273,6 @@
             renderSuccess.style.display = "block"
             renderError.style.display = "none"
         } catch(e) {
-            console.log('asdasdsd', e)
             textRenderError.innerHTML = 'Kegiatan pembelajaran gagal ditampilkan. Silahkan coba untuk refresh halaman.'
             renderSuccess.style.display = "none"
             renderError.style.display = "block"
