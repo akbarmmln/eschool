@@ -131,30 +131,31 @@
 							</div>
 						</div>
 
-                        <div class="custom-datatable-filter table-responsive">
-                            <table class="table">
-                                <thead class="thead-light">
-                                    <tr>
-										<th style="width:5%">No</th>
-                                        <th style="width:10%">Tanggal</th>
-                                        <th style="width:10%">Materi</th>
-										<th style="width:10%">Refleksi</th>
-										<th style="width:20%">Kelas</th>
-										<th style="width:20%">Pengajar</th>
-										<th style="width:20%">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="itemData">
-                                </tbody>
-                            </table>
-							<div id="loadingSpinnerTabel" class="text-center my-3" style="display: none;">
-								<button id="loadingSpinnerTabel" class="btn btn-info-light" type="button" disabled="">
-									<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
-										Memuat data...
-								</button>
-							</div>
-                        </div>
 						<div class="card-body">
+							<div class="custom-datatable-filter table-responsive">
+								<table class="table">
+									<thead class="thead-light">
+										<tr>
+											<th>No</th>
+											<th>Tanggal</th>
+											<th>Materi</th>
+											<th>Refleksi</th>
+											<th>Kelas</th>
+											<th>Pengajar</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody id="itemData">
+									</tbody>
+								</table>
+								<div id="loadingSpinnerTabel" class="text-center my-3" style="display: none;">
+									<button id="loadingSpinnerTabel" class="btn btn-info-light" type="button" disabled="">
+										<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+											Memuat data...
+									</button>
+								</div>
+							</div>
+
 							<nav aria-label="Page navigation" class="pagination-style-2">
 								<ul class="pagination justify-content-end mb-0" id="paginationContainer">
 								</ul>
@@ -298,7 +299,7 @@
 
 			const today = new Date();
 			const sevenDaysAgo = new Date();
-			sevenDaysAgo.setDate(today.getDate() - 7);
+			sevenDaysAgo.setDate(today.getDate() - 20);
 			public_date_to = moment(today).format('DD-MM-YYYY')
 			public_date_from = moment(sevenDaysAgo).format('DD-MM-YYYY')
 

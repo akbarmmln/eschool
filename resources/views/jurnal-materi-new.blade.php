@@ -88,7 +88,7 @@
 								<i class="ti ti-book"></i>
 							</div>
 							<div>
-								<h6 class="mb-1 fw-bold">Materi</h6>
+								<h6 class="materi-html mb-1 fw-bold">Materi</h6>
 								<p id="materi" class="mb-0">-</p>
 							</div>
 						</div>
@@ -320,6 +320,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
 	const id = @json($id);
@@ -573,7 +574,7 @@
 
 			tglJamMengajar.innerHTML = `${dateFormatIndo(tanggal)} • ${jam_mulai} - ${jam_selesai} WIB`
 			namaKelas.innerHTML = `${nama_kelas}`
-			materiX.innerHTML = `${materi}`
+			materiX.innerHTML = `${DOMPurify.sanitize(materi)}`
 			refleksiX.innerHTML = `${refleksi}`
 			jumlahSiswa.innerHTML = `${data_siswa.length} Siswa`
 			pengajar.innerHTML = `${nama_guru}`

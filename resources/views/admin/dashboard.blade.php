@@ -265,11 +265,11 @@
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Materi Pembelajaran</label>
-                            <textarea rows="3" id="materi" class="form-control materi" placeholder="Tuliskan materi yang diajarkan..."></textarea>
+                            <textarea rows="3" id="materi" class="form-control editor" placeholder="Tuliskan materi yang diajarkan..."></textarea>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Refleksi Pembelajaran</label>
-                            <textarea rows="3" id="reflesi" class="form-control reflesi" placeholder="Tuliskan refleksi pembelajaran..."></textarea>
+                            <textarea rows="3" id="refleksi" class="form-control editor" placeholder="Tuliskan refleksi pembelajaran..."></textarea>
 						</div>
                     </div>
 				</div>
@@ -320,6 +320,9 @@
         </div>
     </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+<script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
@@ -367,7 +370,7 @@
         const jam_mulai = addModal.querySelector('#jam_mulai');
         const jam_selesai = addModal.querySelector('#jam_selesai');
         const materi = addModal.querySelector('#materi');
-        const refleksi = addModal.querySelector('#reflesi');
+        const refleksi = addModal.querySelector('#refleksi');
 
         if (tanggal) tanggal.value = '';
         if (jam_mulai) jam_mulai.value = '';
@@ -381,7 +384,7 @@
         const jamMulaiInput = addModal.querySelector('#jam_mulai');
         const jamSelesaiInput = addModal.querySelector('#jam_selesai');
         const materiInput = addModal.querySelector('#materi');
-        const refleksiInput = addModal.querySelector('#reflesi');
+        const refleksiInput = addModal.querySelector('#refleksi');
         const btn = addModal.querySelector('.btn_simpan_edit');
         btn.disabled = true;
 
@@ -400,10 +403,11 @@
                 '#jam_mulai',
                 '#jam_selesai',
                 '#materi',
-                '#reflesi'
+                '#refleksi'
             ]
         });
         addModal._validator = validator;
+        window.currentValidator = validator;
     })
 
     btnLanjutkan.addEventListener('click', async function (event) {
@@ -412,7 +416,7 @@
         const jamMulaiInput = addModal.querySelector('#jam_mulai').value;
         const jamSelesaiInput = addModal.querySelector('#jam_selesai').value;
         const materiInput = addModal.querySelector('#materi').value;
-        const refleksiInput = addModal.querySelector('#reflesi').value;
+        const refleksiInput = addModal.querySelector('#refleksi').value;
 
         if (isEmpty(tanggalInput)) {
             showToast('Hari / Tanggal pembelajaran wajib terisi', 'error')
@@ -623,6 +627,43 @@
             });
             el._dp = dp;
         });
+        
+        tinymce.init({
+            selector: '.editor',
+            height: 250,
+            license_key: 'gpl',
+
+            menubar: false,
+
+            plugins: [
+                'lists', 'link', 'autolink'
+            ],
+
+            toolbar: 'bold italic underline | bullist numlist | link | undo redo',
+
+            branding: false,
+
+            skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
+            content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
+
+            setup: function (editor) {
+                editor.on('input change keyup', function () {
+                    editor.save();
+
+                    // trigger validation manual
+                    if (window.currentValidator) {
+                        window.currentValidator.validate();
+                    }
+                });
+            },
+            
+            content_style: `
+                body { 
+                    font-family: Inter, sans-serif; 
+                    font-size:14px;
+                }
+            `
+        });
 
         hapusFilter.classList.add("d-none");
         cariFilter.classList.remove("d-none");
@@ -767,7 +808,7 @@
                                         Materi
                                     </div>
                                     <div class="text-black small">
-                                        ${item.materi}
+                                        ${DOMPurify.sanitize(item.materi)}
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -775,7 +816,7 @@
                                         Refleksi
                                     </div>
                                     <div class="text-black small">
-                                        ${item.refleksi}
+                                        ${DOMPurify.sanitize(item.refleksi)}
                                     </div>
                                 </div>
 
