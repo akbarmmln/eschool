@@ -630,26 +630,21 @@
         
         tinymce.init({
             selector: '.editor',
-            height: 250,
+            min_height: 250,
+            max_height: 250,
             license_key: 'gpl',
-
             menubar: false,
-
             plugins: [
                 'lists', 'link', 'autolink'
             ],
-
-            toolbar: 'bold italic underline | bullist numlist | link | undo redo',
-
+            toolbar: 'bold italic underline | bullist numlist outdent indent | undo redo',
             branding: false,
-
             skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
             content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
 
             setup: function (editor) {
                 editor.on('input change keyup', function () {
                     editor.save();
-
                     // trigger validation manual
                     if (window.currentValidator) {
                         window.currentValidator.validate();
@@ -668,10 +663,8 @@
         hapusFilter.classList.add("d-none");
         cariFilter.classList.remove("d-none");
 
-        Promise.allSettled([
-            loadProfile(),
-            loadDataJurnal(1)
-        ]);
+        loadProfile()
+        loadDataJurnal(1)
     })
 
     async function loadProfile() {
@@ -679,6 +672,7 @@
             const result = await fetchJson('/_backend/profile', {
                 method: 'POST'
             });
+            console.log('1')
             const nama = result?.data?.nama
             const nama_kelas = result?.data?.nama_kelas ?? ''
             setData('nama', `${getGreeting()}, ${nama}`);
@@ -716,7 +710,7 @@
                     sampai: tglSampai
                 }
             });
-
+            console.log('2')
             if (!result.ok) {
                 jurnal_history_found_page.style.display = "none";
                 jurnal_history_not_found_page.style.display = "block";

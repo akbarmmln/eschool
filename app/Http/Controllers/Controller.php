@@ -149,7 +149,7 @@ class Controller
     }
 
     public function login() {
-        return view('login');
+        return view('login-v2');
     }
 
     public function doLogout(string $status = 'success') {
