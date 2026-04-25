@@ -129,13 +129,13 @@
 
         .title-main {
             font-size: 16px;
-            color: #ffffff;
+            color: rgba(255,255,255,0.85);
         }
 
         /* bawah (lebih kecil) */
         .title-sub {
             font-size: 17.8px;
-            color: rgba(255,255,255,0.85);
+            color: #ffffff;
         }
 
         .btn-login:focus {
