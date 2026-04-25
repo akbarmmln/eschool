@@ -134,7 +134,7 @@
 
         /* bawah (lebih kecil) */
         .title-sub {
-            font-size: 16px;
+            font-size: 17.8px;
             color: rgba(255,255,255,0.85);
         }
 
@@ -217,8 +217,8 @@
     <div class="login-card text-center">
         <img src="https://s3.nevaobjects.id/bucket-sit/logo_tp.png" class="logo" alt="Logo">
         <h4 class="title">
-            <span class="title-main">Welcome to daily dan weekly</span><br>
-            <span class="title-sub">Report Khalifa IMS Nursery & Kindergarten</span>
+            <span class="title-main">Welcome to daily dan weekly report</span><br>
+            <span class="title-sub">Khalifa IMS Nursery&Kindergarten</span>
         </h4>
         <form id="form-login">
             <div class="mb-3 text-start">

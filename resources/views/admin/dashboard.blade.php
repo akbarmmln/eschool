@@ -673,14 +673,14 @@
                 method: 'POST'
             });
             console.log('1')
-            const nama = result?.data?.nama
+            const nama = result?.data?.nama ?? ''
             const nama_kelas = result?.data?.nama_kelas ?? ''
             setData('nama', `${getGreeting()}, ${nama}`);
-            setData('detail', 'Have a Good day at work');
+            setData('detail', 'daily & weekly report student of Khalifa IMS Nursery&Kindergarten');
             setData('kelas', `Admin & Guru wali kelas ${nama_kelas}`);
         } catch(e) {
             setData('nama', `-`);
-            setData('detail', 'Have a Good day at work');
+            setData('detail', 'daily & weekly report student of Khalifa IMS Nursery&Kindergarten');
             setData('kelas', `-`);
         }
     }
