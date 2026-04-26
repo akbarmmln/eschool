@@ -6,11 +6,46 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/education_2.svg') }}">
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
+        /* =========================
+        GLOBAL
+        ========================= */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* =========================
+        SPLIT LAYOUT (DESKTOP)
+        ========================= */
+        .login-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* kiri (form) */
+        .login-left {
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+        }
+
+        /* kanan (background image) */
+        .login-right {
+            width: 70%;
+            background: url('https://s3.nevaobjects.id/bucket-sit/background_school.png') no-repeat center center/cover;
+            background-size: 100% 100%;
+        }
+
+        /* =========================
+        CARD LOGIN
+        ========================= */
         .forgot-password {
             color: #ffffff;
             font-size: 14px;
@@ -29,42 +64,6 @@
             margin-top: 15px;
             margin-bottom: 15px;
             opacity: 0.9;
-        }
-
-        .input-group-custom {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 0 10px;
-        }
-
-        .input-group-custom input {
-            background: transparent !important;
-            border: none !important;
-            color: #fff;
-            flex: 1;
-            padding: 10px;
-        }
-
-        .input-group-custom input:focus {
-            outline: none;
-            box-shadow: none;
-        }
-
-        .toggle-password {
-            cursor: pointer;
-            color: rgba(255,255,255,0.8);
-        }
-
-        body {
-            height: 100vh;
-            background: url('https://s3.nevaobjects.id/bucket-sit/background_school.png') no-repeat center center/cover;
-            background-size: 100% 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', sans-serif;
         }
 
         .login-card {
@@ -98,11 +97,62 @@
         }
 
         .logo {
-            width: 150px;
-            height: auto; /* 🔥 fix distorsi */
+            width: 120px;
             margin-bottom: 20px;
         }
 
+        .title {
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .title-main {
+            font-size: 15px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .title-sub {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        /* =========================
+        INPUT
+        ========================= */
+        .form-control {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: #eee;
+        }
+
+        .input-group-custom {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 0 10px;
+        }
+
+        .input-group-custom input {
+            background: transparent !important;
+            border: none !important;
+            color: #fff;
+            flex: 1;
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* =========================
+        BUTTON
+        ========================= */
         .btn-login {
             background-color: #0d6efd;
             border: none;
@@ -119,37 +169,19 @@
             cursor: not-allowed;
         }
 
-        .title {
-            font-weight: bold;
-            text-align: left;
-            line-height: 1.1;
-            margin: 0;
-            margin-bottom: 20px;
-        }
-
-        .title-main {
-            font-size: 16px;
-            color: rgba(255,255,255,0.85);
-        }
-
-        /* bawah (lebih kecil) */
-        .title-sub {
-            font-size: 17.8px;
-            color: #ffffff;
-        }
-
         .btn-login:focus {
             outline: none;
             box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
         }
-        
-        /* overlay desktop */
-        /* body::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.3);
-        } */
+
+        /* =========================
+        FOOTER
+        ========================= */
+        .forgot-password {
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+        }
 
         /* =========================
         MOBILE VERSION
@@ -157,6 +189,19 @@
         @media (max-width: 576px) {
             body {
                 background: #000;
+            }
+
+            .login-container {
+                display: block;
+            }
+
+            .login-right {
+                display: none;
+            }
+
+            .login-left {
+                width: 100%;
+                background: none;
             }
 
             .login-card {
@@ -198,8 +243,6 @@
 
             .logo {
                 width: 80px;
-                height: auto; /* 🔥 fix distorsi */
-                margin-bottom: 20px;
             }
         }
     </style>
@@ -214,35 +257,49 @@
             </div>
         </div>
     </div>
-    <div class="login-card text-center">
-        <img src="https://s3.nevaobjects.id/bucket-sit/logo_tp.png" class="logo" alt="Logo">
-        <h4 class="title">
-            <span class="title-main">Welcome to daily dan weekly report</span><br>
-            <span class="title-sub">Khalifa IMS Nursery&Kindergarten</span>
-        </h4>
-        <form id="form-login">
-            <div class="mb-3 text-start">
-                <label class="form-label">Email</label>
-                <input type="text" class="form-control" id="email" placeholder="Masukkan email">
-            </div>
 
-            <div class="mb-3 text-start">
-                <label class="form-label">Password</label>
+    <div class="login-container">
+        <!-- RIGHT (IMAGE) -->
+        <div class="login-right"></div>
 
-                <div class="input-group-custom">
-                    <input type="password" class="form-control" id="password" placeholder="Masukkan password">
+        <!-- LEFT (FORM) -->
+        <div class="login-left">
+            <div class="login-card text-center">
 
-                    <span class="toggle-password" onclick="togglePassword()">
-                    <i class="fa fa-eye-slash" id="eyeIcon"></i>
-                    </span>
-                </div>
+                <img src="https://s3.nevaobjects.id/bucket-sit/logo_tp.png" class="logo">
+
+                <h4 class="title">
+                    <span class="title-main">Welcome to daily dan weekly report</span><br>
+                    <span class="title-sub">Khalifa IMS Nursery & Kindergarten</span>
+                </h4>
+
+                <form id="form-login">
+                    <div class="mb-3 text-start">
+                        <label>Email</label>
+                        <input type="text" id="email" class="form-control" autocomplete="off" placeholder="Masukkan email">
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label>Password</label>
+                        <div class="input-group-custom">
+                            <input type="password" id="password" class="form-control" autocomplete="off" placeholder="Masukkan password">
+                            <span class="toggle-password" onclick="togglePassword()">
+                                <i class="fa fa-eye-slash" id="eyeIcon"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn_login" class="btn btn-login w-100">
+                        Masuk
+                    </button>
+
+                    <div class="mt-3">
+                        <a href="{{ route('lupa-password') }}" class="forgot-password">Lupa Password ?</a>
+                    </div>
+                </form>
+
             </div>
-        </form>
-            <button type="submit" id="btn_login" class="btn btn-login w-100 ">Masuk</button>
-            <div class="options">
-                <label></label>
-                <a class="forgot-password" href="{{ route('lupa-password') }}">Lupa Password ?</a>
-            </div>
+        </div>
     </div>
 
     {{-- Flash Message --}}
@@ -335,13 +392,11 @@
             const icon = document.getElementById("eyeIcon");
 
             if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
+                input.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
             } else {
-            input.type = "password";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
+                input.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
             }
         }
     </script>
