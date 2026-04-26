@@ -67,7 +67,7 @@
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(16, 178, 16, 0.15););
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
