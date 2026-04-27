@@ -117,6 +117,7 @@ Route::post('/_backend/logic/siswa/jurnal/detail', [RequestBackEnd::class, 'doSi
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);
 Route::post('/_backend/logic/jurnal-detail', [RequestBackEnd::class, 'doDetailJurnal']);
+Route::post('/_backend/logic/jurnal-delete', [RequestBackEnd::class, 'doDeleteJurnal']);
 Route::post('/_backend/logic/jurnal-update-absensi', [RequestBackEnd::class, 'doUpdateAbsensi']);
 Route::post('/_backend/logic/inisiasi-penilaian', [RequestBackEnd::class, 'doInisiasiPenilaian']);
 Route::post('/_backend/logic/update-penilaian', [RequestBackEnd::class, 'doUpdatePenilaian']);

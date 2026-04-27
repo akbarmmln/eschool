@@ -1,88 +1,108 @@
 @extends('admin.app')
 @section('content')
 <style>
-.shimmer {
-    position: relative;
-    overflow: hidden;
-    background: rgba(255,255,255,0.25);
-    border-radius: 6px;
-}
-
-.shimmer::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150px;
-    height: 100%;
-    width: 150px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,0.6),
-        transparent
-    );
-    animation: shimmer 1.2s infinite;
-}
-
-@keyframes shimmer {
-    100% {
-        left: 100%;
+    .shimmer {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255,255,255,0.25);
+        border-radius: 6px;
     }
-}
 
-.shimmer-text-lg {
-    height: 28px;
-    width: 260px;
-    margin-bottom: 10px;
-}
+    .shimmer::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -150px;
+        height: 100%;
+        width: 150px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.6),
+            transparent
+        );
+        animation: shimmer 1.2s infinite;
+    }
 
-.shimmer-text-md {
-    height: 18px;
-    width: 200px;
-    margin-bottom: 10px;
-}
+    @keyframes shimmer {
+        100% {
+            left: 100%;
+        }
+    }
 
-.shimmer-text-sm {
-    height: 16px;
-    width: 320px;
-}
+    .shimmer-text-lg {
+        height: 28px;
+        width: 260px;
+        margin-bottom: 10px;
+    }
 
-.spin {
-    display: inline-block;
-    animation: spin 1s linear infinite;
-}
+    .shimmer-text-md {
+        height: 18px;
+        width: 200px;
+        margin-bottom: 10px;
+    }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+    .shimmer-text-sm {
+        height: 16px;
+        width: 320px;
+    }
 
-/* Biar lebih modern */
-.air-datepicker {
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    font-family: 'Inter', sans-serif;
+    .spin {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Biar lebih modern */
+    .air-datepicker {
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        font-family: 'Inter', sans-serif;
 
 
-/* Selected date */
-.air-datepicker-cell.-selected- {
-    background: #4f46e5 !important;
-}
+    /* Selected date */
+    .air-datepicker-cell.-selected- {
+        background: #4f46e5 !important;
+    }
 
-/* Hover */
-.air-datepicker-cell:hover {
-    background: #eef2ff;
-}
+    /* Hover */
+    .air-datepicker-cell:hover {
+        background: #eef2ff;
+    }
 
-/* Today */
-.air-datepicker-cell.-current- {
-    background: #e0e7ff;
-}
+    /* Today */
+    .air-datepicker-cell.-current- {
+        background: #e0e7ff;
+    }
 
-.air-datepicker {
-    z-index: 9999 !important;
-}
+    .air-datepicker {
+        z-index: 9999 !important;
+    }
 </style>
+
+<!-- Delete Modal -->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="delete-modal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<span class="delete-icon">
+						<i class="ti ti-trash-x"></i>
+					</span>
+					<h4>Konfirmasi Penghapusan</h4>
+					<p id="title_konfirmasi">Anda akan menghapus data yang dipilih, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya..</p>
+					<div class="d-flex justify-content-center">
+						<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Batalkan</a>
+						<button type="submit" class="btn btn-danger btn_delete">Ya, Hapus</button>
+					</div>
+				</div>				
+			</div>
+		</div>
+</div>
+<!-- /Delete Modal -->
 
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -326,7 +346,7 @@
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
-    let idSukses;
+    let idSukses, selectedIdDelete;
     let isLoading = false;
     let tglDari = "";
     let tglSampai = ""
@@ -334,6 +354,9 @@
     const tipeAccount = @json($tipe_account);
     const today = new Date();
     
+    const delModal = document.getElementById('delete-modal');
+    const btnDel = delModal.querySelector('.btn_delete');
+
     const textResult = document.getElementById('text_result');
     const buttonHapusFilter = document.getElementById('button_hapus_filter');
     const hapusFilter = document.getElementById('hapus_filter');
@@ -355,6 +378,51 @@
         year: 'numeric' 
     };
     const formattedDate = today.toLocaleDateString('id-ID', options);
+
+    delModal.addEventListener('hidden.bs.modal', function () {
+        selectedIdDelete = null;
+    })
+    delModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // tombol yang diklik
+        const title_konfirmasi = delModal.querySelector('#title_konfirmasi')
+        selectedIdDelete = button.getAttribute('data-id');
+
+        title_konfirmasi.innerHTML = `Anda akan menghapus data yang dipilih, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya..`;
+    });
+    btnDel.addEventListener('click', async function (event) {
+        if (!selectedIdDelete) {
+            showToast('Pilih data yang akan dihapus', 'error');
+            return;
+        };
+        btnDel.disabled = true;
+        btnDel.innerHTML = 'Memproses...';
+
+        try {
+            const result = await fetchJson('/_backend/logic/jurnal-delete', {
+                method: 'POST',
+                body: {
+                    id: selectedIdDelete
+                }
+            });
+            if (!result.ok) {
+                throw result;
+            } else {
+                showToast('Data berhasil dihapus', 'success');
+                loadDataJurnal(1);
+            }
+        } catch(e) {
+            console.log('asdasasdsad', e)
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error')
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('delete-modal')
+            );
+            modal.hide();
+
+            btnDel.disabled = false;
+            btnDel.innerHTML = 'Ya, Hapus';
+        }
+    })
 
     buttonHapusFilter.addEventListener('click', function (event) {
         tglDari = null;
@@ -846,8 +914,9 @@
                                         <i class="ti ti-edit"></i>
                                     </button>
 
-                                    <button class="btn btn-sm" style="background:#f4dada;color:#c93636">
-                                        <i class="ti ti-trash"></i>
+                                    <button data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                        class="btn btn-sm" style="background:#f4dada;color:#c93636">
+                                            <i class="ti ti-trash"></i>
                                     </button>
                                 </div>
                             </div>

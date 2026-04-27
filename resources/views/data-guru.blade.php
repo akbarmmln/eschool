@@ -248,6 +248,7 @@
     btnDel.addEventListener('click', async function () {
         if (!selectedId) {
             showAlert('Pilih data yang akan dihapus', 'success');
+            return;
         };
 
         btnDel.disabled = true;

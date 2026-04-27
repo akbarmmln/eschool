@@ -629,7 +629,8 @@
 
         tinymce.init({
             selector: '.editor',
-            height: 250,
+            min_height: 250,
+            max_height: 250,
             license_key: 'gpl',
 
             menubar: false,

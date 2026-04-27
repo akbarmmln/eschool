@@ -486,6 +486,18 @@ class RequestBackEnd
         );
     }
 
+    public function doDeleteJurnal(Request $request, ApiService $apiService) {
+        $url = "/api/v1/jurnal/delete";
+
+        $response = $apiService->fetchPOST($request->only([
+            'id',
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
     public function doUpdateAbsensi(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/update-absensi";
         $response = $apiService->fetchPOST($request->only([
