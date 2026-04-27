@@ -28,7 +28,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN composer require predis/predis
 
 # Laravel setup
-RUN npm install && npm run build
+# RUN npm install && npm run build
 RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 

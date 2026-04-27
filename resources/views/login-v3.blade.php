@@ -332,7 +332,7 @@
             const password = document.getElementById("password").value;
 
             if (!username && !password) {
-                showToast("Username dan Password wajib diisi");
+                showToast('Username dan Password wajib diisi', 'error');
                 return;
             }
 
