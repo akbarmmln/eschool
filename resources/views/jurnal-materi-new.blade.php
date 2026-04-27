@@ -346,15 +346,11 @@
 					</table>
 					<div class="mt-4">
 						<h4 class="mb-3">Upload Foto Tugas (Attachments)</h4>
-
 						<div id="imagePreviewContainer" class="d-flex flex-wrap gap-3">
-
-							<!-- tombol tambah -->
 							<label class="upload-box">
 								<input type="file" id="fileInput" multiple accept="image/*" hidden>
 								<div class="upload-placeholder">+</div>
 							</label>
-
 						</div>
 					</div>
 				</div>
@@ -406,7 +402,7 @@
 	const pengajar = document.getElementById('pengajar')
 
     let attr_id_diajar;
-	let public_id_jurnal, public_id_diajar, public_nama_siswa;
+	let public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa;
 	const modalInputNilai = document.getElementById('modalInputNilai')
 	const modalFile = document.getElementById('modalFile')
 	const btnRefresh = modalInputNilai.querySelector("#btnRefresh");
@@ -417,37 +413,111 @@
 	const fileInput = document.getElementById('fileInput');
 	const container = document.getElementById('imagePreviewContainer');
 	let selectedFiles = [];
-	fileInput.addEventListener('change', function (e) {
+	// fileInput.addEventListener('change', function (e) {
+	// 	const files = Array.from(e.target.files);
+	// 	files.forEach(file => {
+	// 		const reader = new FileReader();
+	// 		reader.onload = function (event) {
+	// 			const base64 = event.target.result;
+	// 			const pureBase64 = base64.split(',')[1];
+
+	// 			selectedFiles.push(pureBase64);
+
+	// 			const wrapper = document.createElement('div');
+	// 			wrapper.classList.add('preview-item');
+
+	// 			wrapper.innerHTML = `
+	// 				<img src="${base64}">
+	// 				<button class="remove-btn">&times;</button>
+	// 			`;
+
+	// 			// tombol hapus
+	// 			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+	// 				container.removeChild(wrapper);
+	// 				selectedFiles = selectedFiles.filter(f => f !== pureBase64);
+	// 			});
+
+	// 			container.insertBefore(wrapper, container.lastElementChild);
+	// 		};
+	// 		reader.readAsDataURL(file);
+	// 	});
+	// 	fileInput.value = "";
+	// });
+	fileInput.addEventListener('change', async function (e) {
 		const files = Array.from(e.target.files);
-		files.forEach(file => {
-			const reader = new FileReader();
-			reader.onload = function (event) {
-				const base64 = event.target.result;
-				const pureBase64 = base64.split(',')[1];
-
-				// 🔥 simpan base64
-				selectedFiles.push(pureBase64);
-
-				const wrapper = document.createElement('div');
-				wrapper.classList.add('preview-item');
-
-				wrapper.innerHTML = `
-					<img src="${base64}">
-					<button class="remove-btn">&times;</button>
-				`;
-
-				// tombol hapus
-				wrapper.querySelector('.remove-btn').addEventListener('click', () => {
-					container.removeChild(wrapper);
-					selectedFiles = selectedFiles.filter(f => f !== pureBase64);
+		for (const file of files) {
+			let finalBase64;
+			if (file.size > 1 * 1024 * 1024) {
+				console.log('kena compress');
+				finalBase64 = await compressToMaxSize(file, 1);
+			} else {
+				console.log('tidak kena compress');
+				finalBase64 = await new Promise((resolve) => {
+					const reader = new FileReader();
+					reader.onload = (event) => resolve(event.target.result);
+					reader.readAsDataURL(file);
 				});
+			}
+			// ambil pure base64
+			const pureBase64 = finalBase64.split(',')[1];
+			selectedFiles.push(pureBase64);
 
-				container.insertBefore(wrapper, container.lastElementChild);
-			};
-			reader.readAsDataURL(file); // 🔥 ini yang bikin base64
-		});
+			// preview
+			const wrapper = document.createElement('div');
+			wrapper.classList.add('preview-item');
+
+			wrapper.innerHTML = `
+				<img src="${finalBase64}">
+				<button class="remove-btn">&times;</button>
+			`;
+
+			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+				wrapper.remove();
+				selectedFiles = selectedFiles.filter(f => f !== pureBase64);
+			});
+
+			container.insertBefore(wrapper, container.lastElementChild);
+		}
 		fileInput.value = "";
 	});
+
+	async function compressToMaxSize(file, maxSizeMB = 1, maxWidth = 1280) {
+		const maxSize = maxSizeMB * 1024 * 1024;
+		return new Promise((resolve) => {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				const img = new Image();
+				img.src = e.target.result;
+
+				img.onload = function () {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					let scale = Math.min(maxWidth / img.width, 1);
+					canvas.width = img.width * scale;
+					canvas.height = img.height * scale;
+
+					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+					let quality = 0.9;
+					let base64;
+
+					do {
+						base64 = canvas.toDataURL('image/jpeg', quality);
+						const size = Math.round((base64.length * 3) / 4); // estimasi size byte
+
+						if (size <= maxSize || quality <= 0.3) break;
+
+						quality -= 0.1; // turunin kualitas
+					} while (true);
+
+					resolve(base64);
+				};
+			};
+			reader.readAsDataURL(file);
+		});
+	}
 
 	batalInputNilai.addEventListener("click", function(){
 		const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
@@ -479,8 +549,11 @@
             const hasil = await fetchJson('/_backend/logic/update-penilaian', {
                 method: 'POST',
                 body: {
-                    data: result
-                }
+					data: result,
+					id_jurnal: public_id_jurnal,
+					id_siswa: public_id_siswa,
+					files: selectedFiles
+				}				
             });
 			if(!hasil.ok) {
 				throw hasil;
@@ -504,10 +577,10 @@
 	});
 
 	btnRefresh.addEventListener("click", async function(e){
-		await loadDataModal(public_id_jurnal, public_id_diajar, public_nama_siswa);
+		await loadDataModal(public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa);
 	});
 
-	async function loadDataModal(id_jurnal, id_diajar, nama_siswa) {
+	async function loadDataModal(id_jurnal, id_diajar, id_siswa, nama_siswa) {
 		const judulModal = modalInputNilai.querySelector('#exampleModalFullscreenLabel');
 		const pagesuccess = modalInputNilai.querySelector("#pagesuccess");
 		const pagefailed = modalInputNilai.querySelector("#pagefailed");
@@ -606,13 +679,18 @@
 		public_id_jurnal = null;
 		public_id_diajar  = null;
 		public_nama_siswa  = null;
+		selectedFiles = []
+		container.querySelectorAll('.preview-item').forEach(el => el.remove());
+		fileInput.value = "";
 	})
 	modalInputNilai.addEventListener('show.bs.modal', async function (event) {
 		const button = event.relatedTarget;
 		public_id_jurnal = button.getAttribute('data-idJurnal');
 		public_id_diajar = button.getAttribute('data-idDiajar');
+		public_id_siswa = button.getAttribute('data-idSiswa');
 		public_nama_siswa = button.getAttribute('data-namaSiswa');
-		await loadDataModal(public_id_jurnal, public_id_diajar, public_nama_siswa);
+
+		await loadDataModal(public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa);
 	})
 
 	document.getElementById("btnRefresh").addEventListener("click", function(e){
@@ -745,6 +823,7 @@
 	function loadItemSilabus(idJurnal, dataSiswa, tbody) {
 		let no = 1;
 		dataSiswa.forEach((item) => {
+			const idSiswa = item.id_siswa
 			const row = `
 				<tr>
 					<td>${no++}.</td>
@@ -759,7 +838,7 @@
 							</button>
 							<a class="btn btn-sm btn-info btn-wave waves-effect waves-light btn-input-nilai"
 								data-bs-toggle="modal" data-bs-target="#modalInputNilai"
-								data-idJurnal="${idJurnal}" data-idDiajar="${item.id}" data-namaSiswa="${item.nama_siswa}">
+								data-idJurnal="${idJurnal}" data-idSiswa="${idSiswa}" data-idDiajar="${item.id}" data-namaSiswa="${item.nama_siswa}">
 									<i class="ti ti-edit align-middle me-2 d-inline-block"></i>Input Nilai
 							</a>
 							<a class="btn btn-sm btn-secondary btn-wave waves-effect waves-light btn-file"

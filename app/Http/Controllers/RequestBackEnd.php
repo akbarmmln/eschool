@@ -537,7 +537,10 @@ class RequestBackEnd
     public function doUpdatePenilaian(Request $request, ApiService $apiService) {
         $url = "/api/v1/jurnal/update-penilaian";
         $response = $apiService->fetchPOST($request->only([
-            'data'
+            'data',
+            'files',
+            'id_jurnal',
+            'id_siswa'
         ]), $url);
         return response()->json(
             $response->json(),

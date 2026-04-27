@@ -24,8 +24,8 @@ class ApiService
             'payload' => $payload
         ]);
         $http = Http::baseUrl($this->baseUrl)
-            ->timeout(5)
-            ->retry(2, 100, function ($exception, $request) {
+            ->timeout(30)
+            ->retry(0, 100, function ($exception, $request) {
                 return $exception instanceof \Illuminate\Http\Client\ConnectionException;
             });
 
