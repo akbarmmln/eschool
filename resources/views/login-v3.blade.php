@@ -11,6 +11,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
+        .bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.6s ease, opacity 0.6s ease;
+        }
+
+        .bg-img.blur {
+            filter: blur(20px);
+            transform: scale(1.1);
+        }
+
+        .bg-img.loaded {
+            filter: blur(0);
+            transform: scale(1);
+        }
+
         /* =========================
         GLOBAL
         ========================= */
@@ -38,10 +55,25 @@
         }
 
         /* kanan (background image) */
-        .login-right {
+        /* .login-right {
             width: 70%;
             background: url('https://s3.nevaobjects.id/bucket-sit/background_school.png') no-repeat center center/cover;
             background-size: 100% 100%;
+        } */
+        .login-right {
+            width: 70%;
+            background: linear-gradient(
+                90deg,
+                #eee 25%,
+                #ddd 37%,
+                #eee 63%
+            );
+            animation: shimmer 1.4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
 
         /* =========================
@@ -261,7 +293,15 @@
 
     <div class="login-container">
         <!-- RIGHT (IMAGE) -->
-        <div class="login-right"></div>
+        <!-- <div class="login-right"></div> -->
+        <div class="login-right">
+            <img 
+                src="/assets/img/bg-blur.jpg" 
+                data-src="https://s3.nevaobjects.id/bucket-sit/background_school.png"
+                class="bg-img blur"
+                id="bgImage"
+            >
+        </div>
 
         <!-- LEFT (FORM) -->
         <div class="login-left">
@@ -327,6 +367,19 @@
         const toastMessage = document.getElementById("toastMessage");
         const toast = new bootstrap.Toast(toastEl);
         const btnLogin = document.getElementById('btn_login');
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const img = document.getElementById("bgImage");
+            const realSrc = img.dataset.src;
+
+            const temp = new Image();
+            temp.src = realSrc;
+
+            temp.onload = function () {
+                img.src = realSrc;
+                img.classList.add("loaded");
+            };
+        });
 
         btnLogin.addEventListener("click", async function () {
             const username = document.getElementById("email").value;
