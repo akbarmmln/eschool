@@ -411,7 +411,6 @@
                 loadDataJurnal(1);
             }
         } catch(e) {
-            console.log('asdasasdsad', e)
             showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error')
         } finally {
             const modal = bootstrap.Modal.getInstance(
