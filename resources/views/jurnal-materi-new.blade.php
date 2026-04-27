@@ -2,6 +2,55 @@
     $role == '0' ? 'admin.app' : 'guru.app'
 )
 @section('content')
+
+<style>
+	.upload-box {
+		width: 150px;
+		height: 150px;
+		border: 2px dashed #ccc;
+		border-radius: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.upload-placeholder {
+		font-size: 40px;
+		color: #aaa;
+	}
+
+	.preview-item {
+		width: 150px;
+		height: 150px;
+		border-radius: 15px;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.preview-item img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.remove-btn {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background: rgba(0,0,0,0.6);
+		color: #fff;
+		border: none;
+		border-radius: 50%;
+		width: 25px;
+		height: 25px;
+		cursor: pointer;
+		font-size: 14px;
+	}
+</style>
+
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 	<div class="content">
@@ -241,67 +290,82 @@
 </div>
 <!-- /Page Wrapper -->
 
-								<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalInputNilai" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
-									<div class="modal-dialog modal-fullscreen">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h4 class="modal-title" id="exampleModalFullscreenLabel"></h4>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalInputNilai" tabindex="-1"
+	aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalFullscreenLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div id="pagefailed" style="display: none;">
+					<div class="card-body">
+						<div class="row justify-content-center">
+							<div id="status_page" class="col-xxl-6 col-xl-6 col-lg-8 col-md-10 col-sm-12">
+								<div class="card bg-white border-0">
+									<div class="alert custom-alert1 alert-warning">
+										<div class="text-center px-5 pb-0">
+											<div class="custom-alert-icon">
+												<i class="feather-alert-triangle flex-shrink-0"></i>
 											</div>
-											<div class="modal-body">
-												<div id="pagefailed" style="display: none;">
-													<div class="card-body">
-														<div class="row justify-content-center">
-															<div id="status_page" class="col-xxl-6 col-xl-6 col-lg-8 col-md-10 col-sm-12">
-																<div class="card bg-white border-0">
-																	<div class="alert custom-alert1 alert-warning">
-																		<div class="text-center px-5 pb-0">
-																			<div class="custom-alert-icon">
-																				<i class="feather-alert-triangle flex-shrink-0"></i>
-																			</div>
-																			<h5 class="fw-bold text-uppercase text-warning mb-3">WARNING</h5>
-																			<p id="text_result" class="text-black mb-1"></p>
-																			<a href="#" id="btnRefresh" class="btn btn-sm btn-warning m-1">Coba kembali</a>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-                                                <div id="loadingSpinner" class="text-center my-3" style="display: none;">
-                                                    <button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
-                                                        <span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
-                                                            Memuat data...
-                                                    </button>
-                                                </div>
-												<div id="pagesuccess" style="display: none;">
-													<table class="table table-bordered align-middle">
-														<thead class="table-light text-center">
-															<tr>
-																<th style="width:5%" rowspan="2">No</th>
-																<th style="width:55%" rowspan="2">Aktifitas</th>
-																<th style="width:10%" colspan="4">Hasil</th>
-																<th style="width:30%" rowspan="2">Keterangan</th>
-															</tr>
-															<tr class="text-center">
-																<th>BSB</th>
-																<th>BSH</th>
-																<th>MB</th>
-																<th>BB</th>
-															</tr>
-														</thead>
-														<tbody id="inputNilai">
-														</tbody>
-													</table>
-												</div>
-											</div>
-											<div class="modal-footer d-flex gap-2">
-												<button id="batal_input_nilai" type="button" class="btn btn-secondary">Tutup</button>
-												<button id="simpan_input_nilai" type="button" class="btn btn-primary">Simpan</button>
-											</div>
+											<h5 class="fw-bold text-uppercase text-warning mb-3">WARNING</h5>
+											<p id="text_result" class="text-black mb-1"></p>
+											<a href="#" id="btnRefresh" class="btn btn-sm btn-warning m-1">Coba
+												kembali</a>
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="loadingSpinner" class="text-center my-3" style="display: none;">
+					<button id="loadingSpinner" class="btn btn-info-light" type="button" disabled="">
+						<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+						Memuat data...
+					</button>
+				</div>
+				<div id="pagesuccess" style="display: none;">
+					<table class="table table-bordered align-middle">
+						<thead class="table-light text-center">
+							<tr>
+								<th style="width:5%" rowspan="2">No</th>
+								<th style="width:55%" rowspan="2">Aktifitas</th>
+								<th style="width:10%" colspan="4">Hasil</th>
+								<th style="width:30%" rowspan="2">Keterangan</th>
+							</tr>
+							<tr class="text-center">
+								<th>BSB</th>
+								<th>BSH</th>
+								<th>MB</th>
+								<th>BB</th>
+							</tr>
+						</thead>
+						<tbody id="inputNilai">
+						</tbody>
+					</table>
+					<div class="mt-4">
+						<h4 class="mb-3">Upload Foto Tugas (Attachments)</h4>
+
+						<div id="imagePreviewContainer" class="d-flex flex-wrap gap-3">
+
+							<!-- tombol tambah -->
+							<label class="upload-box">
+								<input type="file" id="fileInput" multiple accept="image/*" hidden>
+								<div class="upload-placeholder">+</div>
+							</label>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer d-flex gap-2">
+				<button id="batal_input_nilai" type="button" class="btn btn-secondary">Tutup</button>
+				<button id="simpan_input_nilai" type="button" class="btn btn-primary">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalFile" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-fullscreen">
@@ -349,6 +413,41 @@
 	const batalInputNilai = modalInputNilai.querySelector("#batal_input_nilai");
 	const batalInputFile = modalFile.querySelector("#batal_input_file");
 	const simpanInputNilai = modalInputNilai.querySelector("#simpan_input_nilai");
+
+	const fileInput = document.getElementById('fileInput');
+	const container = document.getElementById('imagePreviewContainer');
+	let selectedFiles = [];
+	fileInput.addEventListener('change', function (e) {
+		const files = Array.from(e.target.files);
+		files.forEach(file => {
+			const reader = new FileReader();
+			reader.onload = function (event) {
+				const base64 = event.target.result;
+				const pureBase64 = base64.split(',')[1];
+
+				// 🔥 simpan base64
+				selectedFiles.push(pureBase64);
+
+				const wrapper = document.createElement('div');
+				wrapper.classList.add('preview-item');
+
+				wrapper.innerHTML = `
+					<img src="${base64}">
+					<button class="remove-btn">&times;</button>
+				`;
+
+				// tombol hapus
+				wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+					container.removeChild(wrapper);
+					selectedFiles = selectedFiles.filter(f => f !== pureBase64);
+				});
+
+				container.insertBefore(wrapper, container.lastElementChild);
+			};
+			reader.readAsDataURL(file); // 🔥 ini yang bikin base64
+		});
+		fileInput.value = "";
+	});
 
 	batalInputNilai.addEventListener("click", function(){
 		const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
