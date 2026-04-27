@@ -362,6 +362,18 @@ class RequestBackEnd
         );
     }
 
+    public function doDeleteSiswa(Request $request, ApiService $apiService) {
+        $url = "api/v1/siswa/delete";
+
+        $response = $apiService->fetchPOST($request->only([
+            'id'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
     public function doListSiswa(Request $request, ApiService $apiService) {
         $page = $request->page;
         $search = $request->search;

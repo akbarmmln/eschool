@@ -124,8 +124,38 @@
 
         title_konfirmasi.innerHTML = `Anda akan menghapus <b>${selectedNama}</b>, tindakan ini tidak dapat dibatalkan setelah Anda menghapusnya.`;
     });
-    btnDel.addEventListener('click', function (event) {
-        console.log('sadsadsad')
+    btnDel.addEventListener('click', async function (event) {
+        if (!selectedId) {
+            showToast('Pilih data yang akan dihapus', 'error');
+            return;
+        };
+        btnDel.disabled = true;
+        btnDel.innerHTML = 'Memproses...';
+
+        try {
+            const result = await fetchJson('/_backend/logic/data-siswa-delete', {
+                method: 'POST',
+                body: {
+                    id: selectedId
+                }
+            });
+            if (!result.ok) {
+                throw result;
+            } else {
+                showToast('Data berhasil dihapus', 'success');
+                loadData(1);
+            }
+        } catch(e) {
+            showToast('Terjadi kesalahan pada sistem. Silahkan coba kembali', 'error')
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('delete-modal')
+            );
+            modal.hide();
+
+            btnDel.disabled = false;
+            btnDel.innerHTML = 'Ya, Hapus';
+        }
     })
 
     document.addEventListener("DOMContentLoaded", async function () {
@@ -313,6 +343,33 @@
                 }
             });
         });
+    }
+
+    function showToast(message, type = 'success') {
+        const toastElement = document.getElementById('globalToast');
+        const toastBody = document.getElementById('globalToastBody');
+
+        // reset class
+        toastElement.className = 'toast align-items-center border-0';
+
+        // set warna berdasarkan type
+        if (type === 'success') {
+            toastElement.classList.add('text-bg-primary');
+        } else if (type === 'error') {
+            toastElement.classList.add('text-bg-danger');
+        } else if (type === 'warning') {
+            toastElement.classList.add('text-bg-warning');
+        } else {
+            toastElement.classList.add('text-bg-success');
+        }
+
+        toastBody.innerHTML = message;
+
+        const toast = new bootstrap.Toast(toastElement, {
+            delay: 1500
+        });
+
+        toast.show();
     }
 </script>
 @endsection

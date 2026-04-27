@@ -105,6 +105,7 @@ Route::post('/_backend/logic/update-relasi-silabus', [RequestBackEnd::class, 'do
 Route::post('/_backend/logic/data-siswa', [RequestBackEnd::class, 'doListSiswa']);
 Route::post('/_backend/logic/data-siswa-create', [RequestBackEnd::class, 'doCreateSiswa']);
 Route::post('/_backend/logic/data-siswa-update', [RequestBackEnd::class, 'doUpdateSiswa']);
+Route::post('/_backend/logic/data-siswa-delete', [RequestBackEnd::class, 'doDeleteSiswa']);
 Route::post('/_backend/logic/detail-siswa', [RequestBackEnd::class, 'doDetailSiswa']);
 Route::post('/_backend/logic/kehadiran-siswa', [RequestBackEnd::class, 'doKehadiranSiswa']);
 Route::post('/_backend/logic/ortu/remove-access', [RequestBackEnd::class, 'doOrtuRemoveAccess']);
