@@ -307,10 +307,10 @@
     })
 
     async function renderSilabus(dataSilabus) {
-        const tema = dataSilabus[0]?.title_silabus
         pagesuccess2.style.display = "block"
         try {
             let hasil;
+            const tema = dataSilabus[0]?.title_silabus
             const result = {};
             if (dataSilabus.length == 0) {
                 hasil = {
