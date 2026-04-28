@@ -18,11 +18,35 @@
 	}
 
 	.preview-container img {
-		width: 100%;
-		height: 100%;
+		width: 150px;
+		height: 150px;
 		object-fit: contain;
+		opacity: 0;
+		transition: opacity 0.4s ease;
 	}
-	
+
+	/* ketika sudah loaded */
+	.preview-container img.loaded {
+		opacity: 1;
+	}
+
+	/* skeleton loading */
+	.preview-container.loading {
+		background: linear-gradient(
+			90deg,
+			#eee 25%,
+			#ddd 37%,
+			#eee 63%
+		);
+		background-size: 400% 100%;
+		animation: shimmer 1.2s infinite;
+	}
+
+	@keyframes shimmer {
+		0% { background-position: -400px 0; }
+		100% { background-position: 400px 0; }
+	}
+
 	.upload-box {
 		width: 150px;
 		height: 150px;
@@ -715,22 +739,40 @@
 	function renderUploadedImages(imageUrls = []) {
 		const container = document.getElementById('imagePreviewContainerFromUpload');
 		container.innerHTML = '';
+
 		imageUrls.forEach(url => {
-			const id_img = url.id
-			const img = url.url_image;
+			const id_img = url.id;
+			const imgSrc = url.url_image;
+
 			const wrapper = document.createElement('div');
-			wrapper.classList.add('preview-container');
+			wrapper.classList.add('preview-container', 'loading'); // 🔥 loading state
 
-			wrapper.innerHTML = `
-				<img src="${img}">
-				<button class="remove-btn">&times;</button>
-			`;
+			const img = document.createElement('img');
+			img.src = ""; // kosong dulu
 
-			// tombol hapus (optional)
-			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+			const removeBtn = document.createElement('button');
+			removeBtn.className = "remove-btn";
+			removeBtn.innerHTML = "&times;";
+
+			wrapper.appendChild(img);
+			wrapper.appendChild(removeBtn);
+
+			// 🔥 preload image
+			const temp = new Image();
+			temp.src = imgSrc;
+
+			temp.onload = function () {
+				img.src = imgSrc;
+				img.classList.add('loaded');
+				wrapper.classList.remove('loading'); // hilangkan shimmer
+			};
+
+			// tombol hapus
+			removeBtn.addEventListener('click', () => {
 				wrapper.remove();
 				deletedFiles.push(id_img);
 			});
+
 			container.appendChild(wrapper);
 		});
 	}
