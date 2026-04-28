@@ -4,10 +4,29 @@
 @section('content')
 
 <style>
+	.preview-container {
+		width: 150px;
+		height: 150px;
+		overflow: hidden;
+		border: 2px dashed #d1d5db;
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #f3f4f6;
+		position: relative;
+	}
+
+	.preview-container img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+	
 	.upload-box {
 		width: 150px;
 		height: 150px;
-		border: 2px dashed #ccc;
+		border: 2px dashed #9ca3af;
 		border-radius: 15px;
 		display: flex;
 		align-items: center;
@@ -15,6 +34,17 @@
 		cursor: pointer;
 		overflow: hidden;
 		position: relative;
+		background: white;
+	}
+	.upload-box {
+		z-index: 1;
+	}
+	.upload-box {
+		box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+	}
+	.upload-box:hover {
+		border-color: #6366f1;
+		background: #f9fafb;
 	}
 
 	.upload-placeholder {
@@ -28,26 +58,35 @@
 		border-radius: 15px;
 		overflow: hidden;
 		position: relative;
+		background: #f3f4f6;
 	}
 
 	.preview-item img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 	}
 
 	.remove-btn {
 		position: absolute;
-		top: 5px;
-		right: 5px;
-		background: rgba(0,0,0,0.6);
-		color: #fff;
-		border: none;
+		top: 6px;
+		right: 6px;
+		width: 26px;
+		height: 26px;
 		border-radius: 50%;
-		width: 25px;
-		height: 25px;
+		border: none;
+		background: rgba(0,0,0,0.6);
+		color: white;
+		font-size: 16px;
 		cursor: pointer;
-		font-size: 14px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* hover biar keren */
+	.remove-btn:hover {
+		background: red;
 	}
 </style>
 
@@ -346,11 +385,14 @@
 					</table>
 					<div class="mt-4">
 						<h4 class="mb-3">Upload Foto Tugas (Attachments)</h4>
-						<div id="imagePreviewContainer" class="d-flex flex-wrap gap-3">
-							<label class="upload-box">
-								<input type="file" id="fileInput" multiple accept="image/*" hidden>
-								<div class="upload-placeholder">+</div>
-							</label>
+						<div class="d-flex flex-wrap gap-3 align-items-start">
+							<div id="imagePreviewContainerFromUpload" class="d-flex flex-wrap gap-3"></div>
+							<div id="imagePreviewContainer" class="d-flex flex-wrap gap-3">
+								<label class="upload-box">
+									<input type="file" id="fileInput" multiple accept="image/*" hidden>
+									<div class="upload-placeholder">+</div>
+								</label>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -412,44 +454,14 @@
 
 	const fileInput = document.getElementById('fileInput');
 	const container = document.getElementById('imagePreviewContainer');
-	let selectedFiles = [];
-	// fileInput.addEventListener('change', function (e) {
-	// 	const files = Array.from(e.target.files);
-	// 	files.forEach(file => {
-	// 		const reader = new FileReader();
-	// 		reader.onload = function (event) {
-	// 			const base64 = event.target.result;
-	// 			const pureBase64 = base64.split(',')[1];
-
-	// 			selectedFiles.push(pureBase64);
-
-	// 			const wrapper = document.createElement('div');
-	// 			wrapper.classList.add('preview-item');
-
-	// 			wrapper.innerHTML = `
-	// 				<img src="${base64}">
-	// 				<button class="remove-btn">&times;</button>
-	// 			`;
-
-	// 			// tombol hapus
-	// 			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
-	// 				container.removeChild(wrapper);
-	// 				selectedFiles = selectedFiles.filter(f => f !== pureBase64);
-	// 			});
-
-	// 			container.insertBefore(wrapper, container.lastElementChild);
-	// 		};
-	// 		reader.readAsDataURL(file);
-	// 	});
-	// 	fileInput.value = "";
-	// });
+	let selectedFiles = [], deletedFiles = [];
 	fileInput.addEventListener('change', async function (e) {
 		const files = Array.from(e.target.files);
 		for (const file of files) {
 			let finalBase64;
-			if (file.size > 1 * 1024 * 1024) {
+			if (file.size > 2 * 1024 * 1024) {
 				console.log('kena compress');
-				finalBase64 = await compressToMaxSize(file, 1);
+				finalBase64 = await compressToMaxSize(file, 2);
 			} else {
 				console.log('tidak kena compress');
 				finalBase64 = await new Promise((resolve) => {
@@ -542,43 +554,83 @@
 			});
 		});
 
-		btn.disabled = true;
-		btn.innerText = "Menyimpan data...";
-
-		try {
-            const hasil = await fetchJson('/_backend/logic/update-penilaian', {
-                method: 'POST',
-                body: {
-					data: result,
-					id_jurnal: public_id_jurnal,
-					id_siswa: public_id_siswa,
-					files: selectedFiles
-				}				
-            });
-			if(!hasil.ok) {
-				throw hasil;
-			}
-
-			showToast('Input penilaian berhasil dilakukan', 'success');
-			const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
-			modalInstance.hide();
-		} catch(e) {
-			const code = e?.code
-			const message = e?.message
-			if (code === '70011') {
-				showToast(`Proses gagal dilakukan: ${message}`, 'success');
-			} else {
-				showToast(`Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`, 'success');
-			}
-		} finally {
-			btn.disabled = false;
-			btn.innerText = "Simpan";
+		const a = {
+			data: result,
+			id_jurnal: public_id_jurnal,
+			id_siswa: public_id_siswa,
+			files: selectedFiles,
+			filesDeleted: deletedFiles
 		}
+		console.log('sdsaasadsa', a)
+		// btn.disabled = true;
+		// btn.innerText = "Menyimpan data...";
+
+		// try {
+        //     const hasil = await fetchJson('/_backend/logic/update-penilaian', {
+        //         method: 'POST',
+        //         body: {
+		// 			data: result,
+		// 			id_jurnal: public_id_jurnal,
+		// 			id_siswa: public_id_siswa,
+		// 			files: selectedFiles
+		// 		}				
+        //     });
+		// 	if(!hasil.ok) {
+		// 		throw hasil;
+		// 	}
+
+		// 	showToast('Input penilaian berhasil dilakukan', 'success');
+		// 	const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
+		// 	modalInstance.hide();
+		// } catch(e) {
+		// 	const code = e?.code
+		// 	const message = e?.message
+		// 	if (code === '70011') {
+		// 		showToast(`Proses gagal dilakukan: ${message}`, 'success');
+		// 	} else {
+		// 		showToast(`Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`, 'success');
+		// 	}
+		// } finally {
+		// 	btn.disabled = false;
+		// 	btn.innerText = "Simpan";
+		// }
 	});
 
 	btnRefresh.addEventListener("click", async function(e){
 		await loadDataModal(public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa);
 	});
+
+	modalInputNilai.addEventListener('hidden.bs.modal', function () {
+		const judulModal = modalInputNilai.querySelector('#exampleModalFullscreenLabel');
+		const loading = modalInputNilai.querySelector('#loadingSpinner');
+		const pagefailed = modalInputNilai.querySelector("#pagefailed");
+		const textResult = modalInputNilai.querySelector('#text_result')
+		const tbody = modalInputNilai.querySelector("#inputNilai");
+
+		tbody.innerHTML = "";
+		pagesuccess.style.display = "none";
+		pagefailed.style.display = "none";
+		loading.style.display = "none";
+		judulModal.innerText = "";
+		textResult.textContent = '';
+		public_id_jurnal = null;
+		public_id_diajar  = null;
+		public_nama_siswa  = null;
+		selectedFiles = [];
+		deletedFiles = [];
+		container.querySelectorAll('.preview-item').forEach(el => el.remove());
+		container.querySelectorAll('.preview-container').forEach(el => el.remove());
+		fileInput.value = "";
+	})
+	modalInputNilai.addEventListener('show.bs.modal', async function (event) {
+		const button = event.relatedTarget;
+		public_id_jurnal = button.getAttribute('data-idJurnal');
+		public_id_diajar = button.getAttribute('data-idDiajar');
+		public_id_siswa = button.getAttribute('data-idSiswa');
+		public_nama_siswa = button.getAttribute('data-namaSiswa');
+
+		await loadDataModal(public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa);
+	})
 
 	async function loadDataModal(id_jurnal, id_diajar, id_siswa, nama_siswa) {
 		const judulModal = modalInputNilai.querySelector('#exampleModalFullscreenLabel');
@@ -598,6 +650,7 @@
                 method: 'POST',
                 body: {
 					id_jurnal: id_jurnal,
+					id_siswa: id_siswa,
 					id_diajar: id_diajar
                 }
             });
@@ -617,11 +670,13 @@
 		}
 	}
 
-	function renderPenilaian(items) {
+	function renderPenilaian(data) {
+		const dataNilai = data.silabus;
+		const dataImages = data.attachments;
 		const tbody = modalInputNilai.querySelector("#inputNilai");
 		let html = "";
 		let no = 1;
-		items.forEach(subject => {
+		dataNilai.forEach(subject => {
 			subject.items.forEach(item => {
 				const bsb = item.nilai == '1' ? "checked" : "";
 				const bsh = item.nilai == '2' ? "checked" : "";
@@ -661,37 +716,31 @@
 			})
 		})
 		tbody.innerHTML = html;
+		renderUploadedImages(dataImages)
 	}
+	
+	function renderUploadedImages(imageUrls = []) {
+		const container = document.getElementById('imagePreviewContainerFromUpload');
+		container.innerHTML = '';
+		imageUrls.forEach(url => {
+			const id_img = url.id
+			const img = url.url_image;
+			const wrapper = document.createElement('div');
+			wrapper.classList.add('preview-container');
 
-	modalInputNilai.addEventListener('hidden.bs.modal', function () {
-		const judulModal = modalInputNilai.querySelector('#exampleModalFullscreenLabel');
-		const loading = modalInputNilai.querySelector('#loadingSpinner');
-		const pagefailed = modalInputNilai.querySelector("#pagefailed");
-		const textResult = modalInputNilai.querySelector('#text_result')
-		const tbody = modalInputNilai.querySelector("#inputNilai");
+			wrapper.innerHTML = `
+				<img src="${img}">
+				<button class="remove-btn">&times;</button>
+			`;
 
-		tbody.innerHTML = "";
-		pagesuccess.style.display = "none";
-		pagefailed.style.display = "none";
-		loading.style.display = "none";
-		judulModal.innerText = "";
-		textResult.textContent = '';
-		public_id_jurnal = null;
-		public_id_diajar  = null;
-		public_nama_siswa  = null;
-		selectedFiles = []
-		container.querySelectorAll('.preview-item').forEach(el => el.remove());
-		fileInput.value = "";
-	})
-	modalInputNilai.addEventListener('show.bs.modal', async function (event) {
-		const button = event.relatedTarget;
-		public_id_jurnal = button.getAttribute('data-idJurnal');
-		public_id_diajar = button.getAttribute('data-idDiajar');
-		public_id_siswa = button.getAttribute('data-idSiswa');
-		public_nama_siswa = button.getAttribute('data-namaSiswa');
-
-		await loadDataModal(public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa);
-	})
+			// tombol hapus (optional)
+			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+				wrapper.remove();
+				deletedFiles.push(id_img);
+			});
+			container.appendChild(wrapper);
+		});
+	}
 
 	document.getElementById("btnRefresh").addEventListener("click", function(e){
 		e.preventDefault();

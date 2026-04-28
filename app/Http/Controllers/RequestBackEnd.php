@@ -526,6 +526,7 @@ class RequestBackEnd
         $url = "/api/v1/jurnal/inisiasi-penilaian";
         $response = $apiService->fetchPOST($request->only([
             'id_jurnal',
+            'id_siswa',
             'id_diajar'
         ]), $url);
         return response()->json(
