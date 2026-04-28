@@ -1,12 +1,112 @@
 @extends('ortu.app')
 @section('content')
 <style>
-.error {
-    color: red;
-    font-size: 13px;
-    margin-top: 10px;
-    text-align: center;
-}
+    .error {
+        color: red;
+        font-size: 13px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    /* ===== GLOBAL ===== */
+    body {
+        font-family: Tahoma, sans-serif;
+        background: #f5f7fb;
+    }
+
+    /* ===== GRID ===== */
+    .grid {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* ===== CARD (CUSTOM, NO BOOTSTRAP CONFLICT) ===== */
+    .custom-card {
+        width: 320px;
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* ===== HEADER ===== */
+    .custom-card .card-header {
+        padding: 0;
+        margin-bottom: 10px;
+        border: none;
+        background: transparent;
+    }
+
+    .custom-card .card-header small {
+        color: #94a3b8;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .custom-card .card-header h3 {
+        margin: 5px 0 15px;
+        font-size: 18px;
+    }
+
+    /* ===== SECTION ===== */
+    .section {
+        margin-bottom: 20px;
+    }
+
+    .section label {
+        font-size: 13px;
+        color: #64748b;
+        display: block;
+        margin-bottom: 8px;
+        letter-spacing: 2px;
+    }
+
+    /* ===== ACHIEVEMENT ===== */
+    .achievement {
+        display: flex;
+        gap: 10px;
+    }
+
+    .badge {
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #16a34a;
+    }
+
+    .badge.active {
+        background: #e0f2fe;
+        color: #2563eb;
+        border: 2px solid #2563eb;
+    }
+
+    .badge.green.active {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .badge.yellow.active {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    /* ===== TEXTAREA ===== */
+    textarea {
+        width: 100%;
+        border: none;
+        border-radius: 12px;
+        padding: 10px;
+        background: #f1f5f9;
+        resize: none;
+        font-size: 14px;
+
+        min-height: 100px;
+        max-height: 00px;
+        overflow-y: auto;
+    }
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -152,9 +252,8 @@
                                     <thead class="thead-light">
                                         <tr>
 											<th style="width:10%">No</th>
-                                            <th style="width:40%">Nama Pembelajaran</th>
-                                            <th style="width:20%">Nilai</th>
-                                            <th style="width:20%">Keterangan</th>
+                                            <th style="width:40%">Tema Pembelajaran</th>
+                                            <th style="width:20%">Materi Belajar</th>
                                         </tr>
                                     </thead>
                                     <tbody id="itemPembelajaran">
@@ -168,8 +267,9 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="grid" id="cardContainer"></div>
         </div>
-
 	</div>
 </div>
 <!-- /Page Wrapper -->
@@ -207,6 +307,7 @@
     })
 
     async function renderSilabus(dataSilabus) {
+        const tema = dataSilabus[0]?.title_silabus
         pagesuccess2.style.display = "block"
         try {
             let hasil;
@@ -255,21 +356,51 @@
             } else {
                 let no = 1;
                 item.forEach(lineItem => {
-                    const keteranganNilai =
-                        lineItem.nilai == 1 ? 'Berkembang Sangat Baik' :
-                        lineItem.nilai == 2 ? 'Berkembang Sesuai Harapan' :
-                        lineItem.nilai == 3 ? 'Mulai Berkembang' :
-                        lineItem.nilai == 4 ? 'Belum Berkembang' :
-                        '-';
                     tBodyitemPembelajaran.innerHTML += `
                     <tr>
                         <td>${no++}.</td>
+                        <td>${tema}</td>
                         <td>${lineItem.item_silabus}</td>
-                        <td>${keteranganNilai}</td>
-                        <td>${lineItem.keterangan ?? '-'}</td>
                     </tr>`;
                 })
             }
+
+            const container = document.getElementById("cardContainer");
+            container.innerHTML = "";
+            dataSilabus.forEach(item => {
+                const badgeMap = {
+                    "1": "BSB",
+                    "2": "BSH",
+                    "3": "MB",
+                    "4": "BB"
+                };
+                const active = badgeMap[item.nilai];
+                const card = document.createElement("div");
+                card.className = "custom-card";
+                card.innerHTML = `
+                    <div class="card-header">
+                        <small>Aktifitas dan Pembelajaran pada</small>
+                        <h3>${item.item_silabus}</h3>
+                    </div>
+
+                    <div class="section">
+                        <label>PENCAPAIAN NILAI</label>
+                        <div class="achievement">
+                            <div class="badge ${active === 'BSB' ? 'active' : ''}">BSB</div>
+                            <div class="badge ${active === 'BSH' ? 'active' : ''}">BSH</div>
+                            <div class="badge ${active === 'MB' ? 'active' : ''}">MB</div>
+                            <div class="badge ${active === 'BB' ? 'active' : ''}">BB</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <label>Keterangan Tambahan</label>
+                        <textarea readonly>${item.keterangan ?? ''}</textarea>
+                    </div>
+                `;
+                container.appendChild(card);
+            })
+
             renderSuccess.style.display = "block"
             renderError.style.display = "none"
         } catch(e) {

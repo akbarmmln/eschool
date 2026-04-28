@@ -540,6 +540,7 @@ class RequestBackEnd
         $response = $apiService->fetchPOST($request->only([
             'data',
             'files',
+            'filesDeleted',
             'id_jurnal',
             'id_siswa'
         ]), $url);

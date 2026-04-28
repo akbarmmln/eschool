@@ -554,46 +554,39 @@
 			});
 		});
 
-		const a = {
-			data: result,
-			id_jurnal: public_id_jurnal,
-			id_siswa: public_id_siswa,
-			files: selectedFiles,
-			filesDeleted: deletedFiles
+		btn.disabled = true;
+		btn.innerText = "Menyimpan data...";
+
+		try {
+            const hasil = await fetchJson('/_backend/logic/update-penilaian', {
+                method: 'POST',
+                body: {
+					data: result,
+					id_jurnal: public_id_jurnal,
+					id_siswa: public_id_siswa,
+					files: selectedFiles,
+					filesDeleted: deletedFiles
+				}				
+            });
+			if(!hasil.ok) {
+				throw hasil;
+			}
+
+			showToast('Input penilaian berhasil dilakukan', 'success');
+			const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
+			modalInstance.hide();
+		} catch(e) {
+			const code = e?.code
+			const message = e?.message
+			if (code === '70011') {
+				showToast(`Proses gagal dilakukan: ${message}`, 'success');
+			} else {
+				showToast(`Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`, 'success');
+			}
+		} finally {
+			btn.disabled = false;
+			btn.innerText = "Simpan";
 		}
-		console.log('sdsaasadsa', a)
-		// btn.disabled = true;
-		// btn.innerText = "Menyimpan data...";
-
-		// try {
-        //     const hasil = await fetchJson('/_backend/logic/update-penilaian', {
-        //         method: 'POST',
-        //         body: {
-		// 			data: result,
-		// 			id_jurnal: public_id_jurnal,
-		// 			id_siswa: public_id_siswa,
-		// 			files: selectedFiles
-		// 		}				
-        //     });
-		// 	if(!hasil.ok) {
-		// 		throw hasil;
-		// 	}
-
-		// 	showToast('Input penilaian berhasil dilakukan', 'success');
-		// 	const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
-		// 	modalInstance.hide();
-		// } catch(e) {
-		// 	const code = e?.code
-		// 	const message = e?.message
-		// 	if (code === '70011') {
-		// 		showToast(`Proses gagal dilakukan: ${message}`, 'success');
-		// 	} else {
-		// 		showToast(`Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`, 'success');
-		// 	}
-		// } finally {
-		// 	btn.disabled = false;
-		// 	btn.innerText = "Simpan";
-		// }
 	});
 
 	btnRefresh.addEventListener("click", async function(e){
