@@ -1002,7 +1002,7 @@
                 if(!result.ok) {
                     throw result;
                 }
-                openPdfFromBase64(result.data);
+                downloadPdfFromBase64(result.data);
             } catch(e) {
                 const code = e?.code
                 const message = e?.message
@@ -1014,6 +1014,32 @@
         }
     });
 
+	//not open window
+	function downloadPdfFromBase64(base64, filename = 'file.pdf') {
+		const byteCharacters = atob(base64);
+		const byteNumbers = new Array(byteCharacters.length)
+			.fill(0)
+			.map((_, i) => byteCharacters.charCodeAt(i));
+
+		const byteArray = new Uint8Array(byteNumbers);
+
+		const blob = new Blob([byteArray], { type: "application/pdf" });
+
+		const url = URL.createObjectURL(blob);
+
+		// 🔥 buat link download
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.click();
+
+		// cleanup
+		a.remove();
+		URL.revokeObjectURL(url);
+	}
+
+	//open window
 	function openPdfFromBase64(base64) {
 		// convert base64 ke binary
 		const byteCharacters = atob(base64);
