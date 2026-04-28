@@ -4,13 +4,13 @@
 	<!-- Logo -->
 	<div class="header-left active">
 		<a href="{{ route('dashboard') }}" class="logo logo-normal logo-title">
-			<img src="{{ asset('assets/img/education_1.png') }}" style="width:200px; height:50px; margin-top:5px" alt="Logo">
+			<img src="{{ asset('assets/img/logo_tp_expand.png') }}" style="width:200px; height:52px; margin-top:5px" alt="Logo">
 		</a>
 		<a href="{{ route('dashboard') }}" class="logo-small">
-			<img src="{{ asset('assets/img/education_2.svg') }}" style="width:50px; height:50px; margin-top:5px"" alt="Logo">
+			<img src="{{ asset('assets/img/logo_tp.png') }}" style="width:50px; height:50px; margin-top:5px" alt="Logo">
 		</a>
 		<a href="{{ route('dashboard') }}" class="dark-logo">
-			<img src="{{ asset('assets/img/logo-dark.svg') }}" alt="Logo">
+			<img src="{{ asset('assets/img/logo_tp.png') }}" alt="Logo">
 		</a>
 		<a id="toggle_btn" href="javascript:void(0);">
 			<i class="ti ti-menu-deep"></i>
