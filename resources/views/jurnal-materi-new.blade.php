@@ -445,23 +445,6 @@
 	</div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalFile" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-			<div class="modal-header">
-			    <h4 class="modal-title" id="exampleModalFullscreenLabel"></h4>
-			</div>
-			<div class="modal-body">
-			    ....
-			</div>
-			<div class="modal-footer d-flex gap-2">
-			    <button id="batal_input_file" type="button" class="btn btn-secondary">Batalkan</button>
-				<button type="button" class="btn btn-primary">Simpan</button>
-			</div>
-        </div>
-    </div>
-</div>
-
 <script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
@@ -487,15 +470,13 @@
     let attr_id_diajar;
 	let public_id_jurnal, public_id_diajar, public_id_siswa, public_nama_siswa;
 	const modalInputNilai = document.getElementById('modalInputNilai')
-	const modalFile = document.getElementById('modalFile')
 	const btnRefresh = modalInputNilai.querySelector("#btnRefresh");
 	const batalInputNilai = modalInputNilai.querySelector("#batal_input_nilai");
-	const batalInputFile = modalFile.querySelector("#batal_input_file");
 	const simpanInputNilai = modalInputNilai.querySelector("#simpan_input_nilai");
-
 	const fileInput = document.getElementById('fileInput');
 	const container = document.getElementById('imagePreviewContainer');
 	let selectedFiles = [], deletedFiles = [];
+	
 	fileInput.addEventListener('change', async function (e) {
 		const files = Array.from(e.target.files);
 		for (const file of files) {
@@ -574,10 +555,6 @@
 
 	batalInputNilai.addEventListener("click", function(){
 		const modalInstance = bootstrap.Modal.getInstance(modalInputNilai);
-		modalInstance.hide();
-	});
-	batalInputFile.addEventListener("click", function(){
-		const modalInstance = bootstrap.Modal.getInstance(modalFile);
 		modalInstance.hide();
 	});
 	simpanInputNilai.addEventListener("click", async function(){
@@ -964,11 +941,6 @@
 								data-bs-toggle="modal" data-bs-target="#modalInputNilai"
 								data-idJurnal="${idJurnal}" data-idSiswa="${idSiswa}" data-idDiajar="${item.id}" data-namaSiswa="${item.nama_siswa}">
 									<i class="ti ti-edit align-middle me-2 d-inline-block"></i>Input Nilai
-							</a>
-							<a class="btn btn-sm btn-secondary btn-wave waves-effect waves-light btn-file"
-								data-bs-toggle="modal" data-bs-target="#modalFile"
-								data-idJurnal="${idJurnal}" data-idDiajar="${item.id}" data-namaSiswa="${item.nama_siswa}">
-									<i class="text-black ti ti-brand-appgallery align-middle me-2 d-inline-block"></i><span class="text-black">File lainnya</span>
 							</a>
 						</div>
 					</td>
