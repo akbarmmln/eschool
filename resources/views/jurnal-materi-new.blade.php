@@ -393,9 +393,9 @@
 						<thead class="table-light text-center">
 							<tr>
 								<th style="width:5%" rowspan="2">No</th>
-								<th style="width:55%" rowspan="2">Aktifitas</th>
+								<th style="width:35%" rowspan="2">Aktifitas</th>
 								<th style="width:10%" colspan="4">Hasil</th>
-								<th style="width:30%" rowspan="2">Keterangan</th>
+								<th style="width:50%" rowspan="2">Keterangan</th>
 							</tr>
 							<tr class="text-center">
 								<th>BSB</th>
@@ -446,6 +446,7 @@
     </div>
 </div>
 
+<script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
@@ -569,12 +570,18 @@
 		const radios = modalInputNilai.querySelectorAll("input[type=radio]:checked");
 		radios.forEach(radio => {
 			const id = radio.dataset.id;
-			const ketInput = modalInputNilai.querySelector(`input[type="text"][data-id="${id}"]`);
+			const ketInput = modalInputNilai.querySelector(`textarea[data-id="${id}"]`);
+			let value = null;
+
+			if (ketInput) {
+				const editor = tinymce.get(ketInput.id);
+				value = editor ? editor.getContent() : ketInput.value;
+			}
 
 			result.push({
 				id_mengajar: id,
 				status: radio.value,
-				keterangan: ketInput ? ketInput.value : null
+				keterangan: value
 			});
 		});
 
@@ -638,6 +645,8 @@
 		container.querySelectorAll('.preview-item').forEach(el => el.remove());
 		container.querySelectorAll('.preview-container').forEach(el => el.remove());
 		fileInput.value = "";
+
+		tinymce.remove();
 	})
 	modalInputNilai.addEventListener('show.bs.modal', async function (event) {
 		const button = event.relatedTarget;
@@ -693,6 +702,7 @@
 		const tbody = modalInputNilai.querySelector("#inputNilai");
 		let html = "";
 		let no = 1;
+
 		dataNilai.forEach(subject => {
 			subject.items.forEach(item => {
 				const bsb = item.nilai == '1' ? "checked" : "";
@@ -721,18 +731,32 @@
 						<input type="radio" name="nilai_${item.id}" data-id="${item.id}" value="4" ${bb}>
 					</td>
 					<td>
-						<input 
-							type="text" 
-							class="form-control form-control-sm" 
+						<textarea
+							id="ket_${item.id}"
 							name="ket_${item.id}"
 							data-id="${item.id}"
-							value="${item.keterangan ?? ''}">
+							class="form-control editor" 
+							placeholder="Tuliskan keterangan tambahan......">${item.keterangan ?? ''}</textarea>
 					</td>
 				</tr>
 				`;
 			})
 		})
 		tbody.innerHTML = html;
+
+		tinymce.remove();
+		tinymce.init({
+			selector: '#modalInputNilai .editor',
+			min_height: 150,
+			max_height: 150,
+			license_key: 'gpl',
+			menubar: false,
+			plugins: ['lists', 'link', 'autolink'],
+			toolbar: 'bold italic underline | bullist numlist | link | undo redo',
+			branding: false,
+			skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
+			content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}"
+		});
 		renderUploadedImages(dataImages)
 	}
 	
