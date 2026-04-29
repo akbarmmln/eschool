@@ -2,12 +2,14 @@
 @section('content')
 <style>
     .keterangan-view {
-        background: #f1f5f9;
-        padding: 12px;
         border-radius: 12px;
-        min-height: 80px;
     }
 
+    .keterangan-bg {
+        padding: 12px;
+        min-height: 80px;
+        background: #f1f5f9;
+    }
     .keterangan-view ul {
         list-style: disc;
         padding-left: 20px;
@@ -219,7 +221,7 @@
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Materi</h6>
-								<p id="materi" class="mb-0">-</p>
+                                <div id="materi" class="keterangan-view"></div>
 							</div>
 						</div>
 					</div>
@@ -231,7 +233,7 @@
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Refleksi</h6>
-								<p id="refleksi" class="mb-0">-</p>
+                                <div id="refleksi" class="keterangan-view"></div>
 							</div>
 						</div>
 					</div>
@@ -420,7 +422,7 @@
 
                     <div class="section">
                         <label>Keterangan Tambahan</label>
-                        <div class="keterangan-view">${item.keterangan ?? ''}</div>
+                        <div class="keterangan-view keterangan-bg">${item.keterangan ?? ''}</div>
                     </div>
                 `;
                 container.appendChild(card);
