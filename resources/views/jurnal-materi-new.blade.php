@@ -94,17 +94,37 @@
 
 	.preview-item {
 		width: 150px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.preview-image {
+		width: 150px;
 		height: 150px;
 		border-radius: 15px;
 		overflow: hidden;
 		position: relative;
 		background: #f3f4f6;
 	}
+	.preview-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 
 	.preview-item img {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
+	}
+
+	.image-caption {
+		width: 100%;
+		border-radius: 8px;
+		border: 1px solid #e5e7eb;
+		padding: 6px;
+		font-size: 12px;
 	}
 
 	.remove-btn {
@@ -333,8 +353,8 @@
 											<thead class="thead-light">
 												<tr>
 													<th style="width:10%">No</th>
-													<th style="width:60%">Nama</th>
-													<th style="width:30%">Aksi</th>
+													<th style="width:75%">Nama</th>
+													<th style="width:15%">Aksi</th>
 												</tr>
 											</thead>
 											<tbody id="itemPenilaian">
@@ -476,14 +496,19 @@
 	const fileInput = document.getElementById('fileInput');
 	const container = document.getElementById('imagePreviewContainer');
 	let selectedFiles = [], deletedFiles = [];
-	
+
+	function generateId() {
+		return crypto.randomUUID?.() || Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+	}
+
 	fileInput.addEventListener('change', async function (e) {
 		const files = Array.from(e.target.files);
 		for (const file of files) {
 			let finalBase64;
 			if (file.size > 2 * 1024 * 1024) {
-				console.log('kena compress');
+				console.log('mulai compress');
 				finalBase64 = await compressToMaxSize(file, 2);
+				console.log('selesai compress');
 			} else {
 				console.log('tidak kena compress');
 				finalBase64 = await new Promise((resolve) => {
@@ -494,20 +519,42 @@
 			}
 			// ambil pure base64
 			const pureBase64 = finalBase64.split(',')[1];
-			selectedFiles.push(pureBase64);
+			const id = generateId();
+			selectedFiles.push({
+				id: id,
+				file: pureBase64,
+				caption: ''
+			});
 
 			// preview
 			const wrapper = document.createElement('div');
 			wrapper.classList.add('preview-item');
+			wrapper.dataset.id = id;
 
 			wrapper.innerHTML = `
-				<img src="${finalBase64}">
-				<button class="remove-btn">&times;</button>
+				<div class="preview-image">
+					<img src="${finalBase64}">
+					<button class="remove-btn">&times;</button>
+				</div>
+				<textarea class="image-caption" placeholder="Informasi tentang gambar..." rows="2"></textarea>
 			`;
 
+			// ===== handle caption ===== \\
+			const input = wrapper.querySelector('.image-caption');
+			input.addEventListener('input', (e) => {
+				const id = wrapper.dataset.id;
+
+				const index = selectedFiles.findIndex(f => f.id === id);
+				if (index !== -1) {
+					selectedFiles[index].caption = e.target.value;
+				}
+			});
+			// ===== handle remove ===== \\
 			wrapper.querySelector('.remove-btn').addEventListener('click', () => {
+				const id = wrapper.dataset.id;
+
 				wrapper.remove();
-				selectedFiles = selectedFiles.filter(f => f !== pureBase64);
+				selectedFiles = selectedFiles.filter(f => f.id !== id);
 			});
 
 			container.insertBefore(wrapper, container.lastElementChild);
@@ -590,7 +637,7 @@
 					id_siswa: public_id_siswa,
 					files: selectedFiles,
 					filesDeleted: deletedFiles
-				}				
+				}
             });
 			if(!hasil.ok) {
 				throw hasil;
@@ -744,8 +791,8 @@
 			max_height: 150,
 			license_key: 'gpl',
 			menubar: false,
-			plugins: ['lists', 'link', 'autolink'],
-			toolbar: 'bold italic underline | bullist numlist | link | undo redo',
+			plugins: ['lists', 'autolink'],
+			toolbar: 'bold italic underline | bullist numlist | undo redo',
 			branding: false,
 			skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
 			content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}"
@@ -760,35 +807,53 @@
 		imageUrls.forEach(url => {
 			const id_img = url.id;
 			const imgSrc = url.url_image;
+			const captionValue = url.caption || '';
 
+			// ===== WRAPPER =====
 			const wrapper = document.createElement('div');
-			wrapper.classList.add('preview-container', 'loading'); // 🔥 loading state
+			wrapper.classList.add('preview-item');
+			wrapper.dataset.id = id_img;
+
+			// ===== IMAGE CONTAINER =====
+			const imageBox = document.createElement('div');
+			imageBox.classList.add('preview-container', 'loading');
 
 			const img = document.createElement('img');
-			img.src = ""; // kosong dulu
+			img.src = "";
 
 			const removeBtn = document.createElement('button');
 			removeBtn.className = "remove-btn";
 			removeBtn.innerHTML = "&times;";
 
-			wrapper.appendChild(img);
-			wrapper.appendChild(removeBtn);
+			imageBox.appendChild(img);
+			imageBox.appendChild(removeBtn);
 
-			// 🔥 preload image
+			// ===== CAPTION =====
+			const textarea = document.createElement('textarea');
+			textarea.className = "image-caption";
+			textarea.disabled = true;
+			textarea.value = captionValue;
+			textarea.rows = 2;
+
+			// ===== PROGRESSIVE LOAD =====
 			const temp = new Image();
 			temp.src = imgSrc;
 
 			temp.onload = function () {
 				img.src = imgSrc;
 				img.classList.add('loaded');
-				wrapper.classList.remove('loading'); // hilangkan shimmer
+				imageBox.classList.remove('loading');
 			};
 
-			// tombol hapus
+			// ===== REMOVE =====
 			removeBtn.addEventListener('click', () => {
 				wrapper.remove();
 				deletedFiles.push(id_img);
 			});
+
+			// ===== APPEND =====
+			wrapper.appendChild(imageBox);
+			wrapper.appendChild(textarea);
 
 			container.appendChild(wrapper);
 		});
