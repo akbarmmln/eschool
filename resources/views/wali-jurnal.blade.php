@@ -1,6 +1,29 @@
 @extends('ortu.app')
 @section('content')
 <style>
+    .keterangan-view {
+        background: #f1f5f9;
+        padding: 12px;
+        border-radius: 12px;
+        min-height: 80px;
+    }
+
+    .keterangan-view ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .keterangan-view ol {
+        list-style: decimal;
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .keterangan-view li {
+        margin-bottom: 4px;
+    }
+
     .error {
         color: red;
         font-size: 13px;
@@ -108,6 +131,7 @@
         overflow-y: auto;
     }
 </style>
+
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 	<div class="content">
@@ -274,6 +298,7 @@
 </div>
 <!-- /Page Wrapper -->
 
+<script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
     const id_jurnal = @json($id_jurnal);
@@ -395,7 +420,7 @@
 
                     <div class="section">
                         <label>Keterangan Tambahan</label>
-                        <textarea readonly>${item.keterangan ?? ''}</textarea>
+                        <div class="keterangan-view">${item.keterangan ?? ''}</div>
                     </div>
                 `;
                 container.appendChild(card);

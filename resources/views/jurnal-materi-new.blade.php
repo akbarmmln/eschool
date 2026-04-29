@@ -4,6 +4,22 @@
 @section('content')
 
 <style>
+    .keterangan-view ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .keterangan-view ol {
+        list-style: decimal;
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .keterangan-view li {
+        margin-bottom: 4px;
+    }
+
 	.preview-container {
 		width: 150px;
 		height: 150px;
@@ -201,7 +217,7 @@
 							</div>
 							<div>
 								<h6 class="materi-html mb-1 fw-bold">Materi</h6>
-								<p id="materi" class="mb-0">-</p>
+								<div id="materi" class="keterangan-view"></div>
 							</div>
 						</div>
 					</div>
@@ -225,7 +241,7 @@
 							</div>
 							<div>
 								<h6 class="mb-1 fw-bold">Refleksi</h6>
-								<p id="refleksi" class="mb-0">-</p>
+								<div id="refleksi" class="keterangan-view"></div>
 							</div>
 						</div>
 					</div>
@@ -859,7 +875,7 @@
 
 			tglJamMengajar.innerHTML = `${dateFormatIndo(tanggal)} • ${jam_mulai} - ${jam_selesai} WIB`
 			namaKelas.innerHTML = `${nama_kelas}`
-			materiX.innerHTML = `${DOMPurify.sanitize(materi)}`
+			materiX.innerHTML = `${materi}`
 			refleksiX.innerHTML = `${refleksi}`
 			jumlahSiswa.innerHTML = `${data_siswa.length} Siswa`
 			pengajar.innerHTML = `${nama_guru}`
