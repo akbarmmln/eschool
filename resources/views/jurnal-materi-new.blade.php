@@ -586,11 +586,11 @@
 
 					do {
 						base64 = canvas.toDataURL('image/jpeg', quality);
-						const size = Math.round((base64.length * 3) / 4); // estimasi size byte
+						const size = Math.round((base64.length * 3) / 4);
 
 						if (size <= maxSize || quality <= 0.3) break;
 
-						quality -= 0.1; // turunin kualitas
+						quality -= 0.1;
 					} while (true);
 
 					resolve(base64);
