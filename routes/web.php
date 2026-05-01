@@ -28,8 +28,8 @@ Route::middleware('check.login')->group(function () {
     //route for siswa
     Route::get('/akademik/siswa', [Controller::class, 'siswa'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU)->name('siswa');
     Route::get('/akademik/detail-siswa/{id}', [Controller::class, 'siswadetail'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU)->name('siswa-detail');
-    Route::get('/akademik/ubah-siswa/{id}', [Controller::class, 'siswaubah'])->middleware('auth.role:' . Role::ROLE_ADMIN)->name('siswa-ubah');
-    Route::get('/akademik/tambah-siswa', [Controller::class, 'siswatambah'])->middleware('auth.role:' . Role::ROLE_ADMIN)->name('siswa-tambah');
+    Route::get('/akademik/ubah-siswa/{id}', [Controller::class, 'siswaubah'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU)->name('siswa-ubah');
+    Route::get('/akademik/tambah-siswa', [Controller::class, 'siswatambah'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU)->name('siswa-tambah');
     
     //route for guru
     Route::get('/akademik/guru', [Controller::class, 'guru'])->middleware('auth.role:' . Role::ROLE_ADMIN . ',' . ROLE::ROLE_GURU)->name('guru');

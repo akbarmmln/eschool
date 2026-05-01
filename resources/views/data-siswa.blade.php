@@ -19,7 +19,7 @@
 				</nav>
 			</div>
 			<div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-                @if($role == '0')
+                @if($role == '0' || $role == '1')
                     <div class="mb-2">
                         <a href="{{ route('siswa-tambah') }}" class="btn btn-primary">
                             <i class="ti ti-square-rounded-plus-filled me-2"></i>Tambah Data
@@ -55,7 +55,7 @@
 								<th>Nama Siswa</th>
                                 <th>Kelas</th>
 								<th>Wali Kelas</th>
-                                @if($role == '0')
+                                @if($role == '0' || $role == '1')
                                     <th>Aksi</th>
                                 @endif
 							</tr>
@@ -219,7 +219,7 @@
                                 <td>${item.nama_kelas}</td>
 								<td>${item.nama_guru ?? '-'}</td>
                                 ${
-                                    role == '0' ? `
+                                    role == '0' || role == '1' ? `
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="dropdown">
