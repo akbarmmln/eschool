@@ -110,7 +110,7 @@
 	.preview-image img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 	}
 
 	.preview-item img {
@@ -999,6 +999,7 @@
 							<button class="btn btn-sm btn-success btn-wave waves-effect waves-light btn_download"
 								data-idJurnal="${idJurnal}" 
 								data-idDiajar="${item.id}" 
+								data-idSiswa="${idSiswa}"
 								data-namaSiswa="${item.nama_siswa}">
 									<i class="ti ti-download align-middle me-2 d-inline-block"></i>Download
 							</button>
@@ -1167,12 +1168,14 @@
 
 		const idJurnal = btn.dataset.idjurnal;
 		const idDiajar = btn.dataset.iddiajar;
+		const idSiswa = btn.dataset.idsiswa;
 		const namaSiswa = btn.dataset.namasiswa;
 		
 		try {
             const result = await fetchJson('/_backend/logic/download-single-penilaian-harian', {
                 method: 'POST',
                 body: {
+					id_siswa: idSiswa,
 					id_jurnal: idJurnal,
 					id_detail_diajar: idDiajar,
 					nama_siswa: namaSiswa

@@ -34,7 +34,7 @@
 .upload-frame img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .btn-remove-image {

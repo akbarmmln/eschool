@@ -586,6 +586,7 @@ class RequestBackEnd
         $url = "/api/v1/jurnal/download-single-penilaian-harian";
         $response = $apiService->fetchPOST($request->only([
             'id_jurnal',
+            'id_siswa',
             'id_detail_diajar',
             'nama_siswa'
         ]), $url);
