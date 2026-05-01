@@ -334,8 +334,8 @@
 									<input type="text" class="form-control pendidikan" name="pendidikan" placeholder="Pendidikan">
 								</div>
 								<div class="mb-3">
-									<label class="form-label">Nomor Telepone</label>
-									<input type="text" class="form-control nomot_telp" name="nomot_telp" placeholder="Nomor Telepone">
+									<label class="form-label">Nomor Telepon</label>
+									<input type="text" class="form-control nomot_telp" name="nomot_telp" placeholder="Nomor Telepon">
 								</div>
 							</div>
 						</div>
