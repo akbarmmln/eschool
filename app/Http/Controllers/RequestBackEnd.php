@@ -589,7 +589,7 @@ class RequestBackEnd
             'id_siswa',
             'id_detail_diajar',
             'nama_siswa'
-        ]), $url);
+        ]), $url, 120);
         return response()->json(
             $response->json(),
             $response->status()

@@ -17,14 +17,14 @@ class ApiService
         $this->token   = session('access-token');
     }
 
-    public function request(string $method, string $endpoint, array $payload = []){
+    public function request(string $method, string $endpoint, array $payload = [], int $timeout){
         \Log::info('START REQUEST', [
             'method' => $method,
             'endpoint' => $endpoint,
             'payload' => $payload
         ]);
         $http = Http::baseUrl($this->baseUrl)
-            ->timeout(30)
+            ->timeout($timeout)
             ->retry(0, 100, function ($exception, $request) {
                 return $exception instanceof \Illuminate\Http\Client\ConnectionException;
             });
@@ -226,14 +226,14 @@ class ApiService
         return $response;
     }
 
-    public function fetchPOST(array $payload, string $url) {
+    public function fetchPOST(array $payload, string $url, int $timeout = 30) {
         //jika diperlukan untuk dilakukan mapping terhadap payload body gunakan cara ini
         // $newPayload = [
         //     'id' => $payload['id'],
         //     ...lainnya
         // ];
 
-        $response = $this->request('POST', $url, $payload);
+        $response = $this->request('POST', $url, $payload, $timeout);
         return $response;
     }
 }
