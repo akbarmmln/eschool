@@ -82,6 +82,57 @@
     .air-datepicker {
         z-index: 9999 !important;
     }
+
+	.tooltip-wrapper {
+		position: relative;
+		display: inline-block;
+		color: #0d6efd;
+		font-size: 14px;
+		text-decoration: none;
+	}
+
+	/* tooltip box */
+	.custom-tooltip {
+		position: absolute;
+		bottom: 130%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		background: #5bb3bb;
+		color: white;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 12px;
+		white-space: nowrap;
+
+		opacity: 0;
+		visibility: hidden;
+		transition: 0.2s ease;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	}
+
+	/* arrow */
+	.custom-tooltip::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		border-width: 6px;
+		border-style: solid;
+		border-color: #5bb3bb transparent transparent transparent;
+	}
+
+	/* show on hover */
+	.tooltip-wrapper:hover .custom-tooltip {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(-4px);
+	}
+	.tooltip-wrapper:hover {
+		transform: scale(1.2);
+	}
 </style>
 
 <!-- Delete Modal -->
