@@ -47,7 +47,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
 	<!-- Feathericon CSS -->
-	<link rel="stylesheet" href="{ asset('assets/css/feather.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/feather.css') }}">
 
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.css"/>
 </head>

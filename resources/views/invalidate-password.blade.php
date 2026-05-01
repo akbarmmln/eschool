@@ -166,7 +166,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
         <!-- Feathericon CSS -->
-        <link rel="stylesheet" href="{ asset('assets/css/feather.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/feather.css') }}">
         
     </head>
 

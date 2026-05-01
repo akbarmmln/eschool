@@ -50,6 +50,57 @@
 .student-card.active.disabled {
     opacity: 1;
 }
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    color: #0d6efd;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+/* tooltip box */
+.custom-tooltip {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: #5bb3bb;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s ease;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* arrow */
+.custom-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    border-width: 6px;
+    border-style: solid;
+    border-color: #5bb3bb transparent transparent transparent;
+}
+
+/* show on hover */
+.tooltip-wrapper:hover .custom-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+}
+.tooltip-wrapper:hover {
+    transform: scale(1.2);
+}
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -377,7 +428,18 @@
 						<td>${item.refleksi}</td>
 						<td>${item.nama_kelas}</td>
 						<td>${item.nama_guru}</td>
-						<td><a href="${url}" class="link-primary">Detail</a></td>
+						<td>
+							<div class="hstack gap-2 fs-15">
+								<a href="${url}" class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper">
+									<i class="feather-edit"></i>
+									<span class="custom-tooltip">Lihat Detail</span>
+								</a>
+								<a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-success rounded-pill tooltip-wrapper">
+									<i class="feather-download"></i>
+									<span class="custom-tooltip">Download</span>
+								</a>
+							</div>
+						</td>
 					</tr>
 				`
 			})
