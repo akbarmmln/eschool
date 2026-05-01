@@ -221,8 +221,8 @@ class ApiService
         }
     }
 
-    public function fetchGET(string $url) {
-        $response = $this->request('GET', $url);
+    public function fetchGET(string $url, int $timeout = 30) {
+        $response = $this->request('GET', $url, [], $timeout);
         return $response;
     }
 
