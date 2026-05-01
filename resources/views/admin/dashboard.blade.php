@@ -147,24 +147,6 @@
         <!-- /Greeting Section -->
 
         <div class="row">
-            <!-- <div class="d-flex align-items-center flex-wrap justify-content-end">
-                <div class="input-icon-start mb-3 me-2 position-relative d-flex align-items-center gap-2">
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_jurnal">
-                        <i class="ti ti-square-rounded-plus-filled me-2"></i>Tambah Jurnal
-                    </a>
-                    <div id="hapus_filter" class="d-none d-inline-flex border align-items-center rounded bg-white px-2">
-                        <a href="#" class="btn fw-normal bg-white" data-bs-toggle="modal" data-bs-target="#cari_jurnal">
-                            <i class="ti ti-calendar-due me-1"></i><span id="text_cari"></span>
-                        </a>
-                        <button id="button_hapus_filter" class="btn btn-sm p-0 text-danger border-0">
-                            <i class="ti ti-x fw-bold"></i>
-                        </button>
-                    </div>
-                    <a id="cari_filter" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cari_jurnal"><i
-                        class="ti ti-search me-2"></i>Cari Jurnal
-                    </a>
-                </div>
-            </div> -->
             <div class="d-flex align-items-center justify-content-between flex-wrap mb-3 gap-2">
                 <!-- KIRI -->
                 <div class="d-flex align-items-center gap-2">

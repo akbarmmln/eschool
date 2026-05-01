@@ -1,106 +1,116 @@
 @extends('ortu.app')
 @section('content')
 <style>
-.shimmer {
-    position: relative;
-    overflow: hidden;
-    background: #1dae65;
-    border-radius: 6px;
-}
+	.shimmer {
+		position: relative;
+		overflow: hidden;
+		background: #1dae65;
+		border-radius: 6px;
+	}
 
-.shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -150px;
-    height: 100%;
-    width: 150px;
-    background: linear-gradient(90deg, transparent, rgba(44, 17, 141, 0.2), transparent);
-    animation: shimmer 1s infinite;
-}
+	.shimmer::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -150px;
+		height: 100%;
+		width: 150px;
+		background: linear-gradient(90deg, transparent, rgba(44, 17, 141, 0.2), transparent);
+		animation: shimmer 1s infinite;
+	}
 
-@keyframes shimmer {
-    100% {
-        left: 100%;
+	@keyframes shimmer {
+		100% {
+			left: 100%;
+		}
+	}
+
+	.student-card {
+		cursor: pointer;
+		transition: all 0.2s ease;
+		opacity: 0.9;
+	}
+
+	.student-card:hover {
+		opacity: 1;
+		transform: scale(1.02);
+	}
+
+	.student-card.active {
+		border: 2px solid #0d6efd !important;
+		background: rgba(13, 110, 253, 0.1);
+		transform: scale(0.98);
+	}
+
+	.student-card.disabled {
+		pointer-events: none;
+		opacity: 0.6;
+	}
+
+	.student-card.active.disabled {
+		opacity: 1;
+	}
+
+	.tooltip-wrapper {
+		position: relative;
+		display: inline-block;
+		color: #0d6efd;
+		font-size: 14px;
+		text-decoration: none;
+	}
+
+	/* tooltip box */
+	.custom-tooltip {
+		position: absolute;
+		bottom: 130%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		background: #5bb3bb;
+		color: white;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 12px;
+		white-space: nowrap;
+
+		opacity: 0;
+		visibility: hidden;
+		transition: 0.2s ease;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	}
+
+	/* arrow */
+	.custom-tooltip::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		border-width: 6px;
+		border-style: solid;
+		border-color: #5bb3bb transparent transparent transparent;
+	}
+
+	/* show on hover */
+	.tooltip-wrapper:hover .custom-tooltip {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(-4px);
+	}
+	.tooltip-wrapper:hover {
+		transform: scale(1.2);
+	}
+
+    .spin {
+        display: inline-block;
+        animation: spin 1s linear infinite;
     }
-}
 
-.student-card {
-    cursor: pointer;
-    transition: all 0.2s ease;
-	opacity: 0.9;
-}
-
-.student-card:hover {
-	opacity: 1;
-    transform: scale(1.02);
-}
-
-.student-card.active {
-    border: 2px solid #0d6efd !important;
-    background: rgba(13, 110, 253, 0.1);
-	transform: scale(0.98);
-}
-
-.student-card.disabled {
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-.student-card.active.disabled {
-    opacity: 1;
-}
-
-.tooltip-wrapper {
-    position: relative;
-    display: inline-block;
-    color: #0d6efd;
-    font-size: 14px;
-    text-decoration: none;
-}
-
-/* tooltip box */
-.custom-tooltip {
-    position: absolute;
-    bottom: 130%;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    background: #5bb3bb;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: nowrap;
-
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.2s ease;
-	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* arrow */
-.custom-tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    border-width: 6px;
-    border-style: solid;
-    border-color: #5bb3bb transparent transparent transparent;
-}
-
-/* show on hover */
-.tooltip-wrapper:hover .custom-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(-4px);
-}
-.tooltip-wrapper:hover {
-    transform: scale(1.2);
-}
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
 </style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -369,6 +379,28 @@
 		}
 	});
 
+	document.addEventListener('click', async function (e) {
+		if (e.target.closest(".btn_download")) {
+			const buttonDownload = e.target.closest('.btn_download');
+            buttonDownload.disabled = true;
+            buttonDownload.innerHTML = `<i class="ti ti-loader-2 spin"></i>`;
+
+			const idJurnal = buttonDownload.dataset.idjurnal;
+			const idSiswa = buttonDownload.dataset.idsiswa;
+			
+			try {
+				
+			} catch (e) {
+				const code = e?.code
+				const message = e?.message
+				showToast('Terjadi kesalahan saat memproses data. Silahkan ulangi kembali');
+			} finally {
+				buttonDownload.disabled = false;
+				buttonDownload.innerHTML = `<i class="feather-download"></i><span class="custom-tooltip">Download</span>`;
+			}
+		}
+	})
+
 	async function renderDetailsCard(page) {
         if (isLoadingTabel) return;
         isLoadingTabel = true;
@@ -430,13 +462,14 @@
 						<td>${item.nama_guru}</td>
 						<td>
 							<div class="hstack gap-2 fs-15">
-								<a href="${url}" class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper">
-									<i class="feather-edit"></i>
-									<span class="custom-tooltip">Lihat Detail</span>
-								</a>
-								<a href="javascript:void(0);" class="btn btn-icon btn-sm btn-soft-success rounded-pill tooltip-wrapper">
+								<button class="btn btn-icon btn-sm btn-soft-success btn_download rounded-pill tooltip-wrapper"
+									data-idJurnal="${item.id}" data-idSiswa="${selectedID}">
 									<i class="feather-download"></i>
 									<span class="custom-tooltip">Download</span>
+								</button>
+								<a href="${url}" class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper">
+									<i class="feather-file-text"></i>
+									<span class="custom-tooltip">Detail</span>
 								</a>
 							</div>
 						</td>
