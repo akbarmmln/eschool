@@ -755,4 +755,25 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doAclList(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/role/acl/list";
+        $response = $apiService->fetchGET($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
+    public function doAclUpdate(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/role/acl/update";
+        $response = $apiService->fetchPOST($request->only([
+            'niy',
+            'role_code'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

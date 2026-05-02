@@ -32,6 +32,8 @@ class AuthRoleMiddleware
             if ($dataStatusCode == 500 || $dataStatusCode == 502 || $dataStatusCode == 504) {
                 session(['page_gateway_timeout' => true]);
                 return redirect('/akademik/rto');
+            } else if($dataStatusCode == 401) {
+                return app(Controller::class)->doLogout('jwt-expr');
             } else {
                 return app(Controller::class)->doLogout('jwt-expr');
             }

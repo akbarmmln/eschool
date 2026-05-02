@@ -485,11 +485,13 @@
         const waliHidden = editModal.querySelector('.wali-kelas-id');
         const waliSearch = editModal.querySelector('.wali-kelas-search');
         const dropdown = editModal.querySelector('.wali-kelas-dropdown');
+        const tingkatKelas = editModal.querySelector('.tingkat_kelas');
 
         if (idInput) idInput.value = '';
         if (namaInput) namaInput.value = '';
         if (waliHidden) waliHidden.value = '';
         if (waliSearch) waliSearch.value = '';
+        if (tingkatKelas) tingkatKelas.value = '';
         if (dropdown) {
             dropdown.innerHTML = '';
             dropdown.style.display = 'none';
@@ -543,10 +545,12 @@
         const waliHidden = addModal.querySelector('.wali-kelas-id');
         const waliSearch = addModal.querySelector('.wali-kelas-search');
         const dropdown = addModal.querySelector('.wali-kelas-dropdown');
+        const tingaktKelas = addModal.querySelector('.tingkat_kelas');
 
         if (namaInput) namaInput.value = '';
         if (waliHidden) waliHidden.value = '';
         if (waliSearch) waliSearch.value = '';
+        if (tingaktKelas) tingaktKelas.value = '';
         if (dropdown) {
             dropdown.innerHTML = '';
             dropdown.style.display = 'none';

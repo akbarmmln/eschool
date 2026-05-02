@@ -153,6 +153,9 @@ class Controller
     }
 
     public function doLogout(string $status = 'success') {
+        $endpoint = "/api/v1/auth/logout";
+        $response = $this->apiService->fetchGET($endpoint);
+
         session()->flush();
         request()->session()->invalidate();
         request()->session()->regenerateToken();

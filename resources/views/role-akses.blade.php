@@ -1,5 +1,58 @@
 @extends('admin.app')
 @section('content')
+<style>
+	.tooltip-wrapper {
+		position: relative;
+		display: inline-block;
+		color: #0d6efd;
+		font-size: 14px;
+		text-decoration: none;
+	}
+
+	/* tooltip box */
+	.custom-tooltip {
+		position: absolute;
+		bottom: 130%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		background: #5bb3bb;
+		color: white;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 12px;
+		white-space: nowrap;
+
+		opacity: 0;
+		visibility: hidden;
+		transition: 0.2s ease;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	}
+
+	/* arrow */
+	.custom-tooltip::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		border-width: 6px;
+		border-style: solid;
+		border-color: #5bb3bb transparent transparent transparent;
+	}
+
+	/* show on hover */
+	.tooltip-wrapper:hover .custom-tooltip {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(-4px);
+	}
+	.tooltip-wrapper:hover {
+		transform: scale(1.2);
+	}
+</style>
+
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 	<div class="content">
@@ -45,6 +98,7 @@
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>Jabatan</th>
+                                <th>Aksi</th>
 							</tr>
 						</thead>
 						<tbody id="roleTabel">
@@ -68,13 +122,157 @@
 	</div>
 </div>
 <!-- /Page Wrapper -->
+
+<!-- Edit Role Akses -->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_access">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Ubah Role Akses</h4>
+				<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div id="alertContainerModal"></div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="mb-3">
+								<label class="form-label">NIY</label>
+								<input type="text" id="niy" class="form-control"  disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Nama</label>
+								<input type="text" id="nama" class="form-control" disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Role Akses Saat ini:</label>
+								<input type="text" id="rl_now" class="form-control" disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Role Akses Baru:</label>
+								<select class="form-control rl_new" id="rl_new">
+									<option value="">Pilih</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Batalkan</a>
+					<button type="submit" disabled class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+				</div>
+			
+		</div>
+	</div>
+</div>
+<!-- Edit Role Akses -->
+
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
     let isLoading = false;
+    const editAccess = document.getElementById('edit_access');
+    const btnSimpanAccess = editAccess.querySelector('.btn_simpan');
+
     document.addEventListener("DOMContentLoaded", async function () {
         await loadData(1);
     })
 
+    editAccess.addEventListener('hidden.bs.modal', function () {
+        const niyInput = editAccess.querySelector('#niy');
+        const namaInput = editAccess.querySelector('#nama');
+        const roleNowInput = editAccess.querySelector('#rl_now');
+        const roleNewInput = editAccess.querySelector('#rl_new');
+
+        if (niyInput) niyInput.value = '';
+        if (namaInput) namaInput.value = '';
+        if (roleNowInput) roleNowInput.value = '';
+        if (roleNewInput) roleNewInput.value = '';
+    })
+
+    editAccess.addEventListener('show.bs.modal', function () {
+        const button = event.relatedTarget; // element yang klik
+        const niy = button.getAttribute('data-niy');
+        const nama = button.getAttribute('data-nama');
+        const role_now = button.getAttribute('data-role-now');
+
+        const niyInput = editAccess.querySelector('#niy');
+        const namaInput = editAccess.querySelector('#nama');
+        const roleNowInput = editAccess.querySelector('#rl_now');
+        const optionsRoleNew = editAccess.querySelector('.rl_new');
+        loadRoleData(optionsRoleNew);
+
+        niyInput.value = niy;
+        namaInput.value = nama;
+        roleNowInput.value = role_now;
+
+        initFormValidation(editAccess, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '#niy',
+                '#nama',
+                '#rl_now',
+                '#rl_new'
+            ]
+        });
+    })
+
+    btnSimpanAccess.addEventListener('click', async function () {
+        const niy = editAccess.querySelector('#niy').value;
+        const nama = editAccess.querySelector('#nama').value.trim();
+        const role_code = editAccess.querySelector('#rl_new').value.trim();
+
+        btnSimpanAccess.disabled = true;
+        btnSimpanAccess.innerHTML = 'Menyimpan...';
+
+        try {
+            const result = await fetchJson('/_backend/logic/data-acl/update', {
+                method: 'POST',
+                body: {
+                    niy: niy,
+                    role_code: role_code
+                }
+            });
+            const statusCode = result.statusCode;
+            if (!statusCode || statusCode != 200) {
+                throw result;
+            } else {
+                showToast('Data berhasil diperbarui', 'success');
+                loadData(1);
+            }
+        } catch (e) {
+			const code = e?.code;
+			const message = e?.message ? e.message : 'Terjadi kesalahan pada sistem. Silahkan coba kembali';
+
+            showToast(`Proses gagal dilakukan: ${message}`, 'error');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_access')
+            );
+            modal.hide();
+
+            btnSimpanAccess.disabled = false;
+            btnSimpanAccess.innerHTML = 'Simpan Perubahan';
+        }
+    })
+
+    async function loadRoleData(optionsRoleNew) {
+        try {
+            const result = await fetchJson('/_backend/logic/data-acl', {
+                method: 'POST'
+            });
+            optionsRoleNew.innerHTML = '<option value="">Pilih</option>';
+            result.data.forEach(item => {
+                let option = document.createElement("option");
+                option.value = item.code;
+                option.text = item.nama;
+                optionsRoleNew.appendChild(option);
+            });
+        } catch (e) {
+            optionsRoleNew.innerHTML = '<option value="">Pilih</option>';
+        }
+    }
+    
     async function loadData(page) {
         if (isLoading) return;
         isLoading = true;
@@ -119,6 +317,23 @@
                                 <td>${item.adr_teacher.email ?? '-'}</td>
                                 <td>${role ?? '-'}</td>
                                 <td>${item.adr_teacher.jabatan ?? '-'}</td>
+                                <td>
+                                    <div class="hstack gap-2 fs-15">
+                                        <a class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper"
+                                            data-niy="${item.adr_teacher.niy}"
+                                            data-nama="${item.adr_teacher.nama}"
+                                            data-role-now="${role}"
+                                            data-bs-toggle="modal" data-bs-target="#edit_access">
+                                                <i class="feather-unlock"></i>
+                                                <span class="custom-tooltip">Ubah Akses</span>
+                                        </a>
+                                        <a class="btn btn-icon btn-sm btn-soft-success rounded-pill tooltip-wrapper" 
+                                            data-bs-toggle="modal" data-bs-target="#edit_jabatan">
+                                                <i class="feather-user"></i>
+                                                <span class="custom-tooltip">Ubah Jabatan</span>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         `;
                     });
@@ -219,6 +434,66 @@
                 }
             });
         });
+    }
+
+    function initFormValidation(modal, config) {
+        const btn = modal.querySelector(config.btnSelector);
+
+        const fields = config.fields.map(selector => modal.querySelector(selector));
+
+        const validate = () => {
+            let isValid = fields.every(el => {
+                if (!el) return false;
+                return el.value?.toString().trim() !== "";
+            });
+
+            if (config.customValidate) {
+                isValid = isValid && config.customValidate(fields);
+            }
+
+            btn.disabled = !isValid;
+        };
+
+        if (!modal.dataset.validationAttached) {
+            fields.forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', validate);
+                el.addEventListener('change', validate);
+            });
+
+            modal.dataset.validationAttached = "true";
+        }
+
+        validate();
+
+        return { validate };
+    }
+
+    function showToast(message, type = 'success') {
+        const toastElement = document.getElementById('globalToast');
+        const toastBody = document.getElementById('globalToastBody');
+
+        // reset class
+        toastElement.className = 'toast align-items-center border-0';
+
+        // set warna berdasarkan type
+        if (type === 'success') {
+            toastElement.classList.add('text-bg-primary');
+        } else if (type === 'error') {
+            toastElement.classList.add('text-bg-danger');
+        } else if (type === 'warning') {
+            toastElement.classList.add('text-bg-warning');
+        } else {
+            toastElement.classList.add('text-bg-success');
+        }
+
+        toastBody.innerHTML = message;
+
+        const toast = new bootstrap.Toast(toastElement, {
+            delay: 1500
+        });
+
+        toast.show();
     }
 </script>
 @endsection

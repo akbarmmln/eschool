@@ -60,6 +60,8 @@ Route::get('/akademik/invalidate-password', [Controller::class, 'doInvalidateFor
 Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('forbidden');
 Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
+Route::post('/_backend/logic/data-acl', [RequestBackEnd::class, 'doAclList']);
+Route::post('/_backend/logic/data-acl/update', [RequestBackEnd::class, 'doAclUpdate']);
 Route::post('/_backend/logic/auth/role/list', [RequestBackEnd::class, 'doRoleList']);
 Route::post('/_backend/auth/login-process', [RequestBackEnd::class, 'doLogin']);
 Route::post('/_backend/auth/invalidate-reset-password', [RequestBackEnd::class, 'doForgetPassword']);
