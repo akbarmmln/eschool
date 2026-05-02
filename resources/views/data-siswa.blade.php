@@ -2,6 +2,59 @@
     $role == '0' ? 'admin.app' : 'guru.app'
 )
 @section('content')
+<style>
+	.tooltip-wrapper {
+		position: relative;
+		display: inline-block;
+		color: #0d6efd;
+		font-size: 14px;
+		text-decoration: none;
+	}
+
+	/* tooltip box */
+	.custom-tooltip {
+		position: absolute;
+		bottom: 130%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		background: #5bb3bb;
+		color: white;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 12px;
+		white-space: nowrap;
+
+		opacity: 0;
+		visibility: hidden;
+		transition: 0.2s ease;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	}
+
+	/* arrow */
+	.custom-tooltip::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		border-width: 6px;
+		border-style: solid;
+		border-color: #5bb3bb transparent transparent transparent;
+	}
+
+	/* show on hover */
+	.tooltip-wrapper:hover .custom-tooltip {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(-4px);
+	}
+	.tooltip-wrapper:hover {
+		transform: scale(1.2);
+	}
+</style>
+
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 	<div class="content">
@@ -22,7 +75,7 @@
                 @if($role == '0' || $role == '1')
                     <div class="mb-2">
                         <a href="{{ route('siswa-tambah') }}" class="btn btn-primary">
-                            <i class="ti ti-square-rounded-plus-filled me-2"></i>Tambah Data
+                            <i class="feather-plus-circle me-2"></i>Tambah Data
                         </a>
                     </div>
                 @endif
@@ -221,28 +274,18 @@
                                 ${
                                     role == '0' || role == '1' ? `
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="dropdown">
-                                                <a href="#" class="btn btn-white btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ti ti-dots-vertical fs-14"></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-right p-3">
-                                                    <li>
-                                                        <a class="dropdown-item rounded-1"
-                                                            data-id="${item.id}"
-                                                            onclick="window.location.href='/akademik/ubah-siswa/${item.id}'">
-                                                                <i class="ti ti-edit-circle me-2"></i>Ubah
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item rounded-1" href="#"
-                                                        data-id="${item.id}"  data-nama="${item.nama_siswa}" 
-                                                        data-bs-toggle="modal" data-bs-target="#delete-modal">
-                                                            <i class="ti ti-trash-x me-2"></i>Hapus
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div class="hstack gap-2 fs-15">
+                                            <button class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper"
+                                                onclick="window.location.href='/akademik/ubah-siswa/${item.id}'">
+                                                <i class="feather-edit"></i>
+                                                <span class="custom-tooltip">Ubah</span>
+                                            </button>
+                                            <button class="btn btn-icon btn-sm btn-soft-danger rounded-pill tooltip-wrapper"
+                                                data-id="${item.id}"  data-nama="${item.nama_siswa}"
+                                                data-bs-toggle="modal" data-bs-target="#delete-modal">
+                                                <i class="feather-trash-2"></i>
+                                                <span class="custom-tooltip">Hapus</span>
+                                            </button>
                                         </div>
                                     </td>` : ``
                                 }
