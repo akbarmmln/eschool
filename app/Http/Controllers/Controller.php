@@ -153,9 +153,6 @@ class Controller
     }
 
     public function doLogout(string $status = 'success') {
-        $endpoint = "/api/v1/auth/logout";
-        $response = $this->apiService->fetchGET($endpoint);
-
         session()->flush();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
@@ -174,6 +171,9 @@ class Controller
 
     public function roleAkses(Request $request) {
         $role = $request->auth_role;
-        return response()->view('role-akses', compact('role'));
+        $id_account = $request->auth_id_account;
+        return response()->view('role-akses', compact('role', 'id_account'));
+
+        $role = $request->auth_role;
     }
 }

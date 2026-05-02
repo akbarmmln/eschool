@@ -171,6 +171,7 @@
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
     let isLoading = false;
+    const id_account = @json($id_account);
     const editAccess = document.getElementById('edit_access');
     const btnSimpanAccess = editAccess.querySelector('.btn_simpan');
 
@@ -305,6 +306,7 @@
                 `;
             } else {
                     result.data.rows.forEach(item => {
+                        const accountId = item.adr_teacher.id;
                         const role =
                             item.role == 0 ? 'Admin' :
                             item.role == 1 ? 'User' :
@@ -318,6 +320,7 @@
                                 <td>${role ?? '-'}</td>
                                 <td>${item.adr_teacher.jabatan ?? '-'}</td>
                                 <td>
+                                    ${accountId == id_account ? '' : `
                                     <div class="hstack gap-2 fs-15">
                                         <a class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper"
                                             data-niy="${item.adr_teacher.niy}"
@@ -333,6 +336,7 @@
                                                 <span class="custom-tooltip">Ubah Jabatan</span>
                                         </a>
                                     </div>
+                                    `}
                                 </td>
                             </tr>
                         `;
