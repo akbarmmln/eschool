@@ -810,4 +810,18 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doUpdateItemPenilaian(Request $request, ApiService $apiService) {
+        $url = "/api/v1/jurnal/update-item-penilaian";
+        $response = $apiService->fetchPOST($request->only([
+            'id_jurnal',
+            'judul',
+            'deleted_id_item_silabus',
+            'updated'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

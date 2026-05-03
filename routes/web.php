@@ -128,5 +128,6 @@ Route::post('/_backend/logic/jurnal-update-absensi', [RequestBackEnd::class, 'do
 Route::post('/_backend/logic/inisiasi-penilaian', [RequestBackEnd::class, 'doInisiasiPenilaian']);
 Route::post('/_backend/logic/update-penilaian', [RequestBackEnd::class, 'doUpdatePenilaian']);
 Route::post('/_backend/logic/submit-item-penilaian', [RequestBackEnd::class, 'doSubmitItemPenilaian']);
+Route::post('/_backend/logic/update-item-penilaian', [RequestBackEnd::class, 'doUpdateItemPenilaian']);
 Route::post('/_backend/logic/download-single-penilaian-harian', [RequestBackEnd::class, 'doDownloadSingleNilaiHarian']);
 Route::post('/_backend/logic/download-bulk-penilaian-harian', [RequestBackEnd::class, 'doDownloadBulkNilaiHarian']);

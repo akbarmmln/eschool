@@ -488,6 +488,10 @@
 				</div>
 				<div id="layout_nilai" style="display: none;">
 					<div class="mb-3">
+						<label class="form-label">ID</label>
+						<input type="text" id="id" name="id" class="form-control" disabled="disabled">
+					</div>
+					<div class="mb-3">
 						<label class="form-label">Grup/Judul Pembelajaran</label>
 						<input type="text" id="judul" name="judul" class="form-control" placeholder="Masukkan Grup/Judul pembelajaran">
 					</div>
@@ -661,6 +665,7 @@
 				layoutNilai.style.display = 'none';
 				layoutNilaiNot.style.display = 'block';
 			} else {
+				const id = layoutNilai.querySelector("#id");
 				const judul = layoutNilai.querySelector("#judul");
 				const container = layoutNilai.querySelector("#itemContainerNilai");
 				container.innerHTML = "";
@@ -674,6 +679,7 @@
 					itemIndex++;
 				});
 
+				id.value = idjurnal;
 				judul.value = result.data.title_silabus;
 				loadingSpinner.style.display = 'none';
 				layoutNilai.style.display = 'block';
@@ -1467,10 +1473,6 @@
 		row.remove();
     });
     document.querySelector('.simpanData').addEventListener("click", async function () {
-        const btn = this;
-    	btn.disabled = true;
-		btn.innerText = "Menyimpan data...";
-
         const judul = document.querySelector('input[name="judul"]').value;
         const itemInputs = document.querySelectorAll('#itemContainer input[name^="items"]');
         let items = [];
@@ -1488,7 +1490,11 @@
             showToast('Item aktivitas penilaian minimal 1 dilakukan', 'success');
             return;
         }
-        
+
+		const btn = this;
+    	btn.disabled = true;
+		btn.innerText = "Menyimpan data...";
+
 		try {
             const result = await fetchJson('/_backend/logic/submit-item-penilaian', {
                 method: 'POST',
@@ -1519,6 +1525,7 @@
 		}
     })
 	document.querySelector('.simpanDataItemNilai').addEventListener("click", async function () {
+		const id = editItemNilaiModal.querySelector('#id').value;
 		const judul = editItemNilaiModal.querySelector('#judul').value;
 
 		const items = Array.from(
@@ -1528,9 +1535,47 @@
 			value: row.querySelector('input').value
 		}));
 
-		console.log('judul:', judul);
-		console.log('deleted:', deletedItems);
-		console.log('items:', items);
+        if (!judul) {
+            showToast('Grup/Judul wajib diisi', 'success');
+            return;
+        }
+        if (items.length == 0) {
+            showToast('Item aktivitas penilaian minimal 1 dilakukan', 'success');
+            return;
+        }
+
+        const btn = this;
+    	btn.disabled = true;
+		btn.innerText = "Menyimpan data...";
+
+		try {
+            const result = await fetchJson('/_backend/logic/update-item-penilaian', {
+                method: 'POST',
+                body: {
+					id_jurnal: id,
+					judul: judul,
+					deleted_id_item_silabus: deletedItems,
+					updated: items
+				}
+            });
+			if(!result.ok) {
+				throw result
+			}
+			showToast('Data Item Penilaian berhasil diperbaharui', 'success');
+			loadInit();
+		} catch(e) {
+			const code = e?.code
+			const message = e?.message
+			showToast(`Proses gagal dilakukan: Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`, 'error');
+		} finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_item_nilai')
+            );
+            modal.hide();
+
+            btn.disabled = false;
+			btn.innerText = "Simpan Data";
+		}
 	})
 
 	document.addEventListener("click", async function(e) {
