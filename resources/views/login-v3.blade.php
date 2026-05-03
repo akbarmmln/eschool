@@ -55,11 +55,6 @@
         }
 
         /* kanan (background image) */
-        /* .login-right {
-            width: 70%;
-            background: url('https://s3.nevaobjects.id/bucket-sit/background_school.png') no-repeat center center/cover;
-            background-size: 100% 100%;
-        } */
         .login-right {
             width: 70%;
             background: linear-gradient(

@@ -1519,6 +1519,8 @@
 		}
     })
 	document.querySelector('.simpanDataItemNilai').addEventListener("click", async function () {
+		const judul = editItemNilaiModal.querySelector('#judul').value;
+
 		const items = Array.from(
 			document.querySelectorAll('#itemContainerNilai .item-row')
 		).map(row => ({
@@ -1526,6 +1528,7 @@
 			value: row.querySelector('input').value
 		}));
 
+		console.log('judul:', judul);
 		console.log('deleted:', deletedItems);
 		console.log('items:', items);
 	})

@@ -291,11 +291,11 @@
                     }
                 });
                 if (!result.ok) {
-                    showToast(result.message);
-                    return;
+                    throw result;
                 }
                 window.location.href = "/";
-            } finally {
+            } catch (e) {
+                showToast(e.error.message);
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = "Masuk";
             }
