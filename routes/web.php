@@ -60,6 +60,7 @@ Route::get('/akademik/invalidate-password', [Controller::class, 'doInvalidateFor
 Route::get('/akademik/forbidden', [Controller::class, 'doForbidden'])->name('forbidden');
 Route::get('/akademik/rto', [Controller::class, 'doRTO'])->name('rto');
 
+Route::post('/_backend/logic/data-jabatan', [RequestBackEnd::class, 'doJabatanList']);
 Route::post('/_backend/logic/data-acl', [RequestBackEnd::class, 'doAclList']);
 Route::post('/_backend/logic/data-acl/update', [RequestBackEnd::class, 'doAclUpdate']);
 Route::post('/_backend/logic/auth/role/list', [RequestBackEnd::class, 'doRoleList']);
@@ -119,6 +120,7 @@ Route::post('/_backend/logic/siswa/jurnal/detail', [RequestBackEnd::class, 'doSi
 
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);
+Route::post('/_backend/logic/jurnal-update', [RequestBackEnd::class, 'doUpdateJurnal']);
 Route::post('/_backend/logic/jurnal-detail', [RequestBackEnd::class, 'doDetailJurnal']);
 Route::post('/_backend/logic/jurnal-delete', [RequestBackEnd::class, 'doDeleteJurnal']);
 Route::post('/_backend/logic/jurnal-update-absensi', [RequestBackEnd::class, 'doUpdateAbsensi']);

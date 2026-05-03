@@ -487,6 +487,21 @@ class RequestBackEnd
         );
     }
 
+    public function doUpdateJurnal(Request $request, ApiService $apiService) {
+        $url = "/api/v1/jurnal/update";
+        $response = $apiService->fetchPOST($request->only([
+            'id_jurnal',
+            'mulai',
+            'selesai',
+            'materi',
+            'refleksi'
+        ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
     public function doDetailJurnal(Request $request, ApiService $apiService) {
         $id = $request->id;
         $url = "/api/v1/jurnal/detail/$id";
@@ -771,6 +786,15 @@ class RequestBackEnd
             'niy',
             'role_code'
         ]), $url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
+
+    public function doJabatanList(Request $request, ApiService $apiService) {
+        $url = "/api/v1/auth/role/jabatan/list";
+        $response = $apiService->fetchGET($url);
         return response()->json(
             $response->json(),
             $response->status()

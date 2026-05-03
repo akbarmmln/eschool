@@ -168,6 +168,51 @@
 </div>
 <!-- Edit Role Akses -->
 
+<!-- Edit Jabatan -->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_jabatan">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Ubah Role Akses</h4>
+				<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div id="alertContainerModal"></div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="mb-3">
+								<label class="form-label">NIY</label>
+								<input type="text" id="niy" class="form-control"  disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Nama</label>
+								<input type="text" id="nama" class="form-control" disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Jabatan Saat ini:</label>
+								<input type="text" id="jb_now" class="form-control" disabled="disabled">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Jabatan Baru:</label>
+								<select class="form-control jb_new" id="jb_new">
+									<option value="">Pilih</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Batalkan</a>
+					<button type="submit" disabled class="btn btn-primary btn_simpan">Simpan Perubahan</button>
+				</div>
+			
+		</div>
+	</div>
+</div>
+<!-- Edit Jabatan -->
+
 <script src="{{ asset('assets/js/fetchJson.js') }}"></script>
 <script>
     let isLoading = false;
@@ -175,8 +220,56 @@
     const editAccess = document.getElementById('edit_access');
     const btnSimpanAccess = editAccess.querySelector('.btn_simpan');
 
+    const editJabatan = document.getElementById('edit_jabatan');
+    const btnSimpanJabatan = editJabatan.querySelector('.btn_simpan');
+
     document.addEventListener("DOMContentLoaded", async function () {
         await loadData(1);
+    })
+
+    editJabatan.addEventListener('hidden.bs.modal', function () {
+        const niyInput = editJabatan.querySelector('#niy');
+        const namaInput = editJabatan.querySelector('#nama');
+        const jabNowInput = editJabatan.querySelector('#jb_now');
+        const jabNewInput = editJabatan.querySelector('#jb_new');
+
+        if (niyInput) niyInput.value = '';
+        if (namaInput) namaInput.value = '';
+        if (jabNowInput) jabNowInput.value = '';
+        if (jabNewInput) jabNewInput.value = '';
+    })
+    editJabatan.addEventListener('show.bs.modal', function () {
+        const button = event.relatedTarget; // element yang klik
+        const niy = button.getAttribute('data-niy');
+        const nama = button.getAttribute('data-nama');
+        const jab_now = button.getAttribute('data-jab-now');
+
+        const niyInput = editJabatan.querySelector('#niy');
+        const namaInput = editJabatan.querySelector('#nama');
+        const jabNowInput = editJabatan.querySelector('#jb_now');
+        const optionsJabNew = editJabatan.querySelector('.jb_new');
+        loadJabatanData(optionsJabNew);
+
+        niyInput.value = niy;
+        namaInput.value = nama;
+        jabNowInput.value = jab_now;
+
+        initFormValidation(editJabatan, {
+            btnSelector: '.btn_simpan',
+            fields: [
+                '#niy',
+                '#nama',
+                '#jb_now',
+                '#jb_new'
+            ]
+        });
+    })
+    btnSimpanJabatan.addEventListener('click', async function () {
+        const niy = editJabatan.querySelector('#niy').value;
+        const nama = editJabatan.querySelector('#nama').value.trim();
+        const jb_new = editJabatan.querySelector('#jb_new').value.trim();
+
+        console.log('sdassad', niy, nama, jb_new)
     })
 
     editAccess.addEventListener('hidden.bs.modal', function () {
@@ -190,8 +283,7 @@
         if (roleNowInput) roleNowInput.value = '';
         if (roleNewInput) roleNewInput.value = '';
     })
-
-    editAccess.addEventListener('show.bs.modal', function () {
+    editAccess.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget; // element yang klik
         const niy = button.getAttribute('data-niy');
         const nama = button.getAttribute('data-nama');
@@ -217,7 +309,6 @@
             ]
         });
     })
-
     btnSimpanAccess.addEventListener('click', async function () {
         const niy = editAccess.querySelector('#niy').value;
         const nama = editAccess.querySelector('#nama').value.trim();
@@ -274,6 +365,23 @@
         }
     }
     
+    async function loadJabatanData(optionsJabatanNew) {
+        try {
+            const result = await fetchJson('/_backend/logic/data-jabatan', {
+                method: 'POST'
+            });
+            optionsJabatanNew.innerHTML = '<option value="">Pilih</option>';
+            result.data.forEach(item => {
+                let option = document.createElement("option");
+                option.value = item.nama;
+                option.text = item.nama;
+                optionsJabatanNew.appendChild(option);
+            });
+        } catch (e) {
+            optionsJabatanNew.innerHTML = '<option value="">Pilih</option>';
+        }
+    }
+
     async function loadData(page) {
         if (isLoading) return;
         isLoading = true;
@@ -329,11 +437,6 @@
                                             data-bs-toggle="modal" data-bs-target="#edit_access">
                                                 <i class="feather-unlock"></i>
                                                 <span class="custom-tooltip">Ubah Akses</span>
-                                        </a>
-                                        <a class="btn btn-icon btn-sm btn-soft-success rounded-pill tooltip-wrapper" 
-                                            data-bs-toggle="modal" data-bs-target="#edit_jabatan">
-                                                <i class="feather-user"></i>
-                                                <span class="custom-tooltip">Ubah Jabatan</span>
                                         </a>
                                     </div>
                                     `}

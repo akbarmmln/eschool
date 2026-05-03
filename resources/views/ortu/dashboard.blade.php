@@ -433,51 +433,52 @@
                     </td>
                 </tr>
             `;
-		}
-
-		const rows = result.data.rows
-		const currentPage = result.data.currentPage
-		const totalPage = result.data.rowtotalPages
-
-		if (rows.length == 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="text-center">
-                        Data tidak tersedia
-                    </td>
-                </tr>
-            `;
 		} else {
-			let no = 1;
-			rows.forEach(item => {
-				const jurnalRoute = "{{ route('wali-jurnal', ['id_jurnal' => ':id_jurnal', 'id_siswa' => ':id_siswa']) }}";
-				const url = jurnalRoute.replace(':id_jurnal', item.id).replace(':id_siswa', selectedID);
-				tbody.innerHTML += `
+			const rows = result.data.rows
+			const currentPage = result.data.currentPage
+			const totalPage = result.data.rowtotalPages
+
+			if (rows.length == 0) {
+				tbody.innerHTML = `
 					<tr>
-						<td>${no++}.</td>
-						<td>${dateFormatIndo(item.tanggal_jurnal)} ${item.jam_mulai.slice(0, 5)} - ${item.jam_selesai.slice(0, 5)}</td>
-						<td>${item.materi}</td>
-						<td>${item.refleksi}</td>
-						<td>${item.nama_kelas}</td>
-						<td>${item.nama_guru}</td>
-						<td>
-							<div class="hstack gap-2 fs-15">
-								<button class="btn btn-icon btn-sm btn-soft-success btn_download rounded-pill tooltip-wrapper"
-									data-idJurnal="${item.id}" data-idSiswa="${selectedID}">
-									<i class="feather-download"></i>
-									<span class="custom-tooltip">Download</span>
-								</button>
-								<a href="${url}" class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper">
-									<i class="feather-file-text"></i>
-									<span class="custom-tooltip">Detail</span>
-								</a>
-							</div>
+						<td colspan="7" class="text-center">
+							Data tidak tersedia
 						</td>
 					</tr>
-				`
-			})
-			renderPagination(currentPage, totalPage);
+				`;
+			} else {
+				let no = 1;
+				rows.forEach(item => {
+					const jurnalRoute = "{{ route('wali-jurnal', ['id_jurnal' => ':id_jurnal', 'id_siswa' => ':id_siswa']) }}";
+					const url = jurnalRoute.replace(':id_jurnal', item.id).replace(':id_siswa', selectedID);
+					tbody.innerHTML += `
+						<tr>
+							<td>${no++}.</td>
+							<td>${dateFormatIndo(item.tanggal_jurnal)} ${item.jam_mulai.slice(0, 5)} - ${item.jam_selesai.slice(0, 5)}</td>
+							<td>${item.materi}</td>
+							<td>${item.refleksi}</td>
+							<td>${item.nama_kelas}</td>
+							<td>${item.nama_guru}</td>
+							<td>
+								<div class="hstack gap-2 fs-15">
+									<button class="btn btn-icon btn-sm btn-soft-success btn_download rounded-pill tooltip-wrapper"
+										data-idJurnal="${item.id}" data-idSiswa="${selectedID}">
+										<i class="feather-download"></i>
+										<span class="custom-tooltip">Download</span>
+									</button>
+									<a href="${url}" class="btn btn-icon btn-sm btn-soft-info rounded-pill tooltip-wrapper">
+										<i class="feather-file-text"></i>
+										<span class="custom-tooltip">Detail</span>
+									</a>
+								</div>
+							</td>
+						</tr>
+					`
+				})
+				renderPagination(currentPage, totalPage);
+			}
 		}
+
 
 		loadingSpinnerTabel.style.display = "none";
 		pagination.classList.remove("loading");

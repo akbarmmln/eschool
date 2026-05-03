@@ -469,14 +469,22 @@
         const tanggal = addModal.querySelector('#tanggal');
         const jam_mulai = addModal.querySelector('#jam_mulai');
         const jam_selesai = addModal.querySelector('#jam_selesai');
-        const materi = addModal.querySelector('#materi');
-        const refleksi = addModal.querySelector('#refleksi');
+        const materiInput = addModal.querySelector('#materi');
+        const refleksiInput = addModal.querySelector('#refleksi');
+		const editorMateri = tinymce.get('materi');
+    	const editorRefleksi = tinymce.get('refleksi');
 
         if (tanggal) tanggal.value = '';
         if (jam_mulai) jam_mulai.value = '';
         if (jam_selesai) jam_selesai.value = '';
-        if (materi) materi.value = '';
-        if (refleksi) refleksi.value = '';
+        if (materiInput) materiInput.value = '';
+        if (refleksiInput) refleksiInput.value = '';
+		
+        editorMateri.setContent('');
+        editorRefleksi.setContent('');
+
+        if (editorMateri) editorMateri.remove();
+    	if (editorRefleksi) editorRefleksi.remove();
     })
     addModal.addEventListener('show.bs.modal', async function (event) {
         const tanggalInput = addModal.querySelector("#tanggal");
@@ -494,6 +502,37 @@
         });
 
         await loadKelas(kelasInput);
+
+        tinymce.init({
+            selector: '.editor',
+            min_height: 250,
+            max_height: 250,
+            license_key: 'gpl',
+            menubar: false,
+            plugins: [
+                'lists', 'link', 'autolink'
+            ],
+            toolbar: 'bold italic underline | bullist numlist outdent indent | undo redo',
+            branding: false,
+            skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
+            content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
+
+            setup: function (editor) {
+                editor.on('input change keyup', function () {
+                    editor.save();
+                    if (window.currentValidator) {
+                        window.currentValidator.validate();
+                    }
+                });
+            },
+            
+            content_style: `
+                body { 
+                    font-family: Inter, sans-serif; 
+                    font-size:14px;
+                }
+            `
+        });
 
         const validator = initFormValidation(addModal, {
             btnSelector: '.btn_simpan_edit',
@@ -728,38 +767,6 @@
             el._dp = dp;
         });
         
-        tinymce.init({
-            selector: '.editor',
-            min_height: 250,
-            max_height: 250,
-            license_key: 'gpl',
-            menubar: false,
-            plugins: [
-                'lists', 'link', 'autolink'
-            ],
-            toolbar: 'bold italic underline | bullist numlist outdent indent | undo redo',
-            branding: false,
-            skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
-            content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
-
-            setup: function (editor) {
-                editor.on('input change keyup', function () {
-                    editor.save();
-                    // trigger validation manual
-                    if (window.currentValidator) {
-                        window.currentValidator.validate();
-                    }
-                });
-            },
-            
-            content_style: `
-                body { 
-                    font-family: Inter, sans-serif; 
-                    font-size:14px;
-                }
-            `
-        });
-
         hapusFilter.classList.add("d-none");
         cariFilter.classList.remove("d-none");
 

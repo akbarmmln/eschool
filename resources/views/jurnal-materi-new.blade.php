@@ -166,6 +166,9 @@
 					</ol>
 				</nav>
 			</div>
+			<div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+                <div id="action_jurnal" class="mb-2"></div>
+			</div>
 		</div>
 		<!-- /Page Header -->
 
@@ -389,6 +392,69 @@
 </div>
 <!-- /Page Wrapper -->
 
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_detail">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Ubah Jurnal Mengajar</h4>
+				<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="mb-3">
+							<label class="form-label">ID Jurnal</label>
+							<input type="text" id="id_jurnal" class="form-control"  disabled="disabled">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Hari / Tanggal Mengajar</label>
+							<input type="text" id="tgl_jurnal" class="form-control"  disabled="disabled">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Kelas</label>
+							<input type="text" id="kelas_jurnal" class="form-control"  disabled="disabled">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label class="form-label">Jam Mulai</label>
+							<div class="date-pic">
+								<input type="time" id="jam_mulai" class="form-control jam_mulai">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="mb-3">
+							<label class="form-label">Jam Selesai</label>
+							<div class="date-pic">
+								<input type="time" id="jam_selesai" class="form-control jam_selesai">
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Materi Pembelajaran</label>
+						<textarea rows="3" id="materi" class="form-control editornew"
+							placeholder="Tuliskan materi yang diajarkan...">
+						</textarea>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Refleksi Pembelajaran</label>
+						<textarea rows="3" id="refleksi" class="form-control editornew"
+							placeholder="Tuliskan refleksi pembelajaran...">
+						</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Batalkan</a>
+				<button type="submit" class="btn btn-primary btn_simpan_edit">Simpan Perubahan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalInputNilai" tabindex="-1"
 	aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-fullscreen">
@@ -471,6 +537,10 @@
 <script>
 	const id = @json($id);
     let itemIndex = 0;
+
+	const editDetailModal = document.getElementById("edit_detail");
+	const btnSimpanEditJurnal = editDetailModal.querySelector('.btn_simpan_edit');
+
 	const spinner = document.getElementById("loadingSpinner");
 	const pagefailed = document.getElementById("pagefailed");
 	const pagesuccess1 = document.getElementById("pagesuccess1");
@@ -500,6 +570,141 @@
 	function generateId() {
 		return crypto.randomUUID?.() || Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 	}
+
+	editDetailModal.addEventListener('hidden.bs.modal', function () {
+		const editorMateri = tinymce.get('materi');
+    	const editorRefleksi = tinymce.get('refleksi');
+        const materiInput = editDetailModal.querySelector('#materi');
+        const refleksiInput = editDetailModal.querySelector('#refleksi');
+
+		if (materiInput) materiInput.value = '';
+        if (refleksiInput) refleksiInput.value = '';
+
+		if (editorMateri) editorMateri.remove();
+    	if (editorRefleksi) editorRefleksi.remove();
+	})
+	editDetailModal.addEventListener('show.bs.modal', function (event) {
+		const button = event.relatedTarget;
+		const idjurnal = button.getAttribute('data-idjurnal');
+		const tanggal = button.getAttribute('data-tanggal');
+		const kelas = button.getAttribute('data-kelas');
+		const jam_mulai = button.getAttribute('data-jammulai');
+		const jam_selesai = button.getAttribute('data-jamselesai');
+		const materi = button.getAttribute('data-materi');
+		const refleksi = button.getAttribute('data-refleksi');
+
+		const id_jurnal = editDetailModal.querySelector("#id_jurnal");
+		const tanggal_jurnal = editDetailModal.querySelector("#tgl_jurnal");
+        const kelas_jurnal = editDetailModal.querySelector('#kelas_jurnal');
+		const jam_mulai_jurnal = editDetailModal.querySelector('#jam_mulai');
+		const jam_selesai_jurnal = editDetailModal.querySelector('#jam_selesai');
+        const materiInput = editDetailModal.querySelector('#materi');
+        const refleksiInput = editDetailModal.querySelector('#refleksi');
+		const editorMateri = tinymce.get('materi');
+		const editorRefleksi = tinymce.get('refleksi');
+        const btn = editDetailModal.querySelector('.btn_simpan_edit');
+        btn.disabled = true;
+
+		id_jurnal.value = idjurnal
+		tanggal_jurnal.value = tanggal;
+		kelas_jurnal.value = kelas;
+		jam_mulai_jurnal.value = jam_mulai;
+		jam_selesai_jurnal.value = jam_selesai;
+		materiInput.value = materi;
+		refleksiInput.value = refleksi;
+
+		tinymce.init({
+			selector: '#edit_detail .editornew',
+			min_height: 250,
+			max_height: 250,
+			license_key: 'gpl',
+			menubar: false,
+			plugins: ['lists', 'link', 'autolink'],
+			toolbar: 'bold italic underline | bullist numlist | undo redo',
+            branding: false,
+            skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
+            content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
+			setup: function (editor) {
+				editor.on('init', function () {
+					if (editor.id === 'materi') {
+						editor.setContent(materi || '');
+					}
+
+					if (editor.id === 'refleksi') {
+						editor.setContent(refleksi || '');
+					}
+				});
+
+				editor.on('input change keyup', function () {
+					editor.save();
+					if (window.currentValidator) {
+						window.currentValidator.validate();
+					}
+				});
+			},
+            content_style: `
+                body { 
+                    font-family: Inter, sans-serif; 
+                    font-size:14px;
+                }
+            `
+		});
+
+        const validator = initFormValidation(editDetailModal, {
+            btnSelector: '.btn_simpan_edit',
+            fields: [
+                '#jam_mulai',
+                '#jam_selesai',
+                '#materi',
+                '#refleksi'
+            ]
+        });
+        editDetailModal._validator = validator;
+        window.currentValidator = validator;
+	})
+	btnSimpanEditJurnal.addEventListener('click', async function (event) {
+        const idJurnalInput = editDetailModal.querySelector('#id_jurnal').value;
+		const jamMulaiInput = editDetailModal.querySelector('#jam_mulai').value;
+		const jamSelesaiInput = editDetailModal.querySelector('#jam_selesai').value;
+        const materiInput = editDetailModal.querySelector('#materi').value;
+        const refleksiInput = editDetailModal.querySelector('#refleksi').value;
+
+		btnSimpanEditJurnal.disabled = true;
+        btnSimpanEditJurnal.innerHTML = 'Menyimpan...';
+
+        try {
+            const result = await fetchJson('/_backend/logic/jurnal-update', {
+                method: 'POST',
+                body: {
+                    id_jurnal: idJurnalInput,
+                    mulai: jamMulaiInput,
+					selesai: jamSelesaiInput,
+					materi: materiInput,
+					refleksi: refleksiInput
+                }
+            });
+            const statusCode = result.statusCode;
+            if (!statusCode || statusCode != 200) {
+                throw result;
+            } else {
+                showToast('Data berhasil diperbarui', 'success');
+                loadInit();
+            }
+        } catch (e) {
+			const code = e?.code;
+			const message = e?.message ? e.message : 'Terjadi kesalahan pada sistem. Silahkan coba kembali';
+
+            showToast(`Proses gagal dilakukan: ${message}`, 'error');
+        } finally {
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('edit_detail')
+            );
+            modal.hide();
+
+            btnSimpanEditJurnal.disabled = false;
+            btnSimpanEditJurnal.innerHTML = 'Simpan Perubahan';
+        }
+	})
 
 	fileInput.addEventListener('change', async function (e) {
 		const files = Array.from(e.target.files);
@@ -611,17 +816,11 @@
 		radios.forEach(radio => {
 			const id = radio.dataset.id;
 			const ketInput = modalInputNilai.querySelector(`textarea[data-id="${id}"]`);
-			let value = null;
-
-			if (ketInput) {
-				const editor = tinymce.get(ketInput.id);
-				value = editor ? editor.getContent() : ketInput.value;
-			}
 
 			result.push({
 				id_mengajar: id,
 				status: radio.value,
-				keterangan: value
+				keterangan: ketInput.value
 			});
 		});
 
@@ -685,8 +884,6 @@
 		container.querySelectorAll('.preview-item').forEach(el => el.remove());
 		container.querySelectorAll('.preview-container').forEach(el => el.remove());
 		fileInput.value = "";
-
-		tinymce.remove();
 	})
 	modalInputNilai.addEventListener('show.bs.modal', async function (event) {
 		const button = event.relatedTarget;
@@ -726,6 +923,7 @@
 			pagesuccess.style.display = "block";
 			renderPenilaian(result.data);
 		} catch(e) {
+			console.log('asdasdasd', e)
 			const code = e?.code
 			const message = e?.message
 			textResult.textContent = `Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`;
@@ -783,20 +981,6 @@
 			})
 		})
 		tbody.innerHTML = html;
-
-		tinymce.remove();
-		tinymce.init({
-			selector: '#modalInputNilai .editor',
-			min_height: 150,
-			max_height: 150,
-			license_key: 'gpl',
-			menubar: false,
-			plugins: ['lists', 'autolink'],
-			toolbar: 'bold italic underline | bullist numlist | undo redo',
-			branding: false,
-			skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
-			content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}"
-		});
 		renderUploadedImages(dataImages)
 	}
 	
@@ -865,8 +1049,14 @@
 	});
 
 	document.addEventListener("DOMContentLoaded", async function () {
+		loadInit();
+	});
+
+	async function loadInit() {
 		spinner.style.display = "block";
 		pagefailed.style.display = "none";
+		pagesuccess1.style.display = "none";
+		pagesuccess2.style.display = "none";
 
 		try {
             const result = await fetchJson('/_backend/logic/jurnal-detail', {
@@ -923,7 +1113,31 @@
 			pengajar.innerHTML = `${nama_guru}`
 
 			loadItemKehadiran(data_siswa, tbody);
-			loadItemSilabus(id_jurnal, data_siswa, tbodyItemPenilaian)
+			loadItemSilabus(id_jurnal, data_siswa, tbodyItemPenilaian);
+
+			const container = document.getElementById("action_jurnal");
+			container.innerHTML = `
+				<a 
+					class="btn btn-info-light me-2"
+					data-bs-toggle="modal" 
+					data-bs-target="#edit_detail"
+					data-idjurnal="${id_jurnal}"
+					data-tanggal="${dateFormatIndo(tanggal)}"
+					data-kelas="${nama_kelas}"
+					data-jammulai="${jam_mulai}"
+					data-jamselesai="${jam_selesai}"
+					data-materi="${materi}"
+					data-refleksi="${refleksi}">
+						<i class="feather-edit me-2"></i>Ubah Detail
+				</a>
+
+				<a 
+					class="btn btn-info-light"
+					data-bs-toggle="modal" 
+					data-bs-target="#edit_item_nilai">
+						<i class="feather-file-text me-2"></i>Ubah Item Nilai
+				</a>
+			`;
 		} catch(e) {
 			const code = e?.code
 			const message = e?.message
@@ -939,7 +1153,7 @@
 		} finally {
 			spinner.style.display = "none";
 		}
-	});
+	}
 
 	function loadItemKehadiran(dataSiswa, tbody) {
 		let no = 1;
@@ -1295,6 +1509,39 @@
         });
 
         toast.show();
+    }
+
+    function initFormValidation(modal, config) {
+        const btn = modal.querySelector(config.btnSelector);
+
+        const fields = config.fields.map(selector => modal.querySelector(selector));
+
+        const validate = () => {
+            let isValid = fields.every(el => {
+                if (!el) return false;
+                return el.value?.toString().trim() !== "";
+            });
+
+            if (config.customValidate) {
+                isValid = isValid && config.customValidate(fields);
+            }
+
+            btn.disabled = !isValid;
+        };
+
+        if (!modal.dataset.validationAttached) {
+            fields.forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', validate);
+                el.addEventListener('change', validate);
+            });
+
+            modal.dataset.validationAttached = "true";
+        }
+
+        validate();
+
+        return { validate };
     }
 </script>
 @endsection
