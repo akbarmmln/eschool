@@ -735,7 +735,18 @@
 			license_key: 'gpl',
 			menubar: false,
 			plugins: ['lists', 'link', 'autolink'],
-			toolbar: 'bold italic underline | bullist numlist | undo redo',
+			toolbar_mode: 'wrap',
+			toolbar: 'fontfamily fontsize | bold italic underline | bullist numlist | undo redo',
+			font_family_formats: `
+				Inter=Inter,sans-serif;
+				Arial=arial,helvetica,sans-serif;
+				Times New Roman=times new roman,times;
+				Courier New=courier new,courier;
+				Poppins=Poppins,sans-serif
+			`,
+			font_size_formats: `
+				8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt
+			`,
             branding: false,
             skin_url: "{{ asset('assets/js/tinymce/skins/ui/oxide') }}",
             content_css: "{{ asset('assets/js/tinymce/skins/content/default/content.min.css') }}",
