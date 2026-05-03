@@ -800,4 +800,14 @@ class RequestBackEnd
             $response->status()
         );
     }
+
+    public function doJurnalItemNilai(Request $request, ApiService $apiService) {
+        $id = $request->id;
+        $url = "/api/v1/jurnal/item/nilai/$id";
+        $response = $apiService->fetchGET($url);
+        return response()->json(
+            $response->json(),
+            $response->status()
+        );
+    }
 }

@@ -455,6 +455,59 @@
 	</div>
 </div>
 
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="edit_item_nilai">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Ubah Item Penilaian</h4>
+				<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div id="loadingSpinner" style="display: none;">
+					<div class="mb-3">
+						<div class="text-center my-3">
+							<button class="btn btn-info-light" type="button" disabled="">
+								<span class="spinner-grow spinner-grow-sm align-middle" role="status" aria-hidden="true"></span>
+								Memuat data...
+							</button>
+						</div>
+					</div>
+				</div>
+				<div id="layout_nilai_not" style="display: none;">
+					<div class="alert custom-alert1 alert-warning">
+						<div class="text-center px-5 pb-0">
+							<div class="custom-alert-icon">
+								<i class="feather-alert-triangle flex-shrink-0"></i>
+							</div>
+							<h5 class="fw-bold text-uppercase text-warning mb-3">WARNING</h5>
+							<p id="text_result" class="text-black mb-1">Silahkan lakukan input nilai terlebih dahulu</p>
+						</div>
+					</div>
+				</div>
+				<div id="layout_nilai" style="display: none;">
+					<div class="mb-3">
+						<label class="form-label">Grup/Judul Pembelajaran</label>
+						<input type="text" id="judul" name="judul" class="form-control" placeholder="Masukkan Grup/Judul pembelajaran">
+					</div>
+					<!-- Item Container -->
+					<div id="itemContainerNilai"></div>
+
+					<!-- Tombol Tambah Item -->
+					<button type="button" class="btn btn-sm btn-primary" id="addItemBtnNilai">
+						<i class="ti ti-plus"></i> Tambah Item
+					</button>
+
+					<button type="button" class="btn btn-sm btn-primary simpanDataItemNilai">
+						<i class="ti ti-device-floppy"></i> Simpan Data
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalInputNilai" tabindex="-1"
 	aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-fullscreen">
@@ -537,9 +590,12 @@
 <script>
 	const id = @json($id);
     let itemIndex = 0;
+	let deletedItems = [];
 
 	const editDetailModal = document.getElementById("edit_detail");
 	const btnSimpanEditJurnal = editDetailModal.querySelector('.btn_simpan_edit');
+
+	const editItemNilaiModal = document.getElementById("edit_item_nilai");
 
 	const spinner = document.getElementById("loadingSpinner");
 	const pagefailed = document.getElementById("pagefailed");
@@ -571,6 +627,65 @@
 		return crypto.randomUUID?.() || Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 	}
 
+	editItemNilaiModal.addEventListener('hidden.bs.modal', function () {
+		deletedItems = [];
+	})
+	editItemNilaiModal.addEventListener('show.bs.modal', async function (event) {
+		const button = event.relatedTarget;
+
+		const idjurnal = button.getAttribute('data-idjurnal');
+		await loadItem(idjurnal);
+	})
+
+	async function loadItem(idjurnal) {
+		try {
+			const layoutNilaiNot = editItemNilaiModal.querySelector("#layout_nilai_not");
+			const layoutNilai = editItemNilaiModal.querySelector("#layout_nilai");
+			const loadingSpinner = editItemNilaiModal.querySelector("#loadingSpinner");
+			loadingSpinner.style.display = 'block';
+			layoutNilai.style.display = 'none';
+			layoutNilaiNot.style.display = 'none';
+
+            const result = await fetchJson('/_backend/logic/jurnal-item-nilai', {
+                method: 'POST',
+                body: {
+                    id: idjurnal
+                }
+            });
+			if (!result) {
+				throw result;
+			}
+			const dataItem = result.data
+			if (dataItem.length == 0) {
+				loadingSpinner.style.display = 'none';
+				layoutNilai.style.display = 'none';
+				layoutNilaiNot.style.display = 'block';
+			} else {
+				const judul = layoutNilai.querySelector("#judul");
+				const container = layoutNilai.querySelector("#itemContainerNilai");
+				container.innerHTML = "";
+				
+				itemIndex = 0;
+				dataItem.items.forEach(item => {
+					container.insertAdjacentHTML(
+						"beforeend",
+						createItemField(itemIndex, item)
+					);
+					itemIndex++;
+				});
+
+				judul.value = result.data.title_silabus;
+				loadingSpinner.style.display = 'none';
+				layoutNilai.style.display = 'block';
+				layoutNilaiNot.style.display = 'none';
+			}
+		} catch(e) {
+			loadingSpinner.style.display = 'none';
+			layoutNilai.style.display = 'none';
+			layoutNilaiNot.style.display = 'none';
+		}
+	}
+
 	editDetailModal.addEventListener('hidden.bs.modal', function () {
 		const editorMateri = tinymce.get('materi');
     	const editorRefleksi = tinymce.get('refleksi');
@@ -590,8 +705,8 @@
 		const kelas = button.getAttribute('data-kelas');
 		const jam_mulai = button.getAttribute('data-jammulai');
 		const jam_selesai = button.getAttribute('data-jamselesai');
-		const materi = button.getAttribute('data-materi');
-		const refleksi = button.getAttribute('data-refleksi');
+		const materi = decodeURIComponent(button.getAttribute('data-materi'));
+		const refleksi = decodeURIComponent(button.getAttribute('data-refleksi'));
 
 		const id_jurnal = editDetailModal.querySelector("#id_jurnal");
 		const tanggal_jurnal = editDetailModal.querySelector("#tgl_jurnal");
@@ -923,7 +1038,6 @@
 			pagesuccess.style.display = "block";
 			renderPenilaian(result.data);
 		} catch(e) {
-			console.log('asdasdasd', e)
 			const code = e?.code
 			const message = e?.message
 			textResult.textContent = `Terjadi kesalahan saat memproses data. Silahkan ulangi kembali`;
@@ -1117,8 +1231,7 @@
 
 			const container = document.getElementById("action_jurnal");
 			container.innerHTML = `
-				<a 
-					class="btn btn-info-light me-2"
+				<a class="btn btn-info-light me-2"
 					data-bs-toggle="modal" 
 					data-bs-target="#edit_detail"
 					data-idjurnal="${id_jurnal}"
@@ -1126,13 +1239,13 @@
 					data-kelas="${nama_kelas}"
 					data-jammulai="${jam_mulai}"
 					data-jamselesai="${jam_selesai}"
-					data-materi="${materi}"
-					data-refleksi="${refleksi}">
+					data-materi="${encodeURIComponent(materi)}"
+					data-refleksi="${encodeURIComponent(refleksi)}">
 						<i class="feather-edit me-2"></i>Ubah Detail
 				</a>
 
-				<a 
-					class="btn btn-info-light"
+				<a class="btn btn-info-light"
+					data-idjurnal="${id_jurnal}"
 					data-bs-toggle="modal" 
 					data-bs-target="#edit_item_nilai">
 						<i class="feather-file-text me-2"></i>Ubah Item Nilai
@@ -1310,15 +1423,37 @@
         toast.show();
     }
 
+	document.getElementById("addItemBtnNilai").addEventListener("click", function () {
+		const container = editItemNilaiModal.querySelector("#itemContainerNilai");
+
+		container.insertAdjacentHTML(
+			"beforeend",
+			createItemField(itemIndex)
+		);
+
+		itemIndex++;
+	});
     document.getElementById("addItemBtn").addEventListener("click", function () {
         const container = document.getElementById("itemContainer");
         container.insertAdjacentHTML("beforeend", createItemField(itemIndex));
         itemIndex++;
     });
     document.addEventListener("click", function(e) {
-        if (e.target.closest(".removeItemBtn")) {
-            e.target.closest(".item-row").remove();
-        }
+		const btn = e.target.closest(".removeItemBtn");
+		if (!btn) return;
+
+		const row = btn.closest(".item-row");
+    	if (!row) return;
+
+		const modal = row.closest("#edit_item_nilai");
+		if (modal) {
+			const id = row.dataset.id;
+			if (id) {
+				deletedItems.push(id);
+			}
+		}
+
+		row.remove();
     });
     document.querySelector('.simpanData').addEventListener("click", async function () {
         const btn = this;
@@ -1372,6 +1507,17 @@
 			btn.innerText = "Simpan Data";
 		}
     })
+	document.querySelector('.simpanDataItemNilai').addEventListener("click", async function () {
+		const items = Array.from(
+			document.querySelectorAll('#itemContainerNilai .item-row')
+		).map(row => ({
+			id: row.dataset.id || null,
+			value: row.querySelector('input').value
+		}));
+
+		console.log('deleted:', deletedItems);
+		console.log('items:', items);
+	})
 
 	document.addEventListener("click", async function(e) {
 		const btn = e.target.closest(".btn_download");
@@ -1453,25 +1599,28 @@
 		window.open(blobUrl, "_blank");
 	}
 
-    function createItemField(index) {
-        return `
-            <div class="bg-light-300 border rounded p-3 mb-3 item-row">
-                <div class="d-flex align-items-center gap-2">
+	function createItemField(index, item = null) {
+		return `
+			<div class="bg-light-300 border rounded p-3 mb-3 item-row"
+				data-id="${item?.id_item_silabus || ''}">
 
-                    <input type="text" 
-                        name="items[${index}]" 
-                        class="form-control" 
-                        placeholder="Isi item Penilaian">
+				<div class="d-flex align-items-center gap-2">
 
-                    <button type="button" 
-                            class="btn btn-sm btn-dark removeItemBtn">
-                        <i class="ti ti-trash"></i>
-                    </button>
+					<input type="text" 
+						name="items[${index}]" 
+						class="form-control" 
+						value="${item?.item_silabus || ''}"
+						placeholder="Isi item Penilaian">
 
-                </div>
-            </div>
-        `;
-    }
+					<button type="button" 
+							class="btn btn-sm btn-dark removeItemBtn">
+						<i class="ti ti-trash"></i>
+					</button>
+
+				</div>
+			</div>
+		`;
+	}
 
     function dateFormatIndo(date) {
         const d = new Date(date);

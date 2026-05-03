@@ -118,6 +118,7 @@ Route::post('/_backend/logic/ortu/unlink', [RequestBackEnd::class, 'doOrtuUnlink
 Route::post('/_backend/logic/siswa/jurnal', [RequestBackEnd::class, 'doSiswaJurnal']);
 Route::post('/_backend/logic/siswa/jurnal/detail', [RequestBackEnd::class, 'doSiswaJurnalDetail']);
 
+Route::post('/_backend/logic/jurnal-item-nilai', [RequestBackEnd::class, 'doJurnalItemNilai']);
 Route::post('/_backend/logic/data-jurnal', [RequestBackEnd::class, 'doListDataJurnal']);
 Route::post('/_backend/logic/jurnal-create', [RequestBackEnd::class, 'doCreateJurnal']);
 Route::post('/_backend/logic/jurnal-update', [RequestBackEnd::class, 'doUpdateJurnal']);
